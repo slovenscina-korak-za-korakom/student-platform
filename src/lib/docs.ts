@@ -43,7 +43,7 @@ export const people = [
   {
     id: 3,
     name: ["Sofiya", "Tyutyunnyk"],
-    role: "Professional Teacher/Tutor",
+    role: "Teacher/Tutor",
     fluentIn: ["Slovene", "English", "Russian"],
     imageUrl: "/staff-images/foto-sofia.jpg",
   },
@@ -57,23 +57,30 @@ export const people = [
   {
     id: 5,
     name: ["Ela", "Remic"],
-    role: "Professional Teacher/Tutor",
+    role: "Teacher/Tutor",
     fluentIn: ["Slovene", "Russian", "English"],
     imageUrl: "/staff-images/foto-ela.jpg",
   },
   {
     id: 6,
-    name: ["Albina", ""],
-    role: "Professional Teacher/Tutor",
+    name: ["Albina", "Kolesnikova"],
+    role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-albina.jpeg",
   },
   {
     id: 7,
-    name: ["Ajda", ""],
-    role: "Professional Teacher/Tutor",
+    name: ["Ajda", "Fuchs Plemenitaš"],
+    role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-ajda.jpeg",
+  },
+  {
+    id: 8,
+    name: ["Nataša", "Grešak"],
+    role: "Teacher/Tutor",
+    fluentIn: [],
+    imageUrl: "/staff-images/foto-natasa.jpeg",
   }
 ];
 
