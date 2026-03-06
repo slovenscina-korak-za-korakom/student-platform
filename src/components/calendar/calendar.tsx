@@ -235,7 +235,7 @@ export default function Calendar({
 
   const [showWeekends, setShowWeekends] = useState(true);
   const [selectedTutorId, setSelectedTutorId] = useState<number | null>(null);
-  const [showBookedSessions, setShowBookedSessions] = useState(false);
+  const [showBookedSessions, setShowBookedSessions] = useState(true);
 
   // Filter events based on the selected tutor or booked events
   const events = useMemo(() => {
