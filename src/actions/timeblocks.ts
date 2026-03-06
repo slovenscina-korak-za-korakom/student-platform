@@ -9,10 +9,9 @@ import SessionConfEmail from "@/emails/session-conf-email";
 import CancellationConfEmail from "@/emails/cancellation-conf-email";
 import TutorSessionConfEmail from "@/emails/tutor-session-conf-email";
 import TutorSessionCancelEmail from "@/emails/tutor-session-cancel-email";
-import {Resend} from "resend";
 import {bookingsRevenue, bookingsTotal, emailDuration, emailErrors, emailsSent} from "@/lib/metrics";
+import {resend} from "@/lib/resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const getSchedule = async () => {
   const { userId } = await auth();

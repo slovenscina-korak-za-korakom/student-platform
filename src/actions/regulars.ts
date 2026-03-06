@@ -6,11 +6,9 @@ import {auth, clerkClient} from "@clerk/nextjs/server";
 import {and, eq} from "drizzle-orm";
 import {addMonths, addWeeks, format, isAfter, isBefore, setDay, startOfDay} from "date-fns";
 import {fromZonedTime} from "date-fns-tz";
-import {Resend} from "resend";
 import TutorSessionCancelEmail from "@/emails/tutor-session-cancel-email";
 import {RegularInvitation, CancelledSession, RegularSession} from "@/types/interfaces";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
+import {resend} from "@/lib/resend";
 
 /**
  * Fetches all accepted regular invitations for the current user

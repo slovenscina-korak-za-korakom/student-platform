@@ -1,13 +1,11 @@
 import WelcomeEmail from "@/emails/welcome-email";
-import { Resend } from "resend";
+import { resend } from "@/lib/resend";
 import {
   userSignups,
   emailsSent,
   emailDuration,
   emailErrors,
 } from "@/lib/metrics";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
   const { data, type } = await request.json();

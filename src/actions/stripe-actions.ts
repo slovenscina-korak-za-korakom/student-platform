@@ -7,10 +7,9 @@ import Stripe from "stripe";
 import BookingConfEmail from "@/emails/booking-conf-email";
 import RescheduleConfEmail from "@/emails/reschedule-conf-email";
 import CancellationConfEmail from "@/emails/cancellation-conf-email";
-import { Resend } from "resend";
 import {bookingsRevenue, bookingsTotal, emailDuration, emailErrors, emailsSent} from "@/lib/metrics";
+import {resend} from "@/lib/resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2025-07-30.basil",
 });
