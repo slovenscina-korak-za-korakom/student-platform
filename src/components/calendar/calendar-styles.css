@@ -67,6 +67,7 @@
   margin: 0;
   width: auto;
   min-width: 6px;
+  min-height: 2rem;
 }
 
 .fc-daygrid-day-events .fc-more-link {
@@ -334,6 +335,7 @@
 
 .fc-theme-standard .fc-timegrid-slot {
   border-color: var(--border);
+  height: 3rem;
 }
 
 .fc-theme-standard .fc-timegrid-axis {

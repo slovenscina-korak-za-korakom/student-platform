@@ -681,13 +681,15 @@ export default function Calendar({
                 style={{
                   backgroundColor,
                   overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
                   width: "100%",
                   height: "100%",
+                  minHeight: "3.5rem",
                   borderRadius: "6px",
-                  padding: "2px 0px 0px 8px",
+                  padding: "0px 8px",
                   boxSizing: "border-box",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
                 }}
               >
                 <div
