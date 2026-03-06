@@ -84,7 +84,7 @@
     "stats": {
       "total-upcoming": "Skupaj prihajajočih",
       "language-club": "Dogodki pogovornega kluba",
-      "personal-sessions": "Osebne seje",
+      "personal-sessions": "Ostale ure",
       "regular-sessions": "Redne ure",
       "completed": "Zaključene seje",
       "description": {
@@ -107,7 +107,7 @@
       "calendar-title": "Vaš koledar",
       "calendar-description": "Oglejte si svoje dogodke za ta dan",
       "language-club": "Pogovorni klub",
-      "personal-session": "Osebna seja",
+      "personal-session": "Individualna ura",
       "regular-session": "Redna ura",
       "recurring-note": "Tedensko ponavljajoče",
       "tooltip": {
