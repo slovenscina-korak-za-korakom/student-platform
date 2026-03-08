@@ -49,7 +49,7 @@ export default async function LocaleLayout({ children, params }) {
     name: "Slovenscina Korak za Korakom",
     url: "https://slovenscinakzk.com",
     description:
-      "Personalized Slovene lessons tailored to your goals. Learn online with experienced teachers and join a community of over 1,200 members.",
+      "Personalized Slovene lessons tailored to your goals. Learn online with experienced teachers and join a community of over 1,700 members.",
     publisher: {
       "@type": "Organization",
       name: "Slovenscina Korak za Korakom",

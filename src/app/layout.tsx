@@ -10,7 +10,7 @@ export const metadata : Metadata = {
     template: "%s | Slovenscina Korak za Korakom",
   },
   description:
-    "Slovenscina Korak za Korakom personalized Slovene lessons tailored to your goals. Learn online at your convenience with experienced teachers and join a supportive community of over 1,200 members. Start today and achieve your language goals with Slovenscina Korak za Korakom!",
+    "Slovenscina Korak za Korakom personalized Slovene lessons tailored to your goals. Learn online at your convenience with experienced teachers and join a supportive community of over 1,700 members. Start today and achieve your language goals with Slovenscina Korak za Korakom!",
   metadataBase: new URL("https://slovenscinakzk.com"),
   alternates: {
     canonical: "/",
