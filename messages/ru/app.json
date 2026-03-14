@@ -98,6 +98,7 @@
     },
     "events": {
       "events": "Events",
+      "events-scheduled": "Вы вошли в систему {events, plural, =1 {1 событие} other {# события}}",
       "next-event": "Ваше ближайшее событие",
       "no-events": "Нет событий на {date}",
       "event-on": "События на {date}",

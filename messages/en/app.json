@@ -97,6 +97,7 @@
     },
     "events": {
       "events": "Events",
+      "events-scheduled": "You have {events, plural, =1 {1 event} other {# events}} booked",
       "next-event": "Your next event",
       "no-events": "No events scheduled on {date}",
       "event-on": "Events on {date}",

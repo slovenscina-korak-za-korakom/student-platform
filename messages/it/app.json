@@ -97,6 +97,7 @@
     },
     "events": {
       "events": "Events",
+      "events-scheduled": "Hai effettuato l'accesso a {events, plural, =1 {1 evento} other {# eventi}}",
       "next-event": "Il tuo prossimo evento",
       "no-events": "Nessun evento programmato per {date}",
       "event-on": "Eventi per {date}",
