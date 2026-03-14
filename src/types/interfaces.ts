@@ -31,6 +31,7 @@ export interface ScheduleData {
   id: number;
   ownerId: string;
   schedule: unknown;
+  timezone?: string | null; // IANA timezone name, e.g. 'Europe/Ljubljana'
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -158,11 +159,12 @@ export interface RegularInvitation {
   studentClerkId: string | null;
   status: string;
   dayOfWeek: number;
-  startTime: string;
+  startTime: string; // wall-clock HH:mm in `timezone`
   duration: number;
   location: string;
   description: string | null;
   color: string | null;
+  timezone: string | null; // IANA timezone name, e.g. 'Europe/Ljubljana'
   tutorName: string;
   tutorAvatar: string;
   tutorColor: string;

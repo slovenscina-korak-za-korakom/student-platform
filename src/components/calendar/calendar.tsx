@@ -14,6 +14,7 @@ import { EventSheet } from "@/components/calendar/event-sheet";
 import { NoSlotsOverlay } from "@/components/calendar/no-slots-overlay";
 import "@/components/calendar/calendar-styles.css";
 import {useLocale, useTranslations} from "next-intl";
+import {fromZonedTime} from "date-fns-tz";
 import {useSidebar} from "@/components/ui/sidebar";
 // Transform database tutors to the format expected by the calendar
 const transformTutors = (tutorsData: TutorData[]) => {
@@ -78,7 +79,9 @@ const generateAvailableSlots = (
               const month = String(currentDate.getUTCMonth() + 1).padStart(2, '0');
               const dayNum = String(currentDate.getUTCDate()).padStart(2, '0');
 
-              const slotStart = new Date(`${year}-${month}-${dayNum}T${timeSlot.startTime}:00Z`);
+              // Convert wall-clock time in the tutor's timezone to UTC
+              const timezone = schedule.timezone || 'UTC';
+              const slotStart = fromZonedTime(`${year}-${month}-${dayNum}T${timeSlot.startTime}:00`, timezone);
 
               const slotEnd = new Date(
                 slotStart.getTime() + timeSlot.duration * 60000,
