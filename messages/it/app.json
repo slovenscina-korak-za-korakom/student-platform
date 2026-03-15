@@ -109,6 +109,7 @@
       "language-club": "Club linguistico",
       "personal-session": "Sessione personale",
       "regular-session": "Sessione regolare",
+      "test-session": "Sessione di prova",
       "recurring-note": "Ricorrente settimanale",
       "tooltip": {
         "level": "Livello richiesto: {level} livello",
@@ -151,8 +152,7 @@
         "email-message": "Riceverai a breve un'email di conferma.",
         "location": "Luogo: {loc}",
         "duration": "Durata: {time} minuti"
-      },
-      "test-session": "Sessione di prova"
+      }
     },
     "welcome-dialog": {
       "title": "Benvenuto!",
@@ -249,7 +249,7 @@
       "individual": "Individuale",
       "regular": "Regolare",
       "group": "Di gruppo",
-      "test-session": "Sessione di prova"
+      "test": "Sessione di prova"
     },
     "event-place": {
       "classroom": "In aula",

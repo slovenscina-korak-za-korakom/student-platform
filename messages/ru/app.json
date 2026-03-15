@@ -109,6 +109,7 @@
       "language-club": "Разговоный клуб",
       "personal-session": "Индивидуальный урок",
       "regular-session": "Регулярное занятие",
+      "test-session": "Пробный урок",
       "recurring-note": "Еженедельно повторяющееся",
       "tooltip": {
         "level": "Требуемые знания: {level} уровень",
@@ -151,8 +152,7 @@
         "email-message": "В ближайшее время вы получите письмо с подтверждением.",
         "location": "Место: {loc}",
         "duration": "Длительность: {time} мин."
-      },
-      "test-session": "Пробный урок"
+      }
     },
     "welcome-dialog": {
       "title": "Добро пожаловать!",
@@ -249,7 +249,7 @@
       "individual": "Индивидуальное",
       "regular": "Регулярное",
       "group": "Групповое",
-      "test-session": "Пробный урок"
+      "test": "Пробный урок"
     },
     "event-place": {
       "classroom": "В классе",

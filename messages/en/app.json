@@ -109,6 +109,7 @@
       "language-club": "Language Club",
       "personal-session": "Personal Session",
       "regular-session": "Regular Session",
+      "test-session": "Test Session",
       "recurring-note": "Weekly recurring",
       "tooltip": {
         "level": "Required knowledge: {level} level",
@@ -151,8 +152,7 @@
         "email-message": "You will receive a confirmation email shortly.",
         "location": "Location: {loc}",
         "duration": "Duration: {time} minutes"
-      },
-      "test-session": "Test Session"
+      }
     },
     "welcome-dialog": {
       "title": "Welcome aboard!",
@@ -249,7 +249,7 @@
       "individual": "Individual",
       "regular": "Regular",
       "group": "Group",
-      "test-session": "Test Session"
+      "test": "Test Session"
     },
     "event-place": {
       "classroom": "Classroom",

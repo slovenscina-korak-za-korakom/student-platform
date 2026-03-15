@@ -109,6 +109,7 @@
       "language-club": "Pogovorni klub",
       "personal-session": "Individualna ura",
       "regular-session": "Redna ura",
+      "test-session": "Testna ura",
       "recurring-note": "Tedensko ponavljajoče",
       "tooltip": {
         "level": "Priporočen nivo {level}",
@@ -151,8 +152,7 @@
         "email-message": "V kratkem boste prejeli potrditveno e-pošto.",
         "location": "Lokacija: {loc}",
         "duration": "Trajanje: {time} minut"
-      },
-      "test-session": "Testna ura"
+      }
     },
     "welcome-dialog": {
       "title": "Dobrodošli!",
@@ -249,7 +249,7 @@
       "individual": "Individualna ura",
       "regular": "Redna ura",
       "group": "Skupinska ura",
-      "test-session": "Testna ura"
+      "test": "Test ura"
     },
     "event-place": {
       "classroom": "Učilnica",

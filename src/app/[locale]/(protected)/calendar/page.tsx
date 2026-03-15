@@ -2,7 +2,7 @@ import { getSchedule, getTimeblocks, getTutors } from "@/actions/timeblocks";
 import { getRegularSessions } from "@/actions/regulars";
 import Calendar from "@/components/calendar/calendar";
 import React from "react";
-import {auth} from "@clerk/nextjs/server";
+import {auth, clerkClient} from "@clerk/nextjs/server";
 
 const CalendarPage = async () => {
   const schedule = await getSchedule();
@@ -19,6 +19,13 @@ const CalendarPage = async () => {
     );
   }
 
+  const clerk = await clerkClient();
+  const clerkUser = await clerk.users.getUser(userId);
+  const preferences = clerkUser.privateMetadata.preferences as { preferredTutor?: number } | null | undefined;
+  const preferredTutorDbId = preferences?.preferredTutor ?? null;
+  const testSession = clerkUser.privateMetadata.testSession as { status?: string } | null | undefined;
+  const testSessionStatus = testSession?.status ?? null;
+
   return (
     <div className="h-[90vh] md:h-[calc(100vh-80px)] w-full overflow-hidden">
       <Calendar
@@ -27,6 +34,8 @@ const CalendarPage = async () => {
         timeblocksData={timeblocks.timeblocks}
         tutorsData={tutors.tutors}
         regularSessionsData={regularSessions}
+        preferredTutorDbId={preferredTutorDbId}
+        testSessionStatus={testSessionStatus}
       />
     </div>
   );
