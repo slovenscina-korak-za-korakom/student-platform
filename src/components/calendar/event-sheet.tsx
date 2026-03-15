@@ -5,7 +5,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Tutor, TutoringSession } from "./types";
-// import { tutors } from "./placeholder-data";
 import {
   IconCalendar,
   IconMapPin,
@@ -16,7 +15,7 @@ import {
   IconClock,
   IconRepeat,
 } from "@tabler/icons-react";
-import {bookSession} from "@/actions/timeblocks";
+import {bookSession, bookTestSession} from "@/actions/timeblocks";
 import {toast} from "sonner";
 import {useRouter} from "@/i18n/routing";
 import {useLocale, useTranslations} from "next-intl";
@@ -27,6 +26,7 @@ type EventSheetProps = {
   setIsEventSheetOpen: (isEventSheetOpen: boolean) => void;
   selectedSession: TutoringSession | null;
   tutorsData: Tutor[];
+  testSessionStatus?: string | null;
 };
 
 export const EventSheet = (props: EventSheetProps) => {
@@ -37,6 +37,7 @@ export const EventSheet = (props: EventSheetProps) => {
   const t3 = useTranslations("common.buttons")
   const tE = useTranslations("dashboard.events")
   const tCancel = useTranslations("dashboard.cancel-regular-session-dialog")
+  const isTestSession = props.selectedSession?.sessionType === "test";
 
   // TODO: add canceling functionality to event sheet
   const cancelMessage = {
@@ -83,7 +84,9 @@ export const EventSheet = (props: EventSheetProps) => {
 
     setIsBooking(true);
     try {
-      const response = await bookSession(session);
+      const response = session.sessionType === "test"
+        ? await bookTestSession(session)
+        : await bookSession(session);
       if (response.status === 200) {
         router.refresh();
         toast.success(response.message);
@@ -119,21 +122,28 @@ export const EventSheet = (props: EventSheetProps) => {
                 <div className="flex items-center gap-3">
                   <div>
                     <h2 className="text-lg font-semibold text-foreground">
-                      {t("title")}
+                      {isTestSession ? t("test-session-title") : t("title")}
                     </h2>
                     <p className="text-sm text-muted-foreground mt-0.5">
                       {t("subtitle", {name: props.selectedSession.tutorName})}
                     </p>
                   </div>
                 </div>
-                <Badge
-                  variant={props.selectedSession.status as "booked" || "available" || "cancelled"}
-                  className="shadow-sm"
-                >
-                  <span className="capitalize">
-                    {t(`status.${props.selectedSession.status}`)}
-                  </span>
-                </Badge>
+                <div className="flex items-center gap-2">
+                  {isTestSession && (
+                    <Badge className="bg-amber-500 text-white shadow-sm text-xs px-2 py-0.5">
+                      FREE
+                    </Badge>
+                  )}
+                  <Badge
+                    variant={props.selectedSession.status as "booked" | "available" | "cancelled"}
+                    className="shadow-sm"
+                  >
+                    <span className="capitalize">
+                      {t(`status.${props.selectedSession.status}`)}
+                    </span>
+                  </Badge>
+                </div>
               </div>
             </div>
 
@@ -148,7 +158,7 @@ export const EventSheet = (props: EventSheetProps) => {
                 </h3>
                 <div className="bg-muted/50 hover:bg-muted/70 border border-border rounded-lg p-4 space-y-3 transition-all duration-200">
                   <p className="text-sm text-foreground/90">
-                    {t("session-status")}
+                    {isTestSession ? t("test-session-description") : t("session-status")}
                   </p>
                   <div className="flex items-center gap-4 text-sm">
                     <div className="flex items-center gap-2 text-muted-foreground">
@@ -278,7 +288,11 @@ export const EventSheet = (props: EventSheetProps) => {
                     ) : (
                       <IconCalendarEvent className="h-4 w-4 mr-2" />
                     )}
-                    {isBooking ? t("buttons.booking") || "Booking..." : t("buttons.book")}
+                    {isBooking
+                      ? t("buttons.booking") || "Booking..."
+                      : isTestSession
+                      ? t("buttons.book-test")
+                      : t("buttons.book")}
                   </Button>
                 ) : props.selectedSession.status === "regular" ? (
                   // Regular session actions

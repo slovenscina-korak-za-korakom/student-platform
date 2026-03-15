@@ -222,6 +222,201 @@ export const bookSession = async (data: TutoringSession) => {
   }
 };
 
+export const bookTestSession = async (data: TutoringSession) => {
+  const { userId } = await auth();
+  const client = await clerkClient();
+
+  if (!userId) {
+    return { message: "Unauthorized", status: 401 };
+  }
+
+  try {
+    const user = await client.users.getUser(userId);
+
+    // Check testSession metadata
+    const testSession = user.privateMetadata.testSession as { status: string; sessionId?: number } | null | undefined;
+
+    if (testSession?.status === "completed") {
+      return { message: "You have already used your free test session", status: 400 };
+    }
+
+    // Lazy completion detection: check for any past test session in the DB
+    const pastTestSession = await db.query.timeblocksTable.findFirst({
+      where: and(
+        eq(timeblocksTable.studentId, userId),
+        eq(timeblocksTable.sessionType, "test"),
+        eq(timeblocksTable.status, "booked"),
+        lt(timeblocksTable.startTime, new Date()),
+      ),
+    });
+
+    if (pastTestSession) {
+      await client.users.updateUserMetadata(userId, {
+        privateMetadata: { testSession: { status: "completed" } },
+      });
+      return { message: "You have already used your free test session", status: 400 };
+    }
+
+    if (testSession?.status === "booked") {
+      return { message: "You already have a test session booked", status: 400 };
+    }
+
+    // Validate preferred tutor
+    const preferences = user.privateMetadata.preferences as { preferredTutor?: number } | null | undefined;
+    const preferredTutorId = preferences?.preferredTutor;
+
+    if (!preferredTutorId || Number(data.tutorId) !== preferredTutorId) {
+      return { message: "Test sessions can only be booked with your chosen tutor", status: 400 };
+    }
+
+    // Get the tutor details
+    const tutor = await db.query.tutorsTable.findFirst({
+      where: eq(tutorsTable.id, data.tutorId),
+    });
+
+    if (!tutor) {
+      return { message: "Tutor not found", status: 404 };
+    }
+
+    // Prevent double booking via time overlap check
+    const newSlotStart = new Date(data.startTime);
+    const newSlotEnd = new Date(newSlotStart.getTime() + data.duration * 60000);
+    const dayStart = new Date(newSlotStart);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(newSlotStart);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const existingBookings = await db
+      .select()
+      .from(timeblocksTable)
+      .where(
+        and(
+          eq(timeblocksTable.tutorId, data.tutorId),
+          eq(timeblocksTable.status, "booked"),
+          gte(timeblocksTable.startTime, dayStart),
+          lt(timeblocksTable.startTime, dayEnd),
+        )
+      );
+
+    for (const existing of existingBookings) {
+      const existingStart = new Date(existing.startTime);
+      const existingEnd = new Date(existingStart.getTime() + existing.duration * 60000);
+      if (newSlotStart < existingEnd && newSlotEnd > existingStart) {
+        return { message: "This time slot is no longer available", status: 409 };
+      }
+    }
+
+    // Insert the test session
+    const response = await db
+      .insert(timeblocksTable)
+      .values({
+        tutorId: data.tutorId,
+        startTime: data.startTime,
+        duration: data.duration,
+        status: "booked",
+        sessionType: "test",
+        location: data.location,
+        studentId: userId,
+      })
+      .returning();
+
+    bookingsTotal.inc({ status: "booked", type: "test" });
+
+    const sessionId = response[0].id;
+
+    // Update Clerk metadata to record active test session booking
+    await client.users.updateUserMetadata(userId, {
+      privateMetadata: { testSession: { status: "booked", sessionId } },
+    });
+
+    // Generate ICS file
+    const icsContent = generateSessionICSFile(
+      sessionId.toString(),
+      (user.unsafeMetadata.locale as string) || "en",
+      data.startTime,
+      data.duration,
+      new Date(),
+      "test",
+      data.location,
+      tutor.name
+    );
+
+    const emailTimer = emailDuration.startTimer({ template: "booking_confirmation" });
+
+    // Send confirmation email to student
+    const { error: emailError } = await resend.emails.send({
+      from: "Slovenščina Korak za Korakom <notifications@slovenscinakzk.com>",
+      to: [user.emailAddresses[0].emailAddress],
+      subject: "Free Test Session Booking Confirmation",
+      react: SessionConfEmail({
+        name: user.firstName,
+        locale: (user.unsafeMetadata.locale as string) || "en",
+        startTime: data.startTime,
+        duration: data.duration,
+        tutorName: tutor.name,
+        sessionType: "test",
+        location: data.location,
+      }),
+      attachments: [
+        {
+          filename: "session.ics",
+          content: Buffer.from(icsContent),
+          contentType: "text/calendar; method=REQUEST; charset=UTF-8",
+        },
+      ],
+    });
+    emailTimer();
+
+    if (emailError) {
+      emailErrors.labels({ template: "booking_confirmation" }).inc();
+      console.error("Error sending test session confirmation email:", emailError);
+    }
+    emailsSent.labels({ template: "booking_confirmation" }).inc();
+
+    // Send confirmation email to tutor
+    const studentName = user.firstName && user.lastName
+      ? `${user.firstName} ${user.lastName}`
+      : user.firstName || "Student";
+    const studentEmail = user.emailAddresses[0].emailAddress;
+
+    const emailTimer2 = emailDuration.startTimer({ template: "tutor_booking_confirmation" });
+
+    const { error: tutorEmailError } = await resend.emails.send({
+      from: "Slovenščina Korak za Korakom <notifications@slovenscinakzk.com>",
+      to: [tutor.email],
+      subject: "New Free Test Session Booking",
+      react: TutorSessionConfEmail({
+        tutorName: tutor.name,
+        locale: "en",
+        studentName: studentName,
+        studentEmail: studentEmail,
+        studentBookingCount: 0,
+        sessionDate: data.startTime,
+        sessionDuration: data.duration,
+        sessionType: "test",
+        location: data.location,
+        sessionNotes: undefined,
+      }),
+    });
+    emailTimer2();
+
+    if (tutorEmailError) {
+      emailErrors.labels({ template: "tutor_booking_confirmation" }).inc();
+      console.error("Error sending tutor email for test session:", tutorEmailError);
+    }
+    emailsSent.labels({ template: "tutor_booking_confirmation" }).inc();
+
+    return {
+      message: "Test session booked successfully",
+      status: 200,
+      response: response,
+    };
+  } catch (error) {
+    console.error("Error booking test session:", error);
+    return { message: "Error booking test session", status: 500 };
+  }
+};
+
 export const cancelSession = async (sessionId: number) => {
   const { userId } = await auth();
   const client = await clerkClient();
@@ -279,8 +474,23 @@ export const cancelSession = async (sessionId: number) => {
       })
       .where(eq(timeblocksTable.id, sessionId));
 
-
     bookingsTotal.inc({status: "cancelled", type: session.sessionType})
+
+    // If cancelling a test session, update Clerk metadata to allow rebooking
+    if (session.sessionType === "test") {
+      const sessionStart = new Date(session.startTime);
+      if (sessionStart > new Date()) {
+        // Session hasn't started → clear metadata so student can rebook
+        await client.users.updateUserMetadata(userId, {
+          privateMetadata: { testSession: null },
+        });
+      } else {
+        // Session has passed → mark as completed permanently
+        await client.users.updateUserMetadata(userId, {
+          privateMetadata: { testSession: { status: "completed" } },
+        });
+      }
+    }
 
     const emailTimer = emailDuration.startTimer({template: "cancellation_confirmation"});
 

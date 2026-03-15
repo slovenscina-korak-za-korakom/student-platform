@@ -1,6 +1,6 @@
 "use client";
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
-import { useSearchParams, useRouter, usePathname } from "next/navigation";
+import { useSearchParams, usePathname } from "next/navigation";
 import FullCalendar from "@fullcalendar/react";
 import { DayCellContentArg, EventContentArg, MoreLinkContentArg, CalendarApi } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
@@ -149,6 +149,8 @@ interface CalendarProps {
   tutorsData: TutorData[];
   studentId: string;
   regularSessionsData?: RegularSession[];
+  preferredTutorDbId?: number | null;
+  testSessionStatus?: string | null;
 }
 
 // Map FullCalendar view names to URL-friendly names
@@ -183,9 +185,10 @@ export default function Calendar({
   tutorsData,
   studentId,
   regularSessionsData = [],
+  preferredTutorDbId = null,
+  testSessionStatus = null,
 }: CalendarProps) {
   const locale = useLocale();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("calendar.event-type")
@@ -237,7 +240,7 @@ export default function Calendar({
   const [currentView, setCurrentView] = useState(initialView);
 
   const [showWeekends, setShowWeekends] = useState(true);
-  const [selectedTutorId, setSelectedTutorId] = useState<number | null>(null);
+  // const [selectedTutorId, setSelectedTutorId] = useState<number | null>(preferredTutorDbId ?? null);
   const [showBookedSessions, setShowBookedSessions] = useState(true);
 
   // Filter events based on the selected tutor or booked events
@@ -251,6 +254,14 @@ export default function Calendar({
 
     // Filter out available slots that overlap with booked sessions
     const filteredAvailableSlots = availableSlots.filter((slot) => {
+      // Filter test slots based on eligibility and preferred tutor
+      if (slot.sessionType === "test") {
+        // Hide if already used or currently booked
+        if (testSessionStatus === "completed" || testSessionStatus === "booked") return false;
+        // Only show from preferred tutor; hide if no preferred tutor set
+        if (!preferredTutorDbId || Number(slot.tutorId) !== preferredTutorDbId) return false;
+      }
+
       // Check if this slot overlaps with any booked session for the same tutor
       const isBooked = bookedSessions.some((booked) => {
         const sameTutor = String(slot.tutorId) === String(booked.tutorId);
@@ -269,20 +280,21 @@ export default function Calendar({
       return !isBooked;
     });
 
-    if (selectedTutorId === null) {
+    if (preferredTutorDbId === null) {
       return filteredAvailableSlots;
     } else {
       return filteredAvailableSlots.filter(
-        (event: TutoringSession) => event.tutorId === selectedTutorId,
+        (event: TutoringSession) => event.tutorId === preferredTutorDbId,
       );
     }
   }, [
-    selectedTutorId,
+    preferredTutorDbId,
     availableSlots,
     showBookedSessions,
     bookedSessions,
     studentId,
     regularSessions,
+    testSessionStatus,
   ]);
 
   // Determine if we should show the no slots overlay and what message to display
@@ -293,8 +305,8 @@ export default function Calendar({
     }
 
     // Check if a specific tutor is selected and has no available slots
-    if (selectedTutorId !== null && events.length === 0) {
-      const tutor = transformedTutors.find((t) => t.id === selectedTutorId);
+    if (preferredTutorDbId !== null && events.length === 0) {
+      const tutor = transformedTutors.find((t) => t.id === preferredTutorDbId);
       return {
         type: "tutor",
         tutor: tutor?.name
@@ -302,7 +314,7 @@ export default function Calendar({
     }
 
     // Check if no tutors have any available slots
-    if (selectedTutorId === null && availableSlots.length === 0) {
+    if (preferredTutorDbId === null && availableSlots.length === 0) {
       return {
         type: "all",
         tutor: null
@@ -312,7 +324,7 @@ export default function Calendar({
     return null;
   }, [
     showBookedSessions,
-    selectedTutorId,
+    preferredTutorDbId,
     events.length,
     availableSlots.length,
     transformedTutors,
@@ -326,13 +338,12 @@ export default function Calendar({
       const params = new URLSearchParams(searchParams.toString());
 
       if (updates.view !== undefined) {
-        const urlViewName = viewNameToUrl(updates.view);
-        params.set("view", urlViewName);
+        params.set("view", viewNameToUrl(updates.view));
       }
 
-      router.push(`${pathname}?${params.toString()}`, { scroll: false });
+      window.history.pushState(null, "", `${pathname}?${params.toString()}`);
     },
-    [searchParams, router, pathname],
+    [searchParams, pathname],
   );
 
   // Initialize the calendar from URL on mount and sync with URL changes
@@ -363,10 +374,6 @@ export default function Calendar({
       return () => clearTimeout(timer);
     }
   }, [searchParams, currentView]); // React to URL changes (including initial mount)
-
-  const handleTutorSelect = (tutorId: number | null) => {
-    setSelectedTutorId(tutorId);
-  };
 
   const changeView = useCallback(
     (viewName: string) => {
@@ -521,8 +528,7 @@ export default function Calendar({
           changeView={changeView}
           showWeekends={showWeekends}
           tutors={transformedTutors}
-          selectedTutorId={selectedTutorId}
-          onTutorSelect={handleTutorSelect}
+          selectedTutorId={preferredTutorDbId}
           showBookedSessions={showBookedSessions}
           setBookedSessions={setShowBookedSessions}
         />
@@ -661,17 +667,21 @@ export default function Calendar({
             );
             const tutorColor = tutor?.color || "#3B82F6";
             const status = eventInfo.event.extendedProps?.status;
-            const isAvailable = status === "available";
-            const isRegular = status === "regular";
+            const sessionType = eventInfo.event.extendedProps?.sessionType;
+            const isTestSession = sessionType === "test";
+            const isAvailable = status !== "cancelled";
+            const isRegular = sessionType === "regular";
 
-            // Determine background color based on status
+            // Determine background color based on status and session type
             let backgroundColor: string;
-            if (isAvailable) {
-              backgroundColor = tutorColor;
+            if (isTestSession) {
+              backgroundColor = isAvailable ? "#F59E0B" : "#6B7280"; // amber for test sessions
             } else if (isRegular) {
               backgroundColor = "var(--color-red-400)"; // Red for regular sessions
             } else if (status === "booked") {
               backgroundColor = "var(--color-indigo-600)";
+            } else if (isAvailable) {
+              backgroundColor = tutorColor;
             } else {
               backgroundColor = "#6B7280"; // Gray fallback
             }
@@ -733,6 +743,7 @@ export default function Calendar({
         setIsEventSheetOpen={setIsEventSheetOpen}
         selectedSession={selectedEvent}
         tutorsData={transformedTutors}
+        testSessionStatus={testSessionStatus}
       />
     </div>
   );

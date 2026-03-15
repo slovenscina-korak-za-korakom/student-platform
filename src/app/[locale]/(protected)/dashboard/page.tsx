@@ -6,7 +6,7 @@ import {
   timeblocksTable,
   tutorsTable,
 } from "@/db/schema";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import {asc, eq, and, or, gt} from "drizzle-orm";
 import React from "react";
 import {getRegularSessions} from "@/actions/regulars";
@@ -14,10 +14,15 @@ import {getRegularSessions} from "@/actions/regulars";
 import DashboardClient from "./_components/dashboard-client";
 import DashboardStats from "./_components/dashboard-stats";
 import UnifiedCalendar from "./_components/unified-calendar";
+import WelcomeTestSessionDialog from "./_components/welcome-test-session-dialog";
 
 const DashboardPage = async ({ params }) => {
   const { locale } = await params;
   const { userId } = await auth();
+
+  const clerk = await clerkClient();
+  const clerkUser = await clerk.users.getUser(userId);
+  const showWelcomeDialog = clerkUser.unsafeMetadata.showWelcomeDialog === true;
 
   // Fetch language club events
   const langClubEvents = await db
@@ -78,6 +83,7 @@ const DashboardPage = async ({ params }) => {
 
   return (
     <main className="w-full h-full flex flex-col gap-8 p-8 md:p-10 lg:p-12">
+      {showWelcomeDialog && <WelcomeTestSessionDialog open={true} />}
       <div className="flex-shrink-0">
         <Greeting />
       </div>

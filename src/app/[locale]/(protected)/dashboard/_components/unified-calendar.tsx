@@ -126,10 +126,11 @@ const UnifiedCalendar = ({
       });
     });
 
-    // Add personal sessions
+    // Add personal sessions (includes test sessions)
     personalSessions.forEach((session) => {
       const startTime = new Date(session.startTime);
       const endTime = new Date(startTime.getTime() + session.duration * 60000);
+      const isTestSession = session.sessionType === "test";
       events.push({
         id: `personal-${session.id}`,
         title: session.sessionType,
@@ -143,10 +144,10 @@ const UnifiedCalendar = ({
           duration: session.duration,
           tutorColor: session.tutorColor,
         },
-        backgroundColor: session.tutorColor || "var(--sl-pink)",
-        borderColor: session.tutorColor || "var(--sl-pink)",
+        backgroundColor: isTestSession ? "#F59E0B" : (session.tutorColor || "var(--sl-pink)"),
+        borderColor: isTestSession ? "#D97706" : (session.tutorColor || "var(--sl-pink)"),
         textColor: "#ffffff",
-        classNames: ["personal-event"],
+        classNames: [isTestSession ? "test-event" : "personal-event"],
       });
     });
 
@@ -489,10 +490,13 @@ const UnifiedCalendar = ({
                     {eventsOnSelectedDay.map((event) => {
                       const isLanguageClub = event.type === "language-club";
                       const isRegular = event.type === "regulars";
+                      const isTestSession = event.type === "personal" && event.theme === "test";
                       const iconContainerStyle = isLanguageClub
                         ? {background: "linear-gradient(to bottom right, var(--sl-purple), var(--sl-blue))"}
                         : isRegular
                         ? {background: `linear-gradient(to bottom right, ${event.tutorColor || "var(--sl-green)"}, var(--sl-blue))`}
+                        : isTestSession
+                        ? {background: "linear-gradient(to bottom right, #F59E0B, #D97706)"}
                         : {background: "linear-gradient(to bottom right, var(--sl-blue), var(--sl-pink))"};
 
                       return (
@@ -525,6 +529,8 @@ const UnifiedCalendar = ({
                                         ? "border-[var(--sl-purple)]/30 text-[var(--sl-purple)] bg-[var(--sl-purple)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
                                         : isRegular
                                         ? "border-[var(--sl-green)]/30 text-[var(--sl-green)] bg-[var(--sl-green)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
+                                        : isTestSession
+                                        ? "border-amber-400/40 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 text-[11px] px-2 py-0.5 rounded-full font-medium"
                                         : "border-[var(--sl-pink)]/30 text-[var(--sl-pink)] bg-[var(--sl-pink)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
                                     }
                                   >
@@ -532,6 +538,8 @@ const UnifiedCalendar = ({
                                       ? t("language-club") || "Language Club"
                                       : isRegular
                                       ? t("regular-session") || "Regular Session"
+                                      : isTestSession
+                                      ? t("test-session") || "Test Session"
                                       : t("personal-session") || "Personal Session"}
                                   </Badge>
                                 </div>

@@ -31,7 +31,6 @@ type CalendarControlsProps = {
   showWeekends: boolean,
   tutors: Tutor[],
   selectedTutorId: number | null,
-  onTutorSelect: (tutorId: number | null) => void,
   showBookedSessions?: boolean,
   setBookedSessions?: (showBookedSessions: boolean) => void
 };
@@ -162,7 +161,6 @@ export const CalendarControls = (props: CalendarControlsProps) => {
         <TutorAvatars
           tutors={props.tutors}
           selectedTutorId={props.selectedTutorId}
-          onTutorSelect={props.onTutorSelect}
           disabled={props.showBookedSessions}
           setBooked={props.setBookedSessions}
         />
