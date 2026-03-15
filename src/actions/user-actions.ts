@@ -87,6 +87,19 @@ export const updateEmailLocale = async (locale: string) => {
   }
 };
 
+export const dismissWelcomeDialog = async () => {
+  const client = await clerkClient();
+  const { userId } = await auth();
+  if (!userId) return;
+  try {
+    await client.users.updateUserMetadata(userId, {
+      unsafeMetadata: { showWelcomeDialog: false },
+    });
+  } catch (error) {
+    console.error("Error dismissing welcome dialog:", error);
+  }
+};
+
 export const getEmailLocale = async () => {
   const client = await clerkClient();
   const { userId } = await auth();

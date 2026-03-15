@@ -151,10 +151,21 @@
         "email-message": "You will receive a confirmation email shortly.",
         "location": "Location: {loc}",
         "duration": "Duration: {time} minutes"
-      }
+      },
+      "test-session": "Test Session"
+    },
+    "welcome-dialog": {
+      "title": "Welcome aboard!",
+      "description": "As a new student, you are entitled to one free test session with your tutor.",
+      "test-session-title": "Your Free Test Session",
+      "test-session-desc": "Meet your tutor, get familiar with how sessions work, and ask any questions you have.",
+      "benefit-1": "Meet your preferred tutor one-on-one",
+      "benefit-2": "Get comfortable with the platform",
+      "benefit-3": "No payment required — completely free",
+      "cta-button": "Book Your Free Session"
     }
   },
-  "settings" : {
+  "settings": {
     "tabs": {
       "account": "Account",
       "billing": "Billing",
@@ -237,7 +248,8 @@
     "event-type": {
       "individual": "Individual",
       "regular": "Regular",
-      "group": "Group"
+      "group": "Group",
+      "test-session": "Test Session"
     },
     "event-place": {
       "classroom": "Classroom",
@@ -262,8 +274,11 @@
       "buttons": {
         "book": "Book Session",
         "booking": "Booking ...",
-        "contact": "Contact tutor"
-      }
+        "contact": "Contact tutor",
+        "book-test": "Book Free Session"
+      },
+      "test-session-title": "Free Test Session",
+      "test-session-description": "This is your free introductory session to meet your tutor and get familiar with the platform. No payment required."
     },
     "booked-message": {
       "badge": "No Availability",

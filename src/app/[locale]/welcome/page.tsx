@@ -103,6 +103,7 @@ const WelcomePage = () => {
           ...user.unsafeMetadata,
           onboardingCompleted: true,
           welcome: false,
+          showWelcomeDialog: true,
         },
       });
 

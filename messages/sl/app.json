@@ -151,7 +151,18 @@
         "email-message": "V kratkem boste prejeli potrditveno e-pošto.",
         "location": "Lokacija: {loc}",
         "duration": "Trajanje: {time} minut"
-      }
+      },
+      "test-session": "Testna ura"
+    },
+    "welcome-dialog": {
+      "title": "Dobrodošli!",
+      "description": "Kot novi učenec ste upravičeni do ene brezplačne testne ure z vašim učiteljem.",
+      "test-session-title": "Vaša brezplačna testna ura",
+      "test-session-desc": "Spoznajte svojega učitelja, se seznanite z delovanjem ur in postavite vsa vprašanja.",
+      "benefit-1": "Spoznajte svojega učitelja ena na ena",
+      "benefit-2": "Spoznajte se s platformo",
+      "benefit-3": "Plačilo ni potrebno — popolnoma brezplačno",
+      "cta-button": "Rezervirajte svojo brezplačno uro"
     }
   },
   "settings": {
@@ -237,7 +248,8 @@
     "event-type": {
       "individual": "Individualna ura",
       "regular": "Redna ura",
-      "group": "Skupinska ura"
+      "group": "Skupinska ura",
+      "test-session": "Testna ura"
     },
     "event-place": {
       "classroom": "Učilnica",
@@ -262,8 +274,11 @@
       "buttons": {
         "book": "Rezerviraj termin",
         "booking": "Rezervavija v teku ...",
-        "contact": "Kontaktiraj tutorja"
-      }
+        "contact": "Kontaktiraj tutorja",
+        "book-test": "Rezerviraj brezplačno uro"
+      },
+      "test-session-title": "Brezplačna testna ura",
+      "test-session-description": "To je vaša brezplačna uvodna ura za spoznavanje učitelja in platforme. Plačilo ni potrebno."
     },
     "booked-message": {
       "badge": "Ni prostih terminov",

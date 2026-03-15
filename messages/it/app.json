@@ -151,7 +151,18 @@
         "email-message": "Riceverai a breve un'email di conferma.",
         "location": "Luogo: {loc}",
         "duration": "Durata: {time} minuti"
-      }
+      },
+      "test-session": "Sessione di prova"
+    },
+    "welcome-dialog": {
+      "title": "Benvenuto!",
+      "description": "Come nuovo studente, hai diritto a una sessione di prova gratuita con il tuo tutor.",
+      "test-session-title": "La tua sessione di prova gratuita",
+      "test-session-desc": "Incontra il tuo tutor, scopri come funzionano le sessioni e fai tutte le domande che vuoi.",
+      "benefit-1": "Incontra il tuo tutor preferito faccia a faccia",
+      "benefit-2": "Familiarizza con la piattaforma",
+      "benefit-3": "Nessun pagamento richiesto — completamente gratuito",
+      "cta-button": "Prenota la tua sessione gratuita"
     }
   },
   "settings": {
@@ -237,7 +248,8 @@
     "event-type": {
       "individual": "Individuale",
       "regular": "Regolare",
-      "group": "Di gruppo"
+      "group": "Di gruppo",
+      "test-session": "Sessione di prova"
     },
     "event-place": {
       "classroom": "In aula",
@@ -262,8 +274,11 @@
       "buttons": {
         "book": "Prenota sessione",
         "booking": "Prenotazione in corso ...",
-        "contact": "Contatta il tutor"
-      }
+        "contact": "Contatta il tutor",
+        "book-test": "Prenota sessione gratuita"
+      },
+      "test-session-title": "Sessione di prova gratuita",
+      "test-session-description": "Questa è la tua sessione introduttiva gratuita per conoscere il tuo tutor e familiarizzare con la piattaforma. Nessun pagamento richiesto."
     },
     "booked-message": {
       "badge": "Nessuna disponibilità",
