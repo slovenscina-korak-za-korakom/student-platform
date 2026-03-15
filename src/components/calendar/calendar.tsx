@@ -72,7 +72,7 @@ const generateAvailableSlots = (
           ) {
             daySchedule.timeSlots.forEach((timeSlot: ScheduleTimeSlot) => {
               // Skip "regular" session types - they are handled separately and never bookable
-              if (timeSlot.sessionType === "regulars") return;
+              if (timeSlot.sessionType === "regular") return;
 
               // Create the datetime as UTC (DB stores times as UTC)
               const year = currentDate.getUTCFullYear();

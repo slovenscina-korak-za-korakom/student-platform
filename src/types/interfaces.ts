@@ -96,7 +96,7 @@ export interface RegularSession {
 
 export interface UnifiedEvent {
   id: number | string;
-  type: "language-club" | "personal" | "regulars";
+  type: "language-club" | "personal" | "regular";
   date: Date;
   tutor: string;
   location: string;

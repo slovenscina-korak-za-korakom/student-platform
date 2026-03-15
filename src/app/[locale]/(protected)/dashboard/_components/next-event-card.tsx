@@ -68,7 +68,7 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
 
     try {
       let response;
-      if (event.type === "regulars") {
+      if (event.type === "regular") {
         toast.error("Regular sessions cannot be cancelled individually");
         setIsCancelling(false);
         return;
@@ -101,7 +101,7 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
   };
 
   const isLanguageClub = event.type === "language-club";
-  const isRegular = event.type === "regulars";
+  const isRegular = event.type === "regular";
   const gradientColor = isLanguageClub
     ? "from-[var(--sl-purple)] to-[var(--sl-blue)]"
     : isRegular

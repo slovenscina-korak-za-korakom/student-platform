@@ -80,7 +80,7 @@ const UnifiedCalendar = ({
   const [isCancelling, setIsCancelling] = useState<number | string | null>(null);
   const [rescheduleEvent, setRescheduleEvent] = useState<{
     id: number | string;
-    type: "language-club" | "personal" | "regulars";
+    type: "language-club" | "personal" | "regular";
     bookingId?: number;
   } | null>(null);
   const [cancelRegularEvent, setCancelRegularEvent] = useState<{
@@ -161,7 +161,7 @@ const UnifiedCalendar = ({
         start: startTime,
         end: endTime,
         extendedProps: {
-          type: "regulars",
+          type: "regular",
           session: session,
           tutor: session.tutorName,
           location: session.location,
@@ -183,7 +183,7 @@ const UnifiedCalendar = ({
   const allEvents = useMemo(() => {
     const events: Array<{
       id: number | string;
-      type: "language-club" | "personal" | "regulars";
+      type: "language-club" | "personal" | "regular";
       date: Date;
       tutor?: string;
       theme?: string;
@@ -225,7 +225,7 @@ const UnifiedCalendar = ({
     regularSessions.forEach((session) => {
       events.push({
         id: session.id,
-        type: "regulars" as const,
+        type: "regular" as const,
         date: new Date(session.startTime),
         tutor: session.tutorName,
         theme: session.sessionType,
@@ -264,7 +264,7 @@ const UnifiedCalendar = ({
     setIsCancelling(event.id);
     try {
       let response;
-      if (event.type === "regulars") {
+      if (event.type === "regular") {
         toast.error("Regular sessions cannot be cancelled individually");
         setIsCancelling(null);
         return;
@@ -489,7 +489,7 @@ const UnifiedCalendar = ({
                     </div>
                     {eventsOnSelectedDay.map((event) => {
                       const isLanguageClub = event.type === "language-club";
-                      const isRegular = event.type === "regulars";
+                      const isRegular = event.type === "regular";
                       const isTestSession = event.type === "personal" && event.theme === "test";
                       const iconContainerStyle = isLanguageClub
                         ? {background: "linear-gradient(to bottom right, var(--sl-purple), var(--sl-blue))"}
