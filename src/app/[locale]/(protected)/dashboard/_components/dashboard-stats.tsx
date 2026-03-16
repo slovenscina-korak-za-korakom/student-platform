@@ -9,6 +9,7 @@ import {
   IconRepeat,
 } from "@tabler/icons-react";
 import {LangClubEvent, PersonalSession, RegularSession} from "@/types/interfaces";
+import { SESSION_COLORS, hexToRgba } from "@/lib/session-colors";
 
 
 interface DashboardStatsProps {
@@ -61,36 +62,28 @@ const DashboardStats = ({
       title: t("total-upcoming"),
       value: totalUpcoming,
       icon: IconCalendar,
-      borderColor: "border-l-[var(--sl-blue)]",
-      textColor: "text-foreground",
-      iconBgColor: "bg-[var(--sl-blue)]",
+      color: SESSION_COLORS.individual,
       description: t("description.upcoming"),
     },
     {
       title: t("language-club"),
       value: upcomingLangClub,
       icon: IconUsers,
-      borderColor: "border-l-[var(--sl-purple)]",
-      textColor: "text-foreground",
-      iconBgColor: "bg-[var(--sl-purple)]",
+      color: SESSION_COLORS["language-club"],
       description: t("description.language-club"),
     },
     {
       title: t("personal-sessions"),
       value: upcomingPersonal,
       icon: IconUser,
-      borderColor: "border-l-[var(--sl-pink)]",
-      textColor: "text-foreground",
-      iconBgColor: "bg-[var(--sl-pink)]",
+      color: SESSION_COLORS.individual,
       description: t("description.personal-sessions"),
     },
     {
       title: t("regular-sessions"),
       value: uniqueRegularInvitations,
       icon: IconRepeat,
-      borderColor: "border-l-[var(--sl-green)]",
-      textColor: "text-foreground",
-      iconBgColor: "bg-[var(--sl-green)]",
+      color: SESSION_COLORS.regular,
       description: t("description.regular-sessions"),
     },
   ];
@@ -110,15 +103,14 @@ const DashboardStats = ({
                   {stat.title}
                 </h3>
                 <div
-                  className={`${stat.iconBgColor}/10 p-0 rounded-lg flex-shrink-0 opacity-60 group-hover:opacity-80 transition-opacity duration-300`}
+                  className="p-0 rounded-lg flex-shrink-0 opacity-60 group-hover:opacity-80 transition-opacity duration-300"
+                  style={{ backgroundColor: hexToRgba(stat.color, 0.1) }}
                 >
-                  <Icon className={`h-4 w-4 ${stat.textColor}`} />
+                  <Icon className="h-4 w-4" style={{ color: stat.color }} />
                 </div>
               </div>
               <div className="space-y-2">
-                <div
-                  className={`text-4xl md:text-5xl font-bold ${stat.textColor} tabular-nums`}
-                >
+                <div className="text-4xl md:text-5xl font-bold text-foreground tabular-nums">
                   {stat.value}
                 </div>
                 <p className="text-sm text-muted-foreground/80">

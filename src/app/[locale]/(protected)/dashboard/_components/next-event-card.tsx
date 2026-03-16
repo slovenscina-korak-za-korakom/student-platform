@@ -36,6 +36,7 @@ import { toast } from "sonner";
 import { cancelBooking } from "@/actions/stripe-actions";
 import { cancelSession } from "@/actions/timeblocks";
 import {UnifiedEvent} from "@/types/interfaces";
+import { SESSION_COLORS, getSessionColor, hexToRgba } from "@/lib/session-colors";
 
 interface NextEventCardProps {
   event: UnifiedEvent;
@@ -102,13 +103,12 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
 
   const isLanguageClub = event.type === "language-club";
   const isRegular = event.type === "regular";
-  const gradientColor = isLanguageClub
-    ? "from-[var(--sl-purple)] to-[var(--sl-blue)]"
-    : isRegular
-      ? "from-[var(--sl-green)] to-[var(--sl-blue)]"
-      : event.tutorColor
-        ? `from-[${event.tutorColor}] to-[${event.tutorColor}]`
-        : "from-[var(--sl-pink)] to-[var(--sl-purple)]";
+  const sessionColor = isLanguageClub
+    ? SESSION_COLORS["language-club"]
+    : getSessionColor(event.sessionType || event.type);
+  const gradientStyle = {
+    background: `linear-gradient(to bottom right, ${sessionColor}, ${hexToRgba(sessionColor, 0.7)})`,
+  };
 
   // Calculate time remaining with seconds always displayed
   const timeLeft = useMemo(() => {
@@ -149,7 +149,8 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <div
-                  className={`bg-gradient-to-br ${gradientColor} p-2.5 rounded-xl`}
+                  className="p-2.5 rounded-xl"
+                  style={gradientStyle}
                 >
                   {isLanguageClub ? (
                     <IconUsers className="h-5 w-5 text-foreground" />
@@ -177,13 +178,11 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
             <div className="flex items-center gap-2 flex-wrap">
               <Badge
                 variant="outline"
-                className={
-                  isLanguageClub
-                    ? "border-[var(--sl-purple)]/50 text-[var(--sl-purple)] bg-[var(--sl-purple)]/10"
-                    : isRegular
-                      ? "border-[var(--sl-green)]/50 text-[var(--sl-green)] bg-[var(--sl-green)]/10"
-                      : "border-[var(--sl-pink)]/50 text-[var(--sl-pink)] bg-[var(--sl-pink)]/10"
-                }
+                style={{
+                  borderColor: hexToRgba(sessionColor, 0.5),
+                  color: sessionColor,
+                  backgroundColor: hexToRgba(sessionColor, 0.1),
+                }}
               >
                 {isLanguageClub
                   ? t("language-club") || "Language Club"

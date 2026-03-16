@@ -16,6 +16,7 @@ import "@/components/calendar/calendar-styles.css";
 import {useLocale, useTranslations} from "next-intl";
 import {fromZonedTime} from "date-fns-tz";
 import {useSidebar} from "@/components/ui/sidebar";
+import { SESSION_COLORS, getSessionColor } from "@/lib/session-colors";
 // Transform database tutors to the format expected by the calendar
 const transformTutors = (tutorsData: TutorData[]) => {
   return tutorsData.map((tutor) => ({
@@ -661,38 +662,22 @@ export default function Calendar({
               .toString()
               .padStart(2, "0")}`;
 
-            // Get tutor color
-            const tutor = transformedTutors.find(
-              (t) => t.id === eventInfo.event.extendedProps?.tutorId,
-            );
-            const tutorColor = tutor?.color || "#3B82F6";
             const status = eventInfo.event.extendedProps?.status;
             const sessionType = eventInfo.event.extendedProps?.sessionType;
-            const isTestSession = sessionType === "test";
-            const isAvailable = status !== "cancelled";
-            const isRegular = sessionType === "regular";
+            const isCancelled = status === "cancelled";
+            const isPast = eventInfo.event.end ? new Date(eventInfo.event.end) < new Date() : false;
 
-            // Determine background color based on status and session type
-            let backgroundColor: string;
-            if (isTestSession) {
-              backgroundColor = isAvailable ? "#F59E0B" : "#6B7280"; // amber for test sessions
-            } else if (isRegular) {
-              backgroundColor = "var(--color-red-400)"; // Red for regular sessions
-            } else if (status === "booked") {
-              backgroundColor = "var(--color-indigo-600)";
-            } else if (isAvailable) {
-              backgroundColor = tutorColor;
-            } else {
-              backgroundColor = "#6B7280"; // Gray fallback
-            }
+            const backgroundColor = isCancelled
+              ? SESSION_COLORS.cancelled
+              : getSessionColor(sessionType);
+            const eventOpacity = isPast ? 0.7 : 0.9;
 
             return (
               <div
-                className={`text-white text-sm font-medium w-full ${
-                  isAvailable ? "opacity-90" : "opacity-75"
-                }`}
+                className="text-white text-sm font-medium w-full"
                 style={{
                   backgroundColor,
+                  opacity: eventOpacity,
                   overflow: "hidden",
                   width: "100%",
                   height: "100%",

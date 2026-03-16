@@ -44,6 +44,7 @@ import { cancelSession } from "@/actions/timeblocks";
 import RescheduleDialog from "./reschedule-dialog";
 import CancelRegularSessionDialog from "./cancel-regular-session-dialog";
 import {LangClubEvent, PersonalSession, RegularSession, UnifiedEvent} from "@/types/interfaces";
+import { SESSION_COLORS, getSessionColor, hexToRgba } from "@/lib/session-colors";
 
 
 interface DashboardClientProps {
@@ -144,7 +145,11 @@ const DashboardClient = ({
           <Button
             onClick={() => window.location.href = '/language-club'}
             variant="outline"
-            className="border-[var(--sl-purple)]/50 text-[var(--sl-purple)] hover:bg-[var(--sl-purple)]/10 transition-all duration-200"
+            className="transition-all duration-200"
+            style={{
+              borderColor: hexToRgba(SESSION_COLORS["language-club"], 0.5),
+              color: SESSION_COLORS["language-club"],
+            }}
           >
             {t("browse-events")}
           </Button>
@@ -296,11 +301,10 @@ function ViewAllScheduledDialog({
                     {sortedEvents.map((event) => {
                       const isLanguageClub = event.type === "language-club";
                       const isRegular = event.type === "regular";
-                      const iconContainerStyle = isLanguageClub
-                        ? {background: "linear-gradient(to bottom right, var(--sl-purple), var(--sl-blue))"}
-                        : isRegular
-                        ? {background: `linear-gradient(to bottom right, ${event.tutorColor || "var(--sl-green)"}, var(--sl-blue))`}
-                        : {background: "linear-gradient(to bottom right, var(--sl-blue), var(--sl-pink))"};
+                      const eventColor = isLanguageClub
+                        ? SESSION_COLORS["language-club"]
+                        : getSessionColor(event.sessionType || event.theme);
+                      const iconContainerStyle = {background: `linear-gradient(to bottom right, ${eventColor}, ${hexToRgba(eventColor, 0.7)})`};
 
                       return (
                         <div
@@ -327,13 +331,12 @@ function ViewAllScheduledDialog({
                                   </h4>
                                   <Badge
                                     variant="outline"
-                                    className={
-                                      isLanguageClub
-                                        ? "border-[var(--sl-purple)]/30 text-[var(--sl-purple)] bg-[var(--sl-purple)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                        : isRegular
-                                        ? "border-[var(--sl-green)]/30 text-[var(--sl-green)] bg-[var(--sl-green)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                        : "border-[var(--sl-pink)]/30 text-[var(--sl-pink)] bg-[var(--sl-pink)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                    }
+                                    className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                                    style={{
+                                      borderColor: hexToRgba(eventColor, 0.4),
+                                      color: eventColor,
+                                      backgroundColor: hexToRgba(eventColor, 0.08),
+                                    }}
                                   >
                                     {isLanguageClub
                                       ? tE("language-club") || "Language Club"

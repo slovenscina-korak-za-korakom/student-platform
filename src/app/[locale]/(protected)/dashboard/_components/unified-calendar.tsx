@@ -50,6 +50,7 @@ import CancelRegularSessionDialog from "./cancel-regular-session-dialog";
 import "@/components/calendar/calendar-styles.css";
 import {useSidebar} from "@/components/ui/sidebar";
 import {LangClubEvent, PersonalSession, RegularSession} from "@/types/interfaces";
+import { SESSION_COLORS, getSessionColor, hexToRgba } from "@/lib/session-colors";
 
 interface UnifiedCalendarProps {
   langClubEvents: LangClubEvent[];
@@ -119,8 +120,8 @@ const UnifiedCalendar = ({
           duration: event.duration,
           theme: event.theme,
         },
-        backgroundColor: "var(--sl-purple)",
-        borderColor: "var(--sl-blue)",
+        backgroundColor: SESSION_COLORS["language-club"],
+        borderColor: SESSION_COLORS["language-club"],
         textColor: "#ffffff",
         classNames: ["lang-club-event"],
       });
@@ -130,7 +131,8 @@ const UnifiedCalendar = ({
     personalSessions.forEach((session) => {
       const startTime = new Date(session.startTime);
       const endTime = new Date(startTime.getTime() + session.duration * 60000);
-      const isTestSession = session.sessionType === "test";
+      const isPast = endTime < new Date();
+      const sessionColor = getSessionColor(session.sessionType);
       events.push({
         id: `personal-${session.id}`,
         title: session.sessionType,
@@ -142,12 +144,11 @@ const UnifiedCalendar = ({
           tutor: session.tutorName,
           location: session.location,
           duration: session.duration,
-          tutorColor: session.tutorColor,
         },
-        backgroundColor: isTestSession ? "#F59E0B" : (session.tutorColor || "var(--sl-pink)"),
-        borderColor: isTestSession ? "#D97706" : (session.tutorColor || "var(--sl-pink)"),
+        backgroundColor: isPast ? hexToRgba(sessionColor, 0.7) : sessionColor,
+        borderColor: isPast ? hexToRgba(sessionColor, 0.7) : sessionColor,
         textColor: "#ffffff",
-        classNames: [isTestSession ? "test-event" : "personal-event"],
+        classNames: ["personal-event"],
       });
     });
 
@@ -169,8 +170,8 @@ const UnifiedCalendar = ({
           tutorColor: session.tutorColor,
           isRecurring: true,
         },
-        backgroundColor: session.tutorColor || "var(--sl-green)",
-        borderColor: session.tutorColor || "var(--sl-green)",
+        backgroundColor: new Date(session.startTime) < new Date() ? hexToRgba(SESSION_COLORS.regular, 0.7) : SESSION_COLORS.regular,
+        borderColor: new Date(session.startTime) < new Date() ? hexToRgba(SESSION_COLORS.regular, 0.7) : SESSION_COLORS.regular,
         textColor: "#ffffff",
         classNames: ["regular-event"],
       });
@@ -491,13 +492,10 @@ const UnifiedCalendar = ({
                       const isLanguageClub = event.type === "language-club";
                       const isRegular = event.type === "regular";
                       const isTestSession = event.type === "personal" && event.theme === "test";
-                      const iconContainerStyle = isLanguageClub
-                        ? {background: "linear-gradient(to bottom right, var(--sl-purple), var(--sl-blue))"}
-                        : isRegular
-                        ? {background: `linear-gradient(to bottom right, ${event.tutorColor || "var(--sl-green)"}, var(--sl-blue))`}
-                        : isTestSession
-                        ? {background: "linear-gradient(to bottom right, #F59E0B, #D97706)"}
-                        : {background: "linear-gradient(to bottom right, var(--sl-blue), var(--sl-pink))"};
+                      const eventColor = isLanguageClub
+                        ? SESSION_COLORS["language-club"]
+                        : getSessionColor(event.theme);
+                      const iconContainerStyle = {background: `linear-gradient(to bottom right, ${eventColor}, ${hexToRgba(eventColor, 0.7)})`};
 
                       return (
                         <div
@@ -524,15 +522,12 @@ const UnifiedCalendar = ({
                                   </h4>
                                   <Badge
                                     variant="outline"
-                                    className={
-                                      isLanguageClub
-                                        ? "border-[var(--sl-purple)]/30 text-[var(--sl-purple)] bg-[var(--sl-purple)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                        : isRegular
-                                        ? "border-[var(--sl-green)]/30 text-[var(--sl-green)] bg-[var(--sl-green)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                        : isTestSession
-                                        ? "border-amber-400/40 text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/20 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                        : "border-[var(--sl-pink)]/30 text-[var(--sl-pink)] bg-[var(--sl-pink)]/5 text-[11px] px-2 py-0.5 rounded-full font-medium"
-                                    }
+                                    className="text-[11px] px-2 py-0.5 rounded-full font-medium"
+                                    style={{
+                                      borderColor: hexToRgba(eventColor, 0.4),
+                                      color: eventColor,
+                                      backgroundColor: hexToRgba(eventColor, 0.08),
+                                    }}
                                   >
                                     {isLanguageClub
                                       ? t("language-club") || "Language Club"
