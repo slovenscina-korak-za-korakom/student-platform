@@ -141,7 +141,7 @@
     },
     "language-club": {
       "badge": "Pogovorni klub",
-      "title": "Pridružite se našemu jezikovnemu klubu",
+      "title": "Pridružite se našemu pogovornemu klubu",
       "description": "Izkušite potopne skupinske učne seje, kjer učitelj vodi tematske pogovore z majhno skupino približno 8 ljudi. Vadite slovenščino v resničnih situacijah z vključujočimi razpravami v podpornem, interaktivnem okolju.",
       "price-label": "na osebo na dogodek",
       "group-size": "oseb v skupini",
@@ -163,7 +163,7 @@
           "description": "Izkoristite prednosti naših izkušenih učiteljev, ki vodijo pogovore in nudijo koristne povratne informacije."
         }
       },
-      "cta": "Pridruži se jezikovnemu klubu"
+      "cta": "Pridruži se pogovornemu klubu"
     },
     "faq": {
       "title": "Pogosta vprašanja",
