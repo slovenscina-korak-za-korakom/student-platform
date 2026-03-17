@@ -153,9 +153,9 @@ const NextEventCard = ({ event, locale }: NextEventCardProps) => {
                   style={gradientStyle}
                 >
                   {isLanguageClub ? (
-                    <IconUsers className="h-5 w-5 text-foreground" />
+                    <IconUsers className="h-5 w-5 text-white" />
                   ) : (
-                    <IconUser className="h-5 w-5 text-foregoround" />
+                    <IconUser className="h-5 w-5 text-white" />
                   )}
                 </div>
                 <CardTitle className="text-xl tracking-tight font-semibold text-foreground">
