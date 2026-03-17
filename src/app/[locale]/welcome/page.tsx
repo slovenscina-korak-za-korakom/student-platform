@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useUser} from "@clerk/nextjs";
 import {Button} from "@/components/ui/button";
 import {
@@ -15,9 +15,9 @@ import {
 import {redirect} from "@/i18n/routing";
 import {useLocale, useTranslations} from "next-intl";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {updateLanguageLevel, updateUserPreferences, UserPreferences} from "@/actions/user-actions";
+import {getTutors, updateLanguageLevel, updateUserPreferences, UserPreferences} from "@/actions/user-actions";
 import {toast} from "sonner";
-import {learningGoals, tutors,} from "@/lib/docs";
+import {learningGoals} from "@/lib/docs";
 import {clearPlacementTestState, PlacementTest} from "@/components/welcome/PlacementTest";
 import {cn} from "@/lib/utils";
 import {
@@ -40,7 +40,12 @@ const WelcomePage = () => {
     preferredSchedule: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bioDialogTutor, setBioDialogTutor] = useState<typeof tutors[0] | null>(null);
+  const [tutors, setTutors] = useState<Awaited<ReturnType<typeof getTutors>>>([]);
+  const [bioDialogTutor, setBioDialogTutor] = useState<Awaited<ReturnType<typeof getTutors>>[0] | null>(null);
+
+  useEffect(() => {
+    getTutors().then(setTutors);
+  }, []);
 
   const totalSteps = 3;
 
@@ -174,17 +179,10 @@ const WelcomePage = () => {
                         {/* Name & Features */}
                         <div className="flex flex-col items-center gap-3 w-full">
                           <h3 className="font-semibold text-lg">{tutor.name}</h3>
-                          <ul className="text-sm text-muted-foreground space-y-2 w-full">
-                            {tutor.description[locale].split(",").map((item: string, idx: React.Key) => (
-                              <li
-                                key={idx}
-                                className="flex items-center gap-2 justify-center"
-                              >
-                                <IconCircleDashedCheck className="h-4 w-4 text-primary shrink-0"/>
-                                <span>{item.trim()}</span>
-                              </li>
-                            ))}
-                          </ul>
+                          <p className="flex items-center gap-2 text-sm text-muted-foreground justify-center">
+                            <IconCircleDashedCheck className="h-4 w-4 text-primary shrink-0"/>
+                            {tutor.level === "senior" ? "Senior Tutor" : "Junior Tutor"}
+                          </p>
                         </div>
 
                         {/* Selection Indicator */}
@@ -412,7 +410,7 @@ const WelcomePage = () => {
             </DialogTitle>
             {bioDialogTutor && (
               <p className="text-xs font-medium text-primary mt-0.5 uppercase tracking-wider">
-                {bioDialogTutor.description[locale as keyof typeof bioDialogTutor.description]}
+                {bioDialogTutor.level === "senior" ? "Senior Tutor" : "Junior Tutor"}
               </p>
             )}
 

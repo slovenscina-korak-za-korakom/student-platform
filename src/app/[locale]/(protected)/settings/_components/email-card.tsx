@@ -35,11 +35,11 @@ const EmailCard = () => {
               return (
                 <li
                   key={email.id}
-                  className="flex justify-between items-center"
+                  className="flex flex-wrap justify-between items-center gap-y-1"
                 >
-                  <div className="flex text-foreground/50 gap-3 flex-row justify-start items-center">
-                    <IconMail size={16} />
-                    <span className="text-sm">{email.emailAddress}</span>
+                  <div className="flex text-foreground/50 gap-3 flex-row justify-start items-center flex-wrap min-w-0">
+                    <IconMail size={16} className="shrink-0" />
+                    <span className="text-sm break-all">{email.emailAddress}</span>
                     {isVerified ? (
                       <Tooltip>
                         <TooltipTrigger className="cursor-pointer">

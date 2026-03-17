@@ -1,6 +1,8 @@
 "use server";
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import {db} from "@/db";
+import {tutorsTable} from "@/db/schema";
 
 export interface UserPreferences {
   languageLevel: string;
@@ -97,6 +99,15 @@ export const dismissWelcomeDialog = async () => {
     });
   } catch (error) {
     console.error("Error dismissing welcome dialog:", error);
+  }
+};
+
+export const getTutors = async () => {
+  try {
+    return await db.select().from(tutorsTable);
+  } catch (error) {
+    console.error("Error fetching tutors:", error);
+    return [];
   }
 };
 
