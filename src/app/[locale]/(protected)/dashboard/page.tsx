@@ -82,9 +82,9 @@ const DashboardPage = async ({ params }) => {
   const regularSessions = await getRegularSessions();
 
   return (
-    <main className="w-full h-full flex flex-col gap-8 p-8 md:p-10 lg:p-12">
+    <main className="w-full h-full flex flex-col gap-8 p-0 md:p-10 lg:p-12">
       {showWelcomeDialog && <WelcomeTestSessionDialog open={true} />}
-      <div className="flex-shrink-0">
+      <div className="px-4 pt-8 md:p-0 flex-shrink-0">
         <Greeting />
       </div>
 
@@ -105,7 +105,7 @@ const DashboardPage = async ({ params }) => {
             locale={locale}
           />
         </div>
-        <div className="lg:col-span-1">
+        <div className="lg:col-span-1 p-4">
           <DashboardClient
             langClubEvents={langClubEvents}
             personalSessions={personalSessions}

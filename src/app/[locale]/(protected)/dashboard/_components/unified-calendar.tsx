@@ -44,6 +44,7 @@ const UnifiedCalendar = ({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
   );
+  const [isMobile, setIsMobile] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [isCancelling, setIsCancelling] = useState<number | string | null>(null);
   const [rescheduleEvent, setRescheduleEvent] = useState<{
@@ -211,6 +212,13 @@ const UnifiedCalendar = ({
     setIsSheetOpen(true);
   };
 
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // Update calendar dimensions when sidebar state changes
   useEffect(() => {
     const calendarApi = calendarRef.current?.getApi();
@@ -307,8 +315,32 @@ const UnifiedCalendar = ({
 
   return (
     <div className="h-full rounded-2xl animate-in fade-in slide-in-from-bottom-5 duration-700 delay-150">
-      <Card className="h-full flex flex-col overflow-hidden p-1 py-4 min-h-[500px] bg-background border border-border/40 dark:border-white/10 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.1)]">
-        <CardContent className="flex-1 min-h-0 overflow-hidden flex flex-col p-0">
+      <style>{`
+        @media (max-width: 767px) {
+          .fc-daygrid-day {
+            height: 56px !important;
+            min-height: 56px !important;
+          }
+          .fc-dayGridMonth-view .fc-daygrid-day-frame {
+            padding: 0.2rem !important;
+          }
+          .fc-daygrid-day-events .fc-event {
+            min-height: 1rem !important;
+          }
+          .fc .fc-col-header-cell,
+          .fc .fc-scrollgrid-section-header > td,
+          .fc-scrollgrid-section-header th,
+          .fc-scrollgrid-section-header td,
+          .fc .fc-scrollgrid > thead,
+          .fc .fc-scrollgrid > thead tr,
+          .fc .fc-scrollgrid > thead th {
+            background-color: var(--background) !important;
+            border-color: var(--background) !important;
+          }
+        }
+      `}</style>
+      <Card className="h-full rounded-none md:rounded-2xl flex flex-col md:overflow-hidden p-1 py-4 min-h-[500px] bg-background border-0 border-b md:border border-border/40 dark:border-white/10 shadow-none md:shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.1)]">
+        <CardContent className="flex-1 md:min-h-0 md:overflow-hidden flex flex-col p-0">
           <div className="h-full flex flex-col">
             {/* Calendar Controls */}
             <div className="flex-shrink-0 px-6 pt-2 pb-3 flex items-center justify-between border-b border-border/30">
@@ -342,14 +374,14 @@ const UnifiedCalendar = ({
             </div>
 
             {/* FullCalendar Component */}
-            <div className="flex-1 min-h-0 overflow-hidden px-3 pb-2">
+            <div className="md:flex-1 md:min-h-0 md:overflow-hidden px-3 pb-2">
               <FullCalendar
                 ref={calendarRef}
                 locale={fullLocale}
                 plugins={[dayGridPlugin, interactionPlugin]}
                 initialView="dayGridMonth"
                 headerToolbar={false}
-                height="100%"
+                height={isMobile ? "auto" : "100%"}
                 events={calendarEvents}
                 dateClick={handleDateClick}
                 editable={false}
