@@ -27,7 +27,7 @@ const CalendarPage = async () => {
   const testSessionStatus = testSession?.status ?? null;
 
   return (
-    <div className="h-[90vh] md:h-[calc(100vh-80px)] w-full overflow-hidden">
+    <div className="h-full w-full overflow-hidden">
       <Calendar
         studentId={userId}
         scheduleData={schedule.scheduleData}

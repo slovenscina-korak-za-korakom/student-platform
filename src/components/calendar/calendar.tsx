@@ -607,7 +607,7 @@ export default function Calendar({
       </div>
 
       {/* FullCalendar Component */}
-      <div className={`relative ${isMobileMonth ? "" : "flex-1 min-h-0 h-screen"}`}>
+      <div className={`relative ${isMobileMonth ? "" : "flex-1 min-h-0 md:h-screen"}`}>
         {noSlotsOverlay && (
           <NoSlotsOverlay
             type={noSlotsOverlay.type}
@@ -615,7 +615,7 @@ export default function Calendar({
           />
         )}
         <FullCalendar
-          locale={locale}
+          locale={locale === "en" ? "en-GB": locale}
           ref={calendarRef}
           plugins={[
             dayGridPlugin,
