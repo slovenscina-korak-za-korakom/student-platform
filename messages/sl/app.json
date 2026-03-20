@@ -19,9 +19,9 @@
     },
     "all-scheduled-events": {
       "message": "Prijavljeni ste na {count, plural, =1 {1 dogodek} =2 {2 dogodka} few {# dogodke} other {# dogodkov}}.",
-      "no-future-events": "Ni rezerviranih dogodkov",
-      "upcoming-events": "You have no upcoming sessions. Book a session to get started!",
-      "browse-events": "Browse Events",
+      "no-future-events": "Ni rezerviranih terminov",
+      "upcoming-events": "Trenutno nimate rezerviranih terminov. Rezervirajte svojo prvo uro!",
+      "browse-events": "Ogled Terminov",
       "link": "Poglej vse",
       "event-view-card": {
         "title": "Vsi dogodki",

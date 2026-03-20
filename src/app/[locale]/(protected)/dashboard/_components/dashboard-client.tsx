@@ -29,6 +29,7 @@ const DashboardClient = ({
   locale,
 }: DashboardClientProps) => {
   const t = useTranslations("dashboard.all-scheduled-events");
+  const router = useRouter();
 
   // Combine and sort all events by date
   const allEvents: UnifiedEvent[] = useMemo(() => {
@@ -91,7 +92,9 @@ const DashboardClient = ({
     return events.sort((a, b) => a.date.getTime() - b.date.getTime());
   }, [langClubEvents, personalSessions, regularSessions]);
 
-  const nextEvent = allEvents.length > 0 ? allEvents[0] : null;
+  // const nextEvent = allEvents.length > 0 ? allEvents[0] : null;
+  const nextEvent = null;
+
 
   return (
     <div className="h-full flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-6 duration-700 delay-200">
@@ -111,7 +114,7 @@ const DashboardClient = ({
             {t("upcoming-events")}
           </p>
           <Button
-            onClick={() => window.location.href = '/language-club'}
+            onClick={() => router.push("/calendar")}
             variant="outline"
             className="transition-all duration-200"
             style={{

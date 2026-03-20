@@ -307,7 +307,7 @@ const UnifiedCalendar = ({
 
   return (
     <div className="h-full rounded-2xl animate-in fade-in slide-in-from-bottom-5 duration-700 delay-150">
-      <Card className="h-full flex flex-col overflow-hidden p-1 py-4 min-h-[500px] bg-white dark:bg-[#1a1a1a] border border-border/40 dark:border-white/10 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.1)]">
+      <Card className="h-full flex flex-col overflow-hidden p-1 py-4 min-h-[500px] bg-background border border-border/40 dark:border-white/10 shadow-[0_1px_3px_rgba(0,0,0,0.05),0_1px_2px_rgba(0,0,0,0.1)]">
         <CardContent className="flex-1 min-h-0 overflow-hidden flex flex-col p-0">
           <div className="h-full flex flex-col">
             {/* Calendar Controls */}
