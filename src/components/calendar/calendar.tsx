@@ -228,6 +228,7 @@ export default function Calendar({
     studentId: session.studentId,
   }));
 
+  const [isMobile, setIsMobile] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<TutoringSession | null>(
     null,
   );
@@ -453,6 +454,13 @@ export default function Calendar({
     }
   }, [handleMoreEventsClick]);
 
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // Update calendar dimensions when sidebar state changes
   useEffect(() => {
     const calendarApi = calendarRef.current?.getApi();
@@ -488,6 +496,18 @@ export default function Calendar({
     setIsEventSheetOpen(true);
   };
 
+  const handleDateClick = useCallback(
+    (arg: { date: Date }) => {
+      if (!isMobile || currentView !== "dayGridMonth") return;
+      const calendarApi = calendarRef.current?.getApi();
+      if (calendarApi) {
+        calendarApi.gotoDate(arg.date);
+        changeView("timeGridWeek");
+      }
+    },
+    [isMobile, currentView, changeView],
+  );
+
   const goToToday = () => {
     const calendarApi = calendarRef.current?.getApi();
     calendarApi?.today();
@@ -514,8 +534,59 @@ export default function Calendar({
     }
   };
 
+  const isMobileMonth = isMobile && currentView === "dayGridMonth";
+
+  // For desktop month view: track the first event ID per day so we can render
+  // it as a full block and all others as dots (replacing the "+X more" button)
+  const firstEventIdPerDay = useMemo(() => {
+    if (currentView !== "dayGridMonth" || isMobile) return new Map<string, string>();
+    const map = new Map<string, string>();
+    const sorted = [...events].sort(
+      (a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
+    );
+    sorted.forEach((session) => {
+      const dayKey = new Date(session.startTime).toDateString();
+      if (!map.has(dayKey)) map.set(dayKey, String(session.id));
+    });
+    return map;
+  }, [events, currentView, isMobile]);
+
   return (
     <div className="h-full flex flex-col p-5">
+      <style>{`
+        @media (min-width: 768px) {
+          .fc-dayGridMonth-view .fc-daygrid-day-events {
+            justify-content: flex-start;
+            align-items: flex-end;
+            padding-bottom: 4px;
+          }
+        }
+        @media (max-width: 767px) {
+          .fc-daygrid-day {
+            height: 56px !important;
+            min-height: 56px !important;
+          }
+          .fc-dayGridMonth-view .fc-daygrid-day-frame {
+            padding: 0.2rem !important;
+          }
+          .fc-daygrid-day-events .fc-event {
+            min-height: 1rem !important;
+          }
+          .fc .fc-col-header-cell,
+          .fc .fc-scrollgrid-section-header > td,
+          .fc-scrollgrid-section-header th,
+          .fc-scrollgrid-section-header td,
+          .fc .fc-scrollgrid > thead,
+          .fc .fc-scrollgrid > thead tr,
+          .fc .fc-scrollgrid > thead th {
+            background-color: var(--background) !important;
+            border-color: var(--background) !important;
+          }
+          .fc .fc-timegrid-slot {
+            height: 1.75rem !important;
+          }
+        }
+      `}</style>
       <div className="flex-shrink-0">
         <CalendarControls
           calendarTitle={calendarTitle}
@@ -536,7 +607,7 @@ export default function Calendar({
       </div>
 
       {/* FullCalendar Component */}
-      <div className="flex-1 min-h-0 h-screen relative">
+      <div className={`relative ${isMobileMonth ? "" : "flex-1 min-h-0 h-screen"}`}>
         {noSlotsOverlay && (
           <NoSlotsOverlay
             type={noSlotsOverlay.type}
@@ -554,7 +625,7 @@ export default function Calendar({
           ]}
           initialView={initialView}
           headerToolbar={false}
-          height="100%"
+          height={isMobileMonth ? "auto" : "100%"}
           views={{
             timeGridWeek: {
               type: "timeGrid",
@@ -605,11 +676,12 @@ export default function Calendar({
               studentId: (session as TutoringSession).studentId,
             },
           }))}
+          dateClick={handleDateClick}
           eventClick={handleEventClick}
           editable={false}
           selectable={false}
           selectMirror={false}
-          dayMaxEvents={1}
+          dayMaxEvents={currentView === "dayGridMonth" ? false : 1}
           moreLinkClick="none"
           moreLinkContent={(arg: MoreLinkContentArg) => {
             // Use the num property which contains the count of hidden events
@@ -646,22 +718,6 @@ export default function Calendar({
             return dayNumber;
           }}
           eventContent={(eventInfo: EventContentArg) => {
-            const startTime = new Date(eventInfo.event.start);
-            const endTime = new Date(eventInfo.event.end);
-            const timeString = `${startTime
-              .getHours()
-              .toString()
-              .padStart(2, "0")}:${startTime
-              .getMinutes()
-              .toString()
-              .padStart(2, "0")} - ${endTime
-              .getHours()
-              .toString()
-              .padStart(2, "0")}:${endTime
-              .getMinutes()
-              .toString()
-              .padStart(2, "0")}`;
-
             const status = eventInfo.event.extendedProps?.status;
             const sessionType = eventInfo.event.extendedProps?.sessionType;
             const isCancelled = status === "cancelled";
@@ -671,6 +727,35 @@ export default function Calendar({
               ? SESSION_COLORS.cancelled
               : getSessionColor(sessionType);
             const eventOpacity = isPast ? 0.7 : 0.9;
+
+            if (currentView === "dayGridMonth") {
+              const isFirstOfDay =
+                !isMobile &&
+                eventInfo.event.start &&
+                firstEventIdPerDay.get(new Date(eventInfo.event.start).toDateString()) === eventInfo.event.id;
+
+              if (!isFirstOfDay) {
+                return (
+                  <div className="flex items-center justify-center w-full h-full min-h-[6px]">
+                    <div
+                      className="rounded-full flex-shrink-0 shadow-sm"
+                      style={{
+                        width: isMobile ? "6px" : "12px",
+                        height: isMobile ? "6px" : "12px",
+                        borderRadius: isMobile ? "999px" : "3px",
+                        backgroundColor,
+                        opacity: eventOpacity,
+                        border: "none",
+                      }}
+                    />
+                  </div>
+                );
+              }
+            }
+
+            const startTime = new Date(eventInfo.event.start);
+            const endTime = new Date(eventInfo.event.end);
+            const timeString = `${startTime.getHours().toString().padStart(2, "0")}:${startTime.getMinutes().toString().padStart(2, "0")} - ${endTime.getHours().toString().padStart(2, "0")}:${endTime.getMinutes().toString().padStart(2, "0")}`;
 
             return (
               <div
