@@ -1,10 +1,10 @@
 "use server";
 
 import {db} from "@/db";
-import {schedulesTable, timeblocksTable, tutorsTable} from "@/db/schema";
+import {availableSlotsTable, schedulesTable, timeblocksTable, tutorsTable} from "@/db/schema";
 import {auth, clerkClient} from "@clerk/nextjs/server";
 import {TutoringSession} from "@/components/calendar/types";
-import {and, eq, gte, lt} from "drizzle-orm";
+import {and, eq, gt, gte, lt} from "drizzle-orm";
 import SessionConfEmail from "@/emails/session-conf-email";
 import CancellationConfEmail from "@/emails/cancellation-conf-email";
 import TutorSessionConfEmail from "@/emails/tutor-session-conf-email";
@@ -51,6 +51,23 @@ export const getTutors = async () => {
     return { status: 200, tutors: tutors };
   } catch (error) {
     console.error("Error getting tutors:", error);
+    return { error: "Internal server error", status: 500 };
+  }
+};
+
+export const getAvailableDbSlots = async () => {
+  const { userId } = await auth();
+  if (!userId) {
+    return { error: "Unauthorized", status: 401 };
+  }
+  try {
+    const slots = await db
+      .select()
+      .from(availableSlotsTable)
+      .where(gt(availableSlotsTable.startTime, new Date()));
+    return { status: 200, slots };
+  } catch (error) {
+    console.error("Error getting available slots:", error);
     return { error: "Internal server error", status: 500 };
   }
 };

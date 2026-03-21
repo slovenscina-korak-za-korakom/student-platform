@@ -8,7 +8,7 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
 import interactionPlugin from "@fullcalendar/interaction";
 import { TutoringSession, EventClickArg } from "@/components/calendar/types";
-import { TutorData, ScheduleData, DaySchedule, ScheduleTimeSlot, TimeblockData, RegularSession } from "@/types/interfaces";
+import { TutorData, ScheduleData, DaySchedule, ScheduleTimeSlot, TimeblockData, RegularSession, AvailableSlotData } from "@/types/interfaces";
 import { CalendarControls } from "@/components/calendar/calendar-controls";
 import { EventSheet } from "@/components/calendar/event-sheet";
 import { NoSlotsOverlay } from "@/components/calendar/no-slots-overlay";
@@ -150,6 +150,7 @@ interface CalendarProps {
   tutorsData: TutorData[];
   studentId: string;
   regularSessionsData?: RegularSession[];
+  availableDbSlotsData?: AvailableSlotData[];
   preferredTutorDbId?: number | null;
   testSessionStatus?: string | null;
 }
@@ -186,6 +187,7 @@ export default function Calendar({
   tutorsData,
   studentId,
   regularSessionsData = [],
+  availableDbSlotsData = [],
   preferredTutorDbId = null,
   testSessionStatus = null,
 }: CalendarProps) {
@@ -198,11 +200,41 @@ export default function Calendar({
   // Transform the data from a database
   const transformedTutors = transformTutors(tutorsData);
 
-  // Generate available slots from schedules (regular sessions are filtered out by sessionType)
-  const availableSlots = generateAvailableSlots(
-    scheduleData,
-    tutorsData,
-  );
+  // Generate available slots from schedules and merge with DB-published slots
+  const availableSlots = useMemo(() => {
+    const scheduleSlots = generateAvailableSlots(scheduleData, tutorsData);
+
+    const dbSlots: TutoringSession[] = availableDbSlotsData.map((slot) => {
+      const tutor = tutorsData.find((t) => t.id === slot.tutorId);
+      const startTime = new Date(slot.startTime);
+      const endTime = new Date(startTime.getTime() + slot.duration * 60000);
+      return {
+        id: `db-slot-${slot.id}`,
+        tutorId: slot.tutorId,
+        tutorName: tutor?.name ?? "Unknown Tutor",
+        startTime,
+        endTime,
+        duration: slot.duration,
+        status: "available",
+        sessionType: slot.sessionType,
+        location: slot.location,
+        description: "Available for booking",
+      };
+    });
+
+    // DB slots take precedence; drop schedule slots that overlap with a DB slot
+    return [
+      ...dbSlots,
+      ...scheduleSlots.filter((schedSlot) =>
+        !dbSlots.some(
+          (dbSlot) =>
+            String(dbSlot.tutorId) === String(schedSlot.tutorId) &&
+            schedSlot.startTime < dbSlot.endTime &&
+            schedSlot.endTime > dbSlot.startTime,
+        )
+      ),
+    ];
+  }, [scheduleData, tutorsData, availableDbSlotsData]);
 
   // Get booked sessions (only future ones)
   const bookedSessions = transformTimeblocksToSessions(

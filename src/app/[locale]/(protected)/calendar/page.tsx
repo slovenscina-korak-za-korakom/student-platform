@@ -1,4 +1,4 @@
-import { getSchedule, getTimeblocks, getTutors } from "@/actions/timeblocks";
+import { getSchedule, getTimeblocks, getTutors, getAvailableDbSlots } from "@/actions/timeblocks";
 import { getRegularSessions } from "@/actions/regulars";
 import Calendar from "@/components/calendar/calendar";
 import React from "react";
@@ -9,6 +9,7 @@ const CalendarPage = async () => {
   const timeblocks = await getTimeblocks();
   const tutors = await getTutors();
   const regularSessions = await getRegularSessions();
+  const availableDbSlots = await getAvailableDbSlots();
   const {userId} = await auth();
 
   if (schedule.status !== 200 || timeblocks.status !== 200 || tutors.status !== 200 || !userId) {
@@ -34,6 +35,7 @@ const CalendarPage = async () => {
         timeblocksData={timeblocks.timeblocks}
         tutorsData={tutors.tutors}
         regularSessionsData={regularSessions}
+        availableDbSlotsData={availableDbSlots.status === 200 ? availableDbSlots.slots : []}
         preferredTutorDbId={preferredTutorDbId}
         testSessionStatus={testSessionStatus}
       />

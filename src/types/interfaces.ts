@@ -177,4 +177,14 @@ export interface CancelledSession {
   reason: string | null;
 }
 
+// Available slot published by a tutor (from availableSlotsTable)
+export interface AvailableSlotData {
+  id: number;
+  tutorId: number;
+  startTime: Date;
+  duration: number;
+  sessionType: string;
+  location: string;
+}
+
 
