@@ -93,7 +93,7 @@ const getEmailTranslations = (locale: string) => {
       confirmation: "Подтверждение бронирования",
       subtitle: "Ваш урок словенского языка успешно забронирован!",
       lessonDetails: "Детали урока",
-      type:  "языковой-клуб",
+      type:  "Разговорный клуб",
       date: "Дата",
       time: "Время",
       duration: "Продолжительность",

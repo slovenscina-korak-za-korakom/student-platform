@@ -45,7 +45,7 @@ export const BookingConfEmail = ({
     },
     ru: {
       preview:
-        "Подтверждение бронирования - языковой-клуб",
+        "Подтверждение бронирования - Разговорный клуб",
     },
   };
 
@@ -85,7 +85,7 @@ export default BookingConfEmail;
 // Preview props for testing
 BookingConfEmail.PreviewProps = {
   name: "Sebastjan Bas",
-  locale: "sl",
+  locale: "ru",
   lessonDate: new Date(),
   lessonDuration: 60,
   teacherName: "Anna Novak",

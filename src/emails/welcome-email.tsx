@@ -57,7 +57,7 @@ export const WelcomeEmail = ({ name, locale = "en" }: WelcomeEmailProps) => {
 
 WelcomeEmail.PreviewProps = {
   name: "John",
-  locale: "en",
+  locale: "ru",
 } satisfies WelcomeEmailProps;
 
 export default WelcomeEmail;

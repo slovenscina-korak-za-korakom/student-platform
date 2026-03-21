@@ -119,7 +119,7 @@ export default CancellationConfEmail;
 // Preview props for testing - Personal Session (uncomment to use)
 CancellationConfEmail.PreviewProps = {
   name: "Sebastjan Bas",
-  locale: "en",
+  locale: "ru",
   eventType: "personal-session" as const,
   startTime: new Date(),
   duration: 60,

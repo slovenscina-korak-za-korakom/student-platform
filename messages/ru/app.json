@@ -54,7 +54,7 @@
         "dashboard": "Dashboard",
         "courses": "Курсы",
         "calendar": "Календарь",
-        "language-club": "Языковой клуб",
+        "language-club": "Разговорный клуб",
         "tutors": "Учителя",
         "daily-practice": "Ежедневные занятия",
         "admin": "Admin Dashboard",
@@ -84,13 +84,13 @@
     "stats": {
       "total-upcoming": "Всего предстоящих",
       "language-club": "События разговорного клуба",
-      "personal-sessions": "Индивидуальные уроки",
+      "personal-sessions": "Индивидуальные занятия",
       "regular-sessions": "Регулярные занятия",
       "completed": "Завершенные уроки",
       "description": {
         "upcoming": "Запланированные события",
-        "language-club": "Групповые суроки",
-        "personal-sessions": "Индивидуальные уроки",
+        "language-club": "Групповые занятия",
+        "personal-sessions": "Индивидуальные занятия",
         "regular-sessions": "Еженедельные повторяющиеся",
         "completed": "Прошедшие уроки"
       }

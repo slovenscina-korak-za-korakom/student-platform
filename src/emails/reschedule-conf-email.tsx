@@ -106,7 +106,7 @@ export default RescheduleConfEmail;
 // Preview props for testing
 RescheduleConfEmail.PreviewProps = {
   name: "Sebastjan Bas",
-  locale: "en",
+  locale: "ru",
   oldLessonDate: new Date("2024-12-20T10:00:00"),
   oldLessonDuration: 60,
   oldTeacherName: "Anna Novak",

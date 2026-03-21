@@ -92,7 +92,7 @@ export const routing = defineRouting({
     "/language-club": {
       en: "/language-club",
       sl: "/pogovorni-klub",
-      ru: "/языковой-клуб",
+      ru: "/Разговорный клуб",
       it: "/club-linguistico",
     },
 

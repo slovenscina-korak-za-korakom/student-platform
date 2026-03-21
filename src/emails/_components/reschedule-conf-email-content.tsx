@@ -82,7 +82,7 @@ const getEmailTranslations = (locale: string) => {
     },
     ru: {
       reschedule: "Подтверждение переноса",
-      subtitle: "Ваше бронирование языкового клуба успешно перенесено!",
+      subtitle: "Ваше бронирование разговорного клуба успешно перенесено!",
       oldBooking: "Предыдущее бронирование",
       newBooking: "Новое бронирование",
       lessonDetails: "Детали урока",
@@ -94,7 +94,7 @@ const getEmailTranslations = (locale: string) => {
       location: "Место",
       description: "Описание",
       level: "Уровень",
-      type: "языковой-клуб",
+      type: "Разговорный клуб",
       seeYouSoon: "До скорой встречи",
       dashboard: "Dashboard",
       about: "О нас",

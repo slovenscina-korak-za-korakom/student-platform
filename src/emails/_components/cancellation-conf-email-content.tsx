@@ -107,7 +107,7 @@ const getEmailTranslations = (locale: string) => {
     ru: {
       cancellation: "Подтверждение отмены",
       subtitleLanguageClub: "Ваше бронирование языкового клуба отменено.",
-      subtitlePersonalSession: "Ваша персональная сессия отменена.",
+      subtitlePersonalSession: "Ваше занятие отменено.",
       cancelledDetails: "Детали отмененного бронирования",
       lessonDetails: "Детали урока",
       sessionDetails: "Детали сессии",
