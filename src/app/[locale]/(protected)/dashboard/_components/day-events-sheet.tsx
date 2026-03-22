@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import {Sheet, SheetContent, SheetDescription, SheetTitle} from "@/components/ui/sheet";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -126,10 +126,10 @@ function EventCard({
         day: "numeric",
         hour: "2-digit",
         minute: "2-digit",
-        hour12: locale === "en",
+        hour12: false,
       })
     : event.date.toLocaleTimeString(locale, {
-        hour12: locale === "en",
+        hour12: false,
         hour: "2-digit",
         minute: "2-digit",
       });
@@ -351,6 +351,12 @@ export function DayEventsSheet({
           className="w-full sm:max-w-[420px] p-0 flex flex-col overflow-hidden bg-background dark:bg-[#1a1a1a]"
         >
           <SheetTitle className="sr-only">{headerHeading ?? fullDate}</SheetTitle>
+          <SheetDescription className="sr-only">{`${headerHeading} - ${date.toLocaleDateString(locale, {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          })}`}</SheetDescription>
 
           {/* ── Gradient header ── */}
           <div

@@ -3,10 +3,24 @@ import React, {useState} from "react";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
-import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerTitle,
+} from "@/components/ui/drawer";
 import {
   IconCalendar,
   IconCancel,
+  IconChevronRight,
   IconClock,
   IconCoinEuro,
   IconCreditCard,
@@ -19,15 +33,17 @@ import {
   IconStopwatch,
   IconUsers,
   IconWorld,
+  IconX,
 } from "@tabler/icons-react";
-import {Tooltip, TooltipContent, TooltipTrigger,} from "@/components/ui/tooltip";
+import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {useTranslations} from "next-intl";
-import {bookEventDirect, createCheckoutSession,} from "@/actions/stripe-actions";
+import {bookEventDirect} from "@/actions/stripe-actions";
 import SuccessDialog from "./success-dialog";
 import {toast} from "sonner";
-import {Card} from "@/components/ui/card";
 import {localeType} from "@/i18n/routing";
 import {LangEvent} from "@/types/interfaces";
+import {cn} from "@/lib/utils";
+import {useIsMobile} from "@/hooks/use-mobile";
 
 const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -35,33 +51,19 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [bookedEvent, setBookedEvent] = useState(null);
   const t = useTranslations("dashboard.events");
-  const spotsLeft = event.maxBooked - event.peopleBooked
-  const price = parseFloat(event.price.toString())
+  const isMobile = useIsMobile();
+  const spotsLeft = event.maxBooked - event.peopleBooked;
+  const price = parseFloat(event.price.toString());
 
   const eventDate = new Date(event.date);
   const isFull = spotsLeft <= 0;
-
-  const handleStripeBooking = async () => {
-    setIsLoading(true);
-    setShowBookingDialog(false);
-    try {
-      const result = await createCheckoutSession(event.id.toString(), locale);
-      if (result.error) throw new Error(result.error)
-      window.location.href = result.url;
-    } catch (error) {
-      toast.error("Booking error: " + error.message || "Failed to book appointment");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleDirectBooking = async () => {
     setIsLoading(true);
     setShowBookingDialog(false);
     try {
       const result = await bookEventDirect(event.id.toString());
-      if (!result.success) throw new Error(result.error)
-      // Show success dialog
+      if (!result.success) throw new Error(result.error);
       setBookedEvent(result.event);
       setShowSuccessDialog(true);
       toast.success("Your language club session has been booked.");
@@ -72,10 +74,83 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
     }
   };
 
+  const BookingOptions = () => (
+    <div className="space-y-3">
+      {/* Free / Reserve Option */}
+      <button
+        onClick={handleDirectBooking}
+        className="w-full flex items-start gap-3.5 p-4 rounded-xl border border-border hover:border-green-500/40 hover:bg-green-50/50 dark:hover:bg-green-950/20 transition-all duration-150 cursor-pointer text-left group"
+      >
+        <div className="w-9 h-9 bg-green-50 dark:bg-green-950/60 rounded-lg flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-green-100 dark:group-hover:bg-green-950/80 transition-colors">
+          <IconRosetteDiscountCheck className="w-5 h-5 text-green-600 dark:text-green-400"/>
+        </div>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm font-semibold text-foreground leading-tight">
+            {t("dialog.free-card.title")}
+          </p>
+          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+            {t("dialog.free-card.desc")}
+          </p>
+          <div className="mt-2.5 space-y-1.5">
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconRosetteDiscountCheck className="h-3.5 w-3.5 shrink-0 mt-0.5 text-green-500"/>
+              {t("dialog.free-card.l1")}
+            </p>
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconCoinEuro className="h-3.5 w-3.5 shrink-0 mt-0.5"/>
+              {t("dialog.free-card.l2")}{" "}
+              <span className="italic opacity-70">{t("dialog.free-card.l2-add")}</span>
+            </p>
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconCancel className="h-3.5 w-3.5 shrink-0 mt-0.5"/>
+              {t("dialog.free-card.l3")}
+            </p>
+          </div>
+        </div>
+        <IconChevronRight className="h-4 w-4 text-muted-foreground/40 group-hover:text-green-500 shrink-0 mt-1 transition-colors"/>
+      </button>
+
+      {/* Paid Stripe Option — disabled / coming soon */}
+      <div className="w-full flex items-start gap-3.5 p-4 rounded-xl border border-border opacity-50 text-left cursor-not-allowed">
+        <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/60 rounded-lg flex items-center justify-center shrink-0 mt-0.5">
+          <IconCreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400"/>
+        </div>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 flex-wrap">
+            <p className="text-sm font-semibold text-foreground leading-tight">
+              {t("dialog.pay-card.title")}
+            </p>
+            <Badge variant="secondary" className="text-[10px] py-0 px-1.5 h-4 rounded-full">
+              {t("dialog.disabled-title")}
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+            {t("dialog.pay-card.desc")}
+          </p>
+          <div className="mt-2.5 space-y-1.5">
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconWorld className="h-3.5 w-3.5 shrink-0 mt-0.5"/>
+              {t("dialog.pay-card.l1")}
+            </p>
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconCreditCardRefund className="h-3.5 w-3.5 shrink-0 mt-0.5"/>
+              {t("dialog.pay-card.l2")}{" "}
+              <span className="italic opacity-70">{t("dialog.pay-card.l2-add", {hours: 48})}</span>
+            </p>
+            <p className="flex items-start gap-1.5 text-xs text-muted-foreground">
+              <IconReceiptRefund className="h-3.5 w-3.5 shrink-0 mt-0.5"/>
+              {t("dialog.pay-card.l3")}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <>
-      <div
-        className="rounded-xl border border-border/50 bg-card overflow-hidden transition-colors hover:border-border/80 hover:shadow-sm">
+      {/* ── Card ── */}
+      <div className="rounded-xl border border-border/50 bg-card overflow-hidden transition-colors hover:border-border/80 hover:shadow-sm">
         {/* Gradient accent bar */}
         <div className="h-px w-full bg-gradient-to-r from-blue-500 to-violet-500"/>
 
@@ -200,95 +275,161 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
         </div>
       </div>
 
-      {/* Booking Options Dialog */}
-      <Dialog open={showBookingDialog} onOpenChange={setShowBookingDialog}>
-        <DialogContent className="sm:max-w-3xl w-full rounded-2xl">
-          <DialogHeader>
-            <DialogTitle className="text-center">{t("dialog.title")}</DialogTitle>
-            <DialogDescription className="text-center">
-              {t("dialog.subtitle")}
-            </DialogDescription>
-          </DialogHeader>
+      {/* ── Booking Dialog (desktop) ── */}
+      {!isMobile && (
+        <Dialog open={showBookingDialog} onOpenChange={setShowBookingDialog}>
+          <DialogContent
+            showCloseButton={false}
+            className="p-0 gap-0 border-0 shadow-2xl rounded-2xl overflow-hidden flex flex-row w-[calc(100vw-2rem)] sm:max-w-[620px]"
+          >
+            <DialogTitle className="sr-only">{t("dialog.title")}</DialogTitle>
+            <DialogDescription className="sr-only">{t("dialog.subtitle")}</DialogDescription>
 
-          <div className="flex flex-col md:flex-row gap-3 mt-2">
-            {/* Free / Reserve Option */}
-            <div className="flex-1 rounded-xl border border-border/60 p-5 flex flex-col">
-              <div
-                className="w-9 h-9 bg-green-50 dark:bg-green-950/60 rounded-lg flex items-center justify-center mb-3">
-                <IconRosetteDiscountCheck className="w-5 h-5 text-green-600 dark:text-green-400"/>
+            {/* Left gradient panel */}
+            <div
+              className="w-[190px] shrink-0 flex flex-col"
+              style={{background: "linear-gradient(170deg, #2563eb 0%, #7c3aed 55%, #6d28d9 100%)"}}
+            >
+              <div className="px-5 pt-6 pb-4">
+                <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center mb-4">
+                  <IconCalendar className="h-5 w-5 text-white"/>
+                </div>
+                <p className="text-white/50 text-[10px] font-semibold uppercase tracking-widest mb-1">
+                  {t("dialog.title")}
+                </p>
+                <h2 className="text-white text-lg font-bold leading-snug">
+                  Book<br/>Your Spot
+                </h2>
               </div>
-              <h3 className="font-semibold mb-1">{t("dialog.free-card.title")}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t("dialog.free-card.desc")}
-              </p>
-              <div className="space-y-2.5 text-sm text-muted-foreground mb-6 flex-1">
-                <p className="flex items-start gap-2">
-                  <IconRosetteDiscountCheck className="h-4 w-4 shrink-0 mt-0.5"/>
-                  {t("dialog.free-card.l1")}
-                </p>
-                <p className="flex items-start gap-2">
-                  <IconCoinEuro className="h-4 w-4 shrink-0 mt-0.5"/>
-                  <span>
-                    {t("dialog.free-card.l2")}{" "}
-                    <span className="text-xs italic opacity-70">
-                      {t("dialog.free-card.l2-add")}
-                    </span>
-                  </span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <IconCancel className="h-4 w-4 shrink-0 mt-0.5"/>
-                  {t("dialog.free-card.l3")}
-                </p>
+
+              <div className="mx-5 h-px bg-white/10"/>
+
+              <div className="px-5 py-4 flex-1 space-y-3.5">
+                <div>
+                  <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
+                    Topic
+                  </p>
+                  <p className="text-white text-sm font-semibold leading-snug line-clamp-3">
+                    {event.theme}
+                  </p>
+                </div>
+
+                <div className="h-px bg-white/10"/>
+
+                <div>
+                  <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1.5">
+                    Date & Time
+                  </p>
+                  <p className="text-white text-sm font-semibold tabular-nums">
+                    {eventDate.toLocaleDateString(locale, {
+                      month: "short",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </p>
+                  <p className="text-white/60 text-xs mt-0.5 tabular-nums flex items-center gap-1">
+                    <IconClock className="h-3 w-3"/>
+                    {eventDate.toLocaleTimeString(locale, {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })}
+                  </p>
+                </div>
+
+                <div className="h-px bg-white/10"/>
+
+                <div>
+                  <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
+                    Price
+                  </p>
+                  <p className="text-white text-2xl font-extrabold tabular-nums leading-none">
+                    €{price.toFixed(2)}
+                  </p>
+                </div>
+
+                <div className="h-px bg-white/10"/>
+
+                <div>
+                  <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
+                    Spots Left
+                  </p>
+                  <p className={cn(
+                    "text-sm font-semibold",
+                    spotsLeft <= 2 ? "text-amber-300" : "text-white"
+                  )}>
+                    {spotsLeft} {spotsLeft === 1 ? "spot" : "spots"}
+                  </p>
+                </div>
               </div>
-              <Button variant="outline" onClick={handleDirectBooking} className="w-full">
-                <IconCalendar className="mr-2 h-4 w-4"/>
-                {t("dialog.free-card.button")}
-              </Button>
             </div>
 
-            {/* Paid Stripe Option */}
-            <Card
-              className="flex-1 rounded-xl p-5 flex flex-col"
-              disabled
-              disabledTitle={t("dialog.disabled-title")}
-              disabledText={t("dialog.disabled-text")}
-            >
-              <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/60 rounded-lg flex items-center justify-center mb-3">
-                <IconCreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400"/>
+            {/* Right panel */}
+            <div className="flex-1 flex flex-col min-h-0 bg-background dark:bg-sidebar">
+              {/* Header */}
+              <div className="flex items-center justify-between px-5 py-4 border-b border-border/60 shrink-0">
+                <div>
+                  <h3 className="font-semibold text-foreground text-sm">{t("dialog.title")}</h3>
+                  <p className="text-xs text-muted-foreground mt-0.5">{t("dialog.subtitle")}</p>
+                </div>
+                <DialogClose className="cursor-pointer p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                  <IconX className="h-4 w-4"/>
+                </DialogClose>
               </div>
-              <h3 className="font-semibold mb-1">{t("dialog.pay-card.title")}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {t("dialog.pay-card.desc")}
-              </p>
-              <div className="space-y-2.5 text-sm text-muted-foreground mb-6 flex-1">
-                <p className="flex items-start gap-2">
-                  <IconWorld className="h-4 w-4 shrink-0 mt-0.5"/>
-                  {t("dialog.pay-card.l1")}
-                </p>
-                <p className="flex items-start gap-2">
-                  <IconCreditCardRefund className="h-4 w-4 shrink-0 mt-0.5"/>
-                  <span>
-                    {t("dialog.pay-card.l2")}{" "}
-                    <span className="text-xs italic opacity-70">
-                      {t("dialog.pay-card.l2-add", {hours: 48})}
-                    </span>
-                  </span>
-                </p>
-                <p className="flex items-start gap-2">
-                  <IconReceiptRefund className="h-4 w-4 shrink-0 mt-0.5"/>
-                  {t("dialog.pay-card.l3")}
-                </p>
-              </div>
-              <Button disabled onClick={handleStripeBooking} className="w-full">
-                <IconCreditCard className="mr-2 h-4 w-4"/>
-                {t("dialog.pay-card.button", {price: price.toFixed(2)})}
-              </Button>
-            </Card>
-          </div>
-        </DialogContent>
-      </Dialog>
 
-      {/* Success Dialog */}
+              {/* Options */}
+              <div className="flex-1 px-5 py-5">
+                <BookingOptions/>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* ── Booking Drawer (mobile) ── */}
+      {isMobile && (
+        <Drawer open={showBookingDialog} onOpenChange={setShowBookingDialog}>
+          <DrawerContent>
+            <DrawerTitle className="sr-only">{t("dialog.title")}</DrawerTitle>
+            <DrawerDescription className="sr-only">{t("dialog.subtitle")}</DrawerDescription>
+
+            {/* Gradient header */}
+            <div
+              className="px-5 py-4 flex items-center justify-between shrink-0"
+              style={{background: "linear-gradient(135deg, #2563eb 0%, #7c3aed 100%)"}}
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-white/60 text-[10px] font-semibold uppercase tracking-widest">
+                  {t("dialog.title")}
+                </p>
+                <p className="text-white font-bold text-base leading-snug truncate">
+                  {event.theme}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0 ml-3">
+                <span className="text-[11px] font-mono font-bold bg-white/15 text-white px-2 py-1 rounded-lg">
+                  €{price.toFixed(2)}
+                </span>
+                <DrawerClose className="cursor-pointer p-1.5 rounded-lg bg-white/15 text-white hover:bg-white/25 transition-colors">
+                  <IconX className="h-4 w-4"/>
+                </DrawerClose>
+              </div>
+            </div>
+
+            {/* Options */}
+            <div className="px-4 py-5">
+              <BookingOptions/>
+            </div>
+
+            {/* Subtitle */}
+            <div className="px-4 pb-8 text-center">
+              <p className="text-xs text-muted-foreground">{t("dialog.subtitle")}</p>
+            </div>
+          </DrawerContent>
+        </Drawer>
+      )}
+
+      {/* ── Success Dialog ── */}
       {showSuccessDialog && bookedEvent && (
         <SuccessDialog
           type="direct"

@@ -72,7 +72,7 @@ export const EventSheet = (props: EventSheetProps) => {
     date.toLocaleTimeString(locale, {
       hour: "numeric",
       minute: "2-digit",
-      hour12: locale === "en",
+      hour12: false,
     });
 
   const formatDate = (date: Date) =>
