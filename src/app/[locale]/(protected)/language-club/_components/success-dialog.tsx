@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React from "react";
 import {
@@ -9,10 +8,12 @@ import {
 } from "@/components/ui/dialog";
 import BookingSuccess from "./booking-success";
 import {useTranslations} from "next-intl";
+import {localeType} from "@/i18n/routing";
+import {LangEvent} from "@/types/interfaces";
 
 interface SuccessDialogProps {
-  event: any;
-  locale: string;
+  event: LangEvent;
+  locale: localeType;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   type?: "stripe" | "direct";
