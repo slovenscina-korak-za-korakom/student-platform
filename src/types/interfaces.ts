@@ -49,6 +49,22 @@ export interface TimeblockData {
   studentId: string;
 }
 
+export interface LangEvent {
+  date: Date
+  duration: number
+  id: number
+  tutor: string
+  theme: string
+  description: string
+  level: string
+  location: string
+  peopleBooked: number
+  maxBooked: number
+  price: string
+  stripeProductId: string
+  stripePriceId: string
+}
+
 export interface LangClubEvent {
   id: number;
   description: string;

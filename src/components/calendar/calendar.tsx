@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { useSearchParams, usePathname } from "next/navigation";
 import FullCalendar from "@fullcalendar/react";
-import { DayCellContentArg, EventContentArg, MoreLinkContentArg, CalendarApi } from "@fullcalendar/core";
+import { EventContentArg, CalendarApi } from "@fullcalendar/core";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import listPlugin from "@fullcalendar/list";
@@ -714,41 +714,9 @@ export default function Calendar({
           selectable={false}
           selectMirror={false}
           dayMaxEvents={currentView === "dayGridMonth" ? false : 1}
-          moreLinkClick="none"
-          moreLinkContent={(arg: MoreLinkContentArg) => {
-            // Use the num property which contains the count of hidden events
-            const hiddenCount = arg.num || 0;
-
-            if (hiddenCount > 0) {
-              return `+${hiddenCount} more`;
-            }
-
-            return "";
-          }}
           weekNumbers={false}
           weekends={showWeekends}
           firstDay={1} // Monday
-          dayCellContent={(dayInfo: DayCellContentArg) => {
-            const date = new Date(dayInfo.date);
-            const dayNumber = date.getDate();
-
-            // Check if this is the first day of the month
-            if (dayNumber === 1) {
-              const monthName = date.toLocaleDateString("en-US", {
-                month: "long",
-              });
-              return (
-                <div>
-                  <p className="inline-flex items-center gap-2">
-                    <span>{monthName}</span>
-                    <span>{dayNumber}</span>
-                  </p>
-                </div>
-              );
-            }
-
-            return dayNumber;
-          }}
           eventContent={(eventInfo: EventContentArg) => {
             const status = eventInfo.event.extendedProps?.status;
             const sessionType = eventInfo.event.extendedProps?.sessionType;

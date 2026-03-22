@@ -1,77 +1,55 @@
 "use client";
-import React, { useState } from "react";
+import React, {useState} from "react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
 import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-import {
+  IconCalendar,
+  IconCancel,
+  IconClock,
+  IconCoinEuro,
+  IconCreditCard,
+  IconCreditCardRefund,
   IconLanguage,
+  IconLoader2,
   IconMapPin,
+  IconReceiptRefund,
+  IconRosetteDiscountCheck,
   IconStopwatch,
   IconUsers,
-  IconCreditCard,
-  IconLoader2,
-  IconCalendar,
-  IconRosetteDiscountCheck,
-  IconCoinEuro,
-  IconCancel,
-  IconReceiptRefund,
-  IconCreditCardRefund,
   IconWorld,
 } from "@tabler/icons-react";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { toZonedTime } from "date-fns-tz";
-import { useTranslations } from "next-intl";
-import {
-  createCheckoutSession,
-  bookEventDirect,
-} from "@/actions/stripe-actions";
+import {Tooltip, TooltipContent, TooltipTrigger,} from "@/components/ui/tooltip";
+import {useTranslations} from "next-intl";
+import {bookEventDirect, createCheckoutSession,} from "@/actions/stripe-actions";
 import SuccessDialog from "./success-dialog";
-import { toast } from "sonner";
+import {toast} from "sonner";
+import {Card} from "@/components/ui/card";
+import {localeType} from "@/i18n/routing";
+import {LangEvent} from "@/types/interfaces";
 
-const LangCard = ({ locale, event }) => {
+const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccessDialog, setShowSuccessDialog] = useState(false);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [bookedEvent, setBookedEvent] = useState(null);
   const t = useTranslations("dashboard.events");
+  const spotsLeft = event.maxBooked - event.peopleBooked
+  const price = parseFloat(event.price.toString())
+
+  const eventDate = new Date(event.date);
+  const isFull = spotsLeft <= 0;
 
   const handleStripeBooking = async () => {
     setIsLoading(true);
     setShowBookingDialog(false);
     try {
       const result = await createCheckoutSession(event.id.toString(), locale);
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
-      // Redirect to Stripe checkout
+      if (result.error) throw new Error(result.error)
       window.location.href = result.url;
     } catch (error) {
-      console.error("Booking error:", error);
-      toast.error(
-        "Booking error: " + error.message || "Failed to book appointment"
-      );
+      toast.error("Booking error: " + error.message || "Failed to book appointment");
     } finally {
       setIsLoading(false);
     }
@@ -82,21 +60,13 @@ const LangCard = ({ locale, event }) => {
     setShowBookingDialog(false);
     try {
       const result = await bookEventDirect(event.id.toString());
-
-      if (result.error) {
-        throw new Error(result.error);
-      }
-
+      if (!result.success) throw new Error(result.error)
       // Show success dialog
       setBookedEvent(result.event);
       setShowSuccessDialog(true);
-
       toast.success("Your language club session has been booked.");
     } catch (error) {
-      console.error("Direct booking error:", error);
-      toast.error(
-        "Booking error: " + error.message || "Failed to book appointment"
-      );
+      toast.error("Booking error: " + error.message || "Failed to book appointment");
     } finally {
       setIsLoading(false);
     }
@@ -104,214 +74,215 @@ const LangCard = ({ locale, event }) => {
 
   return (
     <>
-      <Card key={event.id} className="w-full max-w-sm h-fit">
-        <CardHeader>
-          <CardTitle>{event.theme}</CardTitle>
-          <CardDescription>{event.tutor}</CardDescription>
-          <CardAction>
-            <div className="flex flex-col gap-1 items-end">
-              <span>
-                {toZonedTime(event.date, "Europe/Ljubljana").toLocaleDateString(
-                  locale,
-                  {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }
-                )}
-              </span>
-              <span className="text-sm text-muted-foreground">
-                {toZonedTime(event.date, "Europe/Ljubljana").toLocaleTimeString(
-                  locale,
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                )}
-              </span>
+      <div
+        className="rounded-xl border border-border/50 bg-card overflow-hidden transition-colors hover:border-border/80 hover:shadow-sm">
+        {/* Gradient accent bar */}
+        <div className="h-px w-full bg-gradient-to-r from-blue-500 to-violet-500"/>
+
+        <div className="p-4 space-y-3">
+          {/* Header: theme + date/time */}
+          <div className="flex items-start justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="font-semibold text-foreground leading-snug truncate">
+                {event.theme}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-0.5">{event.tutor}</p>
             </div>
-          </CardAction>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <p>{event.description}</p>
-        </CardContent>
-        <CardFooter className="w-full flex flex-col justify-center items-start gap-5">
-          <div className="flex items-center justify-between w-full">
-            <span className="text-[45px] font-medium bg-gradient-to-br bg-clip-text text-transparent from-foreground via-foreground/10 to-foreground">
-              €{event.price.toFixed(2).toString().split(".")[0]}
-              <span className="text-[32px] font-medium">
-                {"." + event.price.toFixed(2).toString().split(".")[1]}
-              </span>
-            </span>
-            <div className="flex flex-col items-center gap-3">
-              <div className="flex flex-row items-center gap-3 w-full">
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge>
-                      <IconLanguage /> {event.level}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {t("tooltip.level", { level: event.level })}
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge
-                      variant="outline"
-                      className={
-                        event.spotsLeft > 2 ? "" : "text-red-500 border-red-300"
-                      }
-                    >
-                      <IconUsers />
-                      {event.spotsLeft > 0 ? event.spotsLeft : "Full"}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {event.spotsLeft > 0
-                      ? t("tooltip.spots.spots-left", {
-                          spots: event.spotsLeft,
-                        })
-                      : t("tooltip.spots.no-spots")}
-                  </TooltipContent>
-                </Tooltip>
-                <Tooltip>
-                  <TooltipTrigger>
-                    <Badge variant="secondary">
-                      <IconStopwatch />
-                      {event.duration}
-                    </Badge>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    {t("tooltip.duration", { duration: event.duration })}
-                  </TooltipContent>
-                </Tooltip>
-              </div>
-              <Badge variant="outline" className="w-full">
-                <IconMapPin /> {event.location}
-              </Badge>
+            <div className="text-right shrink-0">
+              <p className="text-sm font-medium text-foreground tabular-nums">
+                {eventDate.toLocaleDateString(locale, {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1 justify-end mt-0.5 tabular-nums">
+                <IconClock className="h-3 w-3"/>
+                {eventDate.toLocaleTimeString(locale, {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: false,
+                })}
+              </p>
             </div>
           </div>
-          <Button
-            className="w-full"
-            onClick={() => setShowBookingDialog(true)}
-            disabled={isLoading}
-          >
-            {isLoading ? (
-              <>
-                <IconLoader2 className="mr-2 h-4 w-4 animate-spin" />
-                {t("processing")}
-              </>
-            ) : (
-              <>
-                <IconCalendar className="mr-2 h-4 w-4" />
-                {t("book-now")}
-              </>
-            )}
-          </Button>
-        </CardFooter>
-      </Card>
+
+          {/* Description */}
+          {event.description && (
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+              {event.description}
+            </p>
+          )}
+
+          {/* Metadata badges */}
+          <div className="flex flex-wrap gap-1.5">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary" className="text-xs font-normal">
+                  <IconLanguage className="h-3 w-3 mr-1"/>
+                  {event.level}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                {t("tooltip.level", {level: event.level})}
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="outline"
+                  className={`text-xs font-normal ${
+                    isFull
+                      ? "text-red-500 border-red-200 dark:border-red-900"
+                      : spotsLeft <= 2
+                        ? "text-amber-600 border-amber-200 dark:border-amber-900"
+                        : ""
+                  }`}
+                >
+                  <IconUsers className="h-3 w-3 mr-1"/>
+                  {isFull ? t("tooltip.spots.no-spots") : spotsLeft}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                {isFull
+                  ? t("tooltip.spots.no-spots")
+                  : t("tooltip.spots.spots-left", {spots: spotsLeft})}
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="outline" className="text-xs font-normal">
+                  <IconStopwatch className="h-3 w-3 mr-1"/>
+                  {event.duration}m
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>
+                {t("tooltip.duration", {duration: event.duration})}
+              </TooltipContent>
+            </Tooltip>
+
+            <Badge variant="outline" className="text-xs font-normal">
+              <IconMapPin className="h-3 w-3 mr-1"/>
+              {event.location}
+            </Badge>
+          </div>
+
+          {/* Price + CTA */}
+          <div className="flex items-center justify-between gap-3 pt-1">
+            <div className="leading-none">
+              <span className="text-2xl font-bold text-foreground tabular-nums">
+                €{price.toFixed(2).split(".")[0]}
+              </span>
+              <span className="text-base font-medium text-foreground/70 tabular-nums">
+                .{price.toFixed(2).split(".")[1]}
+              </span>
+            </div>
+            <Button
+              size="sm"
+              className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white border-0 shadow-none"
+              onClick={() => setShowBookingDialog(true)}
+              disabled={isLoading || isFull}
+            >
+              {isLoading ? (
+                <>
+                  <IconLoader2 className="mr-1.5 h-3.5 w-3.5 animate-spin"/>
+                  {t("processing")}
+                </>
+              ) : (
+                <>
+                  <IconCalendar className="mr-1.5 h-3.5 w-3.5"/>
+                  {t("book-now")}
+                </>
+              )}
+            </Button>
+          </div>
+        </div>
+      </div>
 
       {/* Booking Options Dialog */}
       <Dialog open={showBookingDialog} onOpenChange={setShowBookingDialog}>
-        <DialogContent className="sm:max-w-4xl w-full bg-white dark:bg-background rounded-2xl flex flex-col items-center justify-center">
+        <DialogContent className="sm:max-w-3xl w-full rounded-2xl">
           <DialogHeader>
-            <DialogTitle className="text-center">
-              {t("dialog.title")}
-            </DialogTitle>
+            <DialogTitle className="text-center">{t("dialog.title")}</DialogTitle>
             <DialogDescription className="text-center">
               {t("dialog.subtitle")}
             </DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 flex flex-col md:flex-row gap-4 justify-center items-center md:items-stretch w-full">
-            {/* Free Direct Booking Option */}
-            <Card className="border rounded-lg p-4 space-y-3 flex-1/2 h-full w-full flex flex-col items-center justify-center">
-              <CardHeader className="w-full flex flex-col items-center justify-center text-center">
-                <div className="w-10 h-10 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-2">
-                  <IconRosetteDiscountCheck className="w-5 h-5 text-green-600 dark:text-green-400" />
-                </div>
-                <CardTitle>{t("dialog.free-card.title")}</CardTitle>
-                <CardDescription>
-                  {t("dialog.free-card.desc")}
-                  {/* <span className="block text-xs text-muted-foreground mt-1">
-                    No online payment required. Payment is collected at the
-                    event.
-                  </span> */}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="w-full">
-                <div className="space-y-2 text-sm">
-                  <p className="inline-flex items-center gap-2">
-                    <IconRosetteDiscountCheck className="h-4 w-4" />
-                    {t("dialog.free-card.l1")}
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <IconCoinEuro className="h-4 w-4" />
-                    {t("dialog.free-card.l2")}
-                    <span className="text-xs text-muted-foreground italic">
-                     {t("dialog.free-card.l2-add")}
+
+          <div className="flex flex-col md:flex-row gap-3 mt-2">
+            {/* Free / Reserve Option */}
+            <div className="flex-1 rounded-xl border border-border/60 p-5 flex flex-col">
+              <div
+                className="w-9 h-9 bg-green-50 dark:bg-green-950/60 rounded-lg flex items-center justify-center mb-3">
+                <IconRosetteDiscountCheck className="w-5 h-5 text-green-600 dark:text-green-400"/>
+              </div>
+              <h3 className="font-semibold mb-1">{t("dialog.free-card.title")}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t("dialog.free-card.desc")}
+              </p>
+              <div className="space-y-2.5 text-sm text-muted-foreground mb-6 flex-1">
+                <p className="flex items-start gap-2">
+                  <IconRosetteDiscountCheck className="h-4 w-4 shrink-0 mt-0.5"/>
+                  {t("dialog.free-card.l1")}
+                </p>
+                <p className="flex items-start gap-2">
+                  <IconCoinEuro className="h-4 w-4 shrink-0 mt-0.5"/>
+                  <span>
+                    {t("dialog.free-card.l2")}{" "}
+                    <span className="text-xs italic opacity-70">
+                      {t("dialog.free-card.l2-add")}
                     </span>
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <IconCancel className="h-4 w-4" />
-                    {t("dialog.free-card.l3")}
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter className="w-full">
-                <Button
-                  variant="outline"
-                  onClick={handleDirectBooking}
-                  className="w-full"
-                >
-                  <IconCalendar className="mr-2 h-4 w-4" />
-                  {t("dialog.free-card.button")}
-                </Button>
-              </CardFooter>
-            </Card>
+                  </span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <IconCancel className="h-4 w-4 shrink-0 mt-0.5"/>
+                  {t("dialog.free-card.l3")}
+                </p>
+              </div>
+              <Button variant="outline" onClick={handleDirectBooking} className="w-full">
+                <IconCalendar className="mr-2 h-4 w-4"/>
+                {t("dialog.free-card.button")}
+              </Button>
+            </div>
+
             {/* Paid Stripe Option */}
             <Card
-              className="border rounded-lg p-4 space-y-3 flex-1/2 h-full w-full flex flex-col items-center justify-center relative"
+              className="flex-1 rounded-xl p-5 flex flex-col"
               disabled
               disabledTitle={t("dialog.disabled-title")}
               disabledText={t("dialog.disabled-text")}
             >
-              <CardHeader className="w-full flex flex-col items-center justify-center text-center">
-                <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center mb-2">
-                  <IconCreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-                </div>
-                <CardTitle>{t("dialog.pay-card.title")}</CardTitle>
-                <CardDescription>{t("dialog.pay-card.desc")}</CardDescription>
-              </CardHeader>
-              <CardContent className="w-full">
-                <div className="space-y-2 text-sm">
-                  <p className="inline-flex items-center gap-2">
-                    <IconWorld className="h-4 w-4" />
-                    {t("dialog.pay-card.l1")}
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <IconCreditCardRefund className="h-4 w-4" />
-                    {t("dialog.pay-card.l2")}
-                    <span className="text-xs text-muted-foreground italic">
+              <div className="w-9 h-9 bg-blue-50 dark:bg-blue-950/60 rounded-lg flex items-center justify-center mb-3">
+                <IconCreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400"/>
+              </div>
+              <h3 className="font-semibold mb-1">{t("dialog.pay-card.title")}</h3>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t("dialog.pay-card.desc")}
+              </p>
+              <div className="space-y-2.5 text-sm text-muted-foreground mb-6 flex-1">
+                <p className="flex items-start gap-2">
+                  <IconWorld className="h-4 w-4 shrink-0 mt-0.5"/>
+                  {t("dialog.pay-card.l1")}
+                </p>
+                <p className="flex items-start gap-2">
+                  <IconCreditCardRefund className="h-4 w-4 shrink-0 mt-0.5"/>
+                  <span>
+                    {t("dialog.pay-card.l2")}{" "}
+                    <span className="text-xs italic opacity-70">
                       {t("dialog.pay-card.l2-add", {hours: 48})}
                     </span>
-                  </p>
-                  <p className="inline-flex items-center gap-2">
-                    <IconReceiptRefund className="h-4 w-4" />
-                    {t("dialog.pay-card.l3")}
-                  </p>
-                </div>
-              </CardContent>
-              <CardFooter className="w-full">
-                <Button
-                  onClick={handleStripeBooking}
-                  className="w-full"
-                  disabled
-                >
-                  <IconCreditCard className="mr-2 h-4 w-4" />
-                  {t("dialog.pay-card.button", {price: event.price.toFixed(2)})}
-                </Button>
-              </CardFooter>
+                  </span>
+                </p>
+                <p className="flex items-start gap-2">
+                  <IconReceiptRefund className="h-4 w-4 shrink-0 mt-0.5"/>
+                  {t("dialog.pay-card.l3")}
+                </p>
+              </div>
+              <Button disabled onClick={handleStripeBooking} className="w-full">
+                <IconCreditCard className="mr-2 h-4 w-4"/>
+                {t("dialog.pay-card.button", {price: price.toFixed(2)})}
+              </Button>
             </Card>
           </div>
         </DialogContent>

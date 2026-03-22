@@ -71,6 +71,7 @@ const EmailCard = () => {
                         year: "numeric",
                         month: "long",
                         day: "numeric",
+                        hour12: false
                       })}
                     )}
                   </span>

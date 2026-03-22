@@ -1,23 +1,20 @@
 "use client";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import LangCalendar from "./lang-calendar";
 import LangCard from "./lang-card";
 import SuccessDialog from "./success-dialog";
-import { useTranslations } from "next-intl";
-import { IconCalendar, IconCalendarEvent } from "@tabler/icons-react";
+import {useTranslations} from "next-intl";
+import {IconCalendar, IconCalendarEvent} from "@tabler/icons-react";
+import {localeType} from "@/i18n/routing";
+import {LangEvent} from "@/types/interfaces";
 
-const LangComponents = ({ events, calendarEvents, locale, bookedEvent }) => {
+const LangComponents = ({events, locale, bookedEvent}: {events: LangEvent[], locale: localeType, bookedEvent: LangEvent }) => {
   const [date, setDate] = useState<Date | undefined>(new Date());
   const filteredEvents = events.filter((event) => {
     if (!date) return false;
-    // Convert both dates to Europe/Ljubljana timezone for comparison
-    const eventDateInLjubljana = event.date.toLocaleDateString("en-CA", {
-      timeZone: "Europe/Ljubljana",
-    });
-    const selectedDateInLjubljana = date.toLocaleDateString("en-CA", {
-      timeZone: "Europe/Ljubljana",
-    });
-    return eventDateInLjubljana === selectedDateInLjubljana;
+    const eventDateKey = new Date(event.date).toLocaleDateString("en-CA");
+    const selectedDateKey = date.toLocaleDateString("en-CA");
+    return eventDateKey === selectedDateKey;
   });
 
   const [showSuccessDialog, setShowSuccessDialog] = useState(!!bookedEvent);
@@ -26,70 +23,76 @@ const LangComponents = ({ events, calendarEvents, locale, bookedEvent }) => {
   return (
     <div className="flex flex-col h-full w-full">
       {/* Page Header */}
-      <div className="px-6 sm:px-8 lg:px-12 pt-8 sm:pt-10 lg:pt-12 pb-6 sm:pb-8">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-tighter text-foreground mb-2">
-            {t("title")}
-          </h1>
-          <p className="text-sm sm:text-base text-muted-foreground">
-            {t("subtitle")}
-          </p>
+      <div className="px-4 sm:px-6 lg:px-10 pt-6 sm:pt-8 pb-4">
+        <div className="flex items-center gap-3">
+          <div className="w-0.5 h-14 rounded-full bg-gradient-to-b from-blue-500 to-violet-500 shrink-0"/>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-foreground">
+              {t("title")}
+            </h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {t("subtitle")}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-6 sm:px-8 lg:px-12 pb-8 overflow-hidden">
-        <div className="max-w-7xl mx-auto h-full">
-          <div className="flex flex-col lg:flex-row gap-6 lg:gap-8 h-full">
-            {/* Calendar Section */}
-            <div className="flex-1 flex flex-col min-h-0">
-              <div className="bg-background/50 dark:bg-background/30 rounded-2xl border border-border/50 shadow-sm p-6 sm:p-8 lg:p-10 overflow-hidden">
-                <LangCalendar
-                  events={calendarEvents}
-                  locale={locale}
-                  date={date}
-                  setDate={setDate}
-                />
-              </div>
-            </div>
+      <div className="flex-1 px-4 sm:px-6 lg:px-10 pb-6 flex flex-col lg:overflow-hidden">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-6 flex-1 lg:h-full lg:min-h-0">
 
-            {/* Events Section */}
-            <div className="w-full lg:w-96 xl:w-[28rem] flex flex-col min-h-0">
-              <div className="flex flex-col gap-4 overflow-y-auto pr-2 pb-20 lg:pb-0">
-                {filteredEvents.length > 0 ? (
-                  <>
-                    <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <IconCalendarEvent className="h-4 w-4" />
-                      <span>
-                        {t("events-for-date", {
-                          date: (date || new Date()).toLocaleDateString(locale, {
-                            month: "long",
-                            day: "numeric",
-                            year: "numeric",
-                          }),
-                        })}
-                      </span>
-                    </div>
-                    {filteredEvents.map((event) => (
-                      <LangCard event={event} locale={locale} key={event.id} />
-                    ))}
-                  </>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-12 px-6 text-center bg-background/50 dark:bg-background/30 rounded-2xl border border-border/50">
-                    <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
-                      <IconCalendar className="w-8 h-8 text-muted-foreground/60" />
-                    </div>
-                    <h3 className="text-base font-medium text-foreground mb-2">
-                      {t("no-events-scheduled")}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {t("no-events-description")}
-                    </p>
-                  </div>
-                )}
-              </div>
+          {/* Calendar — primary focus, takes most space */}
+          <div className="w-full lg:flex-1 lg:min-h-0">
+            <div className="rounded-2xl border border-border/40 overflow-hidden h-full">
+              <LangCalendar
+                events={events}
+                locale={locale}
+                setDate={setDate}
+              />
             </div>
           </div>
+
+          {/* Events panel — secondary, fixed width on desktop */}
+          <div className="w-full lg:w-md flex flex-col">
+            {/* Date label */}
+            <div className="flex items-center gap-2 mb-2 h-5">
+              {date && (
+                <>
+                  <IconCalendarEvent className="h-3.5 w-3.5 text-muted-foreground/60 shrink-0"/>
+                  <span className="text-xs text-muted-foreground">
+                      {t("events-for-date", {
+                        date: date.toLocaleDateString(locale, {
+                          month: "long",
+                          day: "numeric",
+                          year: "numeric",
+                        }),
+                      })}
+                    </span>
+                </>
+              )}
+            </div>
+
+            {/* Event cards — scrollable on both mobile and desktop */}
+            <div className="flex flex-col gap-3 overflow-y-auto pb-6 lg:pb-0 max-h-[40vh] lg:max-h-none lg:flex-1">
+              {filteredEvents.length > 0 ? (
+                filteredEvents.map((event) => (
+                  <LangCard event={event} locale={locale} key={event.id}/>
+                ))
+              ) : (
+                <div
+                  className="flex flex-col items-center justify-center py-12 px-6 text-center rounded-xl border border-dashed border-border/50">
+                  <IconCalendar className="w-7 h-7 text-muted-foreground/30 mb-3"/>
+                  <p className="text-sm font-medium text-foreground/60 mb-1">
+                    {t("no-events-scheduled")}
+                  </p>
+                  <p className="text-xs text-muted-foreground/60">
+                    {t("no-events-description")}
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
         </div>
       </div>
 
