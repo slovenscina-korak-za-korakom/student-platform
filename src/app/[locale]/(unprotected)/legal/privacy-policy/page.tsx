@@ -6,7 +6,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: "Privacy Policy",
-    description: "Privacy Policy for Slovene Step by Step. Learn how we collect, use, and protect your personal data in compliance with GDPR.",
+    description: "Privacy Policy for Slovenščina Korak za Korkom. Learn how we collect, use, and protect your personal data in compliance with GDPR.",
     alternates: getAlternates("/legal/privacy-policy", locale),
   };
 }
@@ -18,7 +18,7 @@ const PrivacyPolicyPage = () => {
         <h1>PRIVACY POLICY</h1>
         <p>Last Updated: 1st January 2025</p>
         <p>
-          Welcome to Slovene Step by Step! Your privacy is important to us. This
+          Welcome to Slovenščina Korak za Korkom! Your privacy is important to us. This
           Privacy Policy explains how we collect, use, and protect your personal
           data when you use our website and services. It also outlines your
           rights under GDPR and other applicable laws.
@@ -32,7 +32,7 @@ const PrivacyPolicyPage = () => {
       <section>
         <h2>1. INTRODUCTION</h2>
         <p>
-          Slovene Step by Step (“Company,” “we,” “us,” or “our”) provides online
+          Slovenščina Korak za Korkom (“Company,” “we,” “us,” or “our”) provides online
           language learning services. We are committed to protecting your
           personal data and ensuring transparency in how we handle it.
         </p>
@@ -237,7 +237,7 @@ const PrivacyPolicyPage = () => {
         </ul>
         <p>
           To exercise these rights, contact us at{" "}
-          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.></p>">
+          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.></p>">
             support@slovene-step-by-step.com
           </a>
           . We will respond within 7 days.
@@ -333,7 +333,7 @@ const PrivacyPolicyPage = () => {
         </p>
         <p>
           Email:{" "}
-          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.></p>">
+          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.></p>">
             support@slovene-step-by-step.com
           </a>{" "}
           <br /> Website:{" "}

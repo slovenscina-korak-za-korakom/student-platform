@@ -1,4 +1,4 @@
-# Slovene Step by Step
+# Slovenščina Korak za Korkom
 
 A modern, multilingual online language learning platform designed to help users master Slovenian through personalized lessons, interactive features, and community support. Built with Next.js 15, TypeScript, and modern web technologies.
 
@@ -21,7 +21,7 @@ A modern, multilingual online language learning platform designed to help users 
 
 ## 🎯 Overview
 
-Slovene Step by Step is a comprehensive online language learning platform that offers:
+Slovenščina Korak za Korkom is a comprehensive online language learning platform that offers:
 
 - **Personalized Slovenian Lessons**: Tailored to individual goals and learning styles
 - **Multi-language Support**: Available in English, Slovenian, Russian, and Italian

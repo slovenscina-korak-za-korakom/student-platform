@@ -52,7 +52,7 @@ export default function MobileNavigationDialog({
                       className="block w-auto h-6 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-foreground-lighter focus-visible:ring-offset-4 focus-visible:ring-offset-background-alternative focus-visible:rounded-sm"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <span className="sr-only">Slovene Step By Step</span>
+                      <span className="sr-only">Slovenščina Korak za Korkom</span>
                       <IconLogo className="h-7 w-auto" />
                     </Link>
                     <div className="flex flex-row justify-center items-center gap-2">

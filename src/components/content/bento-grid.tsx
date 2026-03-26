@@ -278,7 +278,7 @@ export default function BentoGrid() {
         <div className="hidden">
           <IconLogo className="size-10" />
           <h1 className="uppercase text-center text-[0.590rem] text-sl-accent font-bold">
-            Slovene Step By Step
+            Slovenščina Korak za Korkom
           </h1>
         </div>
 

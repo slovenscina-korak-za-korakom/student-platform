@@ -37,7 +37,7 @@ export default function NavBar({ locale }) {
                 type="button"
                 className="block w-auto h-6 focus-visible:ring-2 focus-visible:outline-none focus-visible:ring-foreground-lighter focus-visible:ring-offset-4 focus-visible:ring-offset-background-alternative focus-visible:rounded-sm"
               >
-                <span className="sr-only">Slovene Step By Step</span>
+                <span className="sr-only">Slovenščina Korak za Korkom</span>
                 <IconLogo className={"size-5 h-7 w-auto"} />
               </Link>
             </div>

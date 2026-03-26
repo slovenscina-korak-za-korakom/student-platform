@@ -6,7 +6,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: "Terms of Service",
-    description: "Terms of Service for Slovene Step by Step. Read our policies governing use of our language learning platform.",
+    description: "Terms of Service for Slovenščina Korak za Korakom. Read our policies governing use of our language learning platform.",
     alternates: getAlternates("/legal/terms-of-service", locale),
   };
 }
@@ -18,7 +18,7 @@ const TermsOfServicePage = () => {
         <h1>TERMS OF SERVICE</h1>
         <p>Last Updated: 1st January 2025</p>
         <p>
-          Welcome to Slovene Step by Step! By accessing or using our services,
+          Welcome to Slovenščina Korak za Korkom! By accessing or using our services,
           you agree to the following Terms of Service (“Terms”). Please read
           them carefully before using our website or enrolling in our language
           learning programs.
@@ -28,7 +28,7 @@ const TermsOfServicePage = () => {
       <section>
         <h2>1. INTRODUCTION</h2>
         <p>
-          Slovene Step by Step (“Company,” “we,” “us,” or “our”) provides online
+          Slovenščina Korak za Korkom (“Company,” “we,” “us,” or “our”) provides online
           language learning services, including personalized lessons, materials,
           and tutor-led sessions. These Terms apply to all users, including
           students, tutors, and visitors to our website.
@@ -119,7 +119,7 @@ const TermsOfServicePage = () => {
         <h2>5. INTELLECTUAL PROPERTY</h2>
         <p>
           All course materials, including text, videos, graphics, and lesson
-          content, are the intellectual property of Slovene Step by Step. You
+          content, are the intellectual property of Slovenščina Korak za Korkom. You
           may not copy, modify, or distribute them without our written
           permission.
         </p>
@@ -157,7 +157,7 @@ const TermsOfServicePage = () => {
         </p>
         <p>
           Email:{" "}
-          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.></p>">
+          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.></p>">
             support@slovene-step-by-step.com
           </a>{" "}
           <br />

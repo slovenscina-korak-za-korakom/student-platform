@@ -12,7 +12,7 @@ export const EmailComponent = () => {
       </h2>
       <p className="mt-4 text-lg text-sl-secondary">{t("subtitle")}</p>
       <Button variant="mine" className="mt-8" asChild>
-        <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.>">
+        <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.>">
           {t("button")}
         </a>
       </Button>

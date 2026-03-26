@@ -6,7 +6,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   const { locale } = await params;
   return {
     title: "License Agreement",
-    description: "License Agreement for Slovene Step by Step. Understand your rights and obligations when using our platform and educational content.",
+    description: "License Agreement for Slovenščina Korak za Korakom. Understand your rights and obligations when using our platform and educational content.",
     alternates: getAlternates("/legal/license", locale),
   };
 }
@@ -19,7 +19,7 @@ const LicenseePage = () => {
         <p>Last Updated: 1st January 2025</p>
         <p>
           This License Agreement (“Agreement”) is a legal contract between
-          Slovene Step by Step (“Licensor,” “we,” “us,” or “our”) and you
+          Slovenščina Korak za Korkom (“Licensor,” “we,” “us,” or “our”) and you
           (“Licensee,” “you,” or “your”). It governs your access to and use of
           our website, software, educational content, and services
           (collectively, the “Licensed Materials”).
@@ -233,7 +233,7 @@ const LicenseePage = () => {
         <p>If you have questions about this Agreement, please contact us:</p>
         <p>
           Email:{" "}
-          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.></p>">
+          <a href="mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.></p>">
             support@slovene-step-by-step.com
           </a>{" "}
           <br /> Website:{" "}

@@ -24,7 +24,7 @@ export default function Footer() {
         <div className="flex flex-col lg:flex-row justify-between gap-12">
           <div className="flex flex-col gap-6 max-w-md">
             <div className="size-10">
-              <span className="sr-only">Slovene Step By Step</span>
+              <span className="sr-only">Slovenščina Korak za Korkom</span>
               <IconLogo />
             </div>
             <p className="text-sl-secondary text-lg leading-relaxed">
@@ -33,7 +33,7 @@ export default function Footer() {
             <div className="flex flex-row items-center gap-x-4">
               <SocialLinks
                 href={"https://t.me/slovenscina_korak_za_korakom"}
-                srOnly={"Slovene Step By Step | Telegram"}
+                srOnly={"Slovenščina Korak za Korkom | Telegram"}
               >
                 <svg
                   width={socialLinkSize}
@@ -52,7 +52,7 @@ export default function Footer() {
               </SocialLinks>
               <SocialLinks
                 href={"https://www.instagram.com/slovenscina_korakzakorakom/"}
-                srOnly={"Slovene Step By Step | Instagram"}
+                srOnly={"Slovenščina Korak za Korkom | Instagram"}
               >
                 <svg
                   width={socialLinkSize}
@@ -84,7 +84,7 @@ export default function Footer() {
               </SocialLinks>
               <SocialLinks
                 href={"https://www.tiktok.com/@slovenina.korak.z5"}
-                srOnly={"Slovene Step By Step | Tik Tok"}
+                srOnly={"Slovenščina Korak za Korkom | Tik Tok"}
               >
                 <svg
                   width={socialLinkSize}
@@ -99,7 +99,7 @@ export default function Footer() {
                   />
                 </svg>
               </SocialLinks>
-              {/* <SocialLinks href={"#"} srOnly={"Slovene Step By Step | Facebook"}>
+              {/* <SocialLinks href={"#"} srOnly={"Slovenščina Korak za Korkom | Facebook"}>
                         <svg
                             width={socialLinkSize}
                             height={socialLinkSize}

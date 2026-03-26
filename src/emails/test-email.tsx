@@ -84,7 +84,7 @@ export default function TestEmail() {
           <p style={{ color: "#888", fontSize: "13px", marginTop: "32px" }}>
             Thank you for choosing us!
             <br />
-            The Slovene Step by Step Team
+            The Slovenščina Korak za Korkom Team
           </p>
         </div>
       </div>
