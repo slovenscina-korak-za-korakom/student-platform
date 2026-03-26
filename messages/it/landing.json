@@ -94,45 +94,57 @@
     "plans": {
       "session": "ora",
       "plan1": {
-        "description": "A flexible plan for learning Slovenian in pairs. Enjoy shared motivation and personalized, interactive 60-minute lessons.",
+        "description": "Slovenian language learning in pairs. A joint learning plan with a family member, friend, or a partner selected by us. Personalized pair lessons with a flexible schedule, duration 60 minutes.",
         "features": [
-          "Lessons with a native speaker and a professional tutor",
-          "Practice with a friend or family member",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
-          "Private Telegram group",
-          "Access to recordings of past lectures"
+          "Lezioni con un tutor professionista madrelingua",
+          "Possibilità di studiare con un amico o un familiare",
+          "Orario flessibile",
+          "Durata: 60 minuti",
+          "Libri, quaderni di esercizi e altro materiale didattico",
+          "Metodi di insegnamento personalizzati",
+          "Accesso a materiale didattico per gli esami A1, A2, B1, B2, C1",
+          "Lezione di prova gratuita",
+          "Accesso a materiale scolastico per alunni e studenti",
+          "Gruppo Telegram privato",
+          "Accesso alle registrazioni delle lezioni precedenti",
+          "Lezioni online tramite Microsoft Teams",
+          "Preparazione agli esami di stato"
         ]
       },
       "plan2": {
-        "description": "A flexible plan if you're just starting out in Slovenian. Take advantage of 45-minute interactive sessions and a flexible schedule that works for you.",
+        "description": "Lezioni individuali di lingua slovena. Un piano di apprendimento personalizzato, studiato su misura per i tuoi obiettivi e le tue esigenze. Lezioni individuali con orario flessibile, della durata di 60 minuti.",
         "features": [
-          "45 min individual lessons tailored to your goals",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "Lessons with a native speaker and a professional tutor",
-          "Private tutor",
-          "Access to recordings of past lectures"
+          "Lezioni con un tutor professionista madrelingua",
+          "Lezione di prova gratuita",
+          "Orari flessibili",
+          "Durata 60 minuti",
+          "Libri, quaderni di esercizi e altro materiale didattico",
+          "Metodi di insegnamento personalizzati",
+          "Accesso a materiale didattico per gli esami A1, A2, B1, B2, C1",
+          "Accesso a materiale scolastico per studenti",
+          "Gruppo Telegram privato",
+          "Accesso alle registrazioni delle lezioni precedenti",
+          "Lezioni online tramite Microsoft Teams",
+          "Preparazione per esami di stato, NPZ, esami di maturità",
+          "Preparazione per esami professionali di medicina"
         ]
       },
       "plan3": {
-        "description": "A flexible plan for small groups, ideal for families or friends. Enjoy 60 min lessons with group activities and shared goals.",
+        "description": "Lezioni individuali di lingua slovena. Un piano di apprendimento personalizzato, studiato su misura per i tuoi obiettivi e le tue esigenze. Lezioni individuali con orario flessibile, della durata di 45 minuti.",
         "features": [
-          "Private Telegram group",
-          "Access to school materials for pupils, students and students",
-          "Practice with a friend or family member",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Lessons with a native speaker and a professional tutor",
-          "Access to recordings of past lectures",
-          "Flexible schedule and materials"
+          "Lezioni con un tutor professionista madrelingua",
+          "Lezione di prova gratuita",
+          "Orario flessibile",
+          "Durata 45 minuti",
+          "Libri, quaderni di esercizi e altro materiale didattico",
+          "Metodi di insegnamento personalizzati",
+          "Accesso a materiale didattico per gli esami A1, A2, B1, B2, C1",
+          "Accesso a materiale scolastico per studenti",
+          "Gruppo Telegram privato",
+          "Accesso alle registrazioni delle lezioni precedenti",
+          "Lezioni online tramite Microsoft Teams",
+          "Preparazione per esami di stato, NPZ, esami di maturità",
+          "Preparazione per esami professionali di medicina"
         ]
       }
     },
@@ -200,7 +212,7 @@
       "text1": "In Slovenščina Korak za Korakom, la nostra missione è quella di dare potere a persone con background diversi offrendo esperienze di apprendimento linguistico personalizzate, coinvolgenti ed efficaci. Ci impegniamo a colmare le lacune culturali e a promuovere connessioni aiutando i nostri studenti non solo a imparare una lingua, ma anche a sentirsi a casa nei loro nuovi ambienti. Attraverso una guida esperta, opzioni di apprendimento flessibili e una comunità di supporto, puntiamo a rendere l'apprendimento delle lingue accessibile e piacevole per tutti.",
       "text2": "Immaginiamo un mondo in cui le barriere linguistiche non ostacolano più le opportunità o l'integrazione. Quella che è iniziata come una piattaforma per supportare i migranti di lingua russa che si muovono nella vita in Slovenia è cresciuta fino a diventare un vivace hub per studenti provenienti da diversi background linguistici e culturali.",
       "text3": "Il nostro obiettivo è diventare una piattaforma leader per l'apprendimento delle lingue in Slovenia e oltre, aiutando gli individui a liberare il loro pieno potenziale attraverso la padronanza della lingua. Aspiriamo a costruire una comunità globale di studenti, uniti dalla loro passione per la crescita, la connessione e lo scambio culturale.",
-      "text4": "Grazie a metodi di insegnamento innovativi, insegnanti dedicati e un impegno verso l'eccellenza, Slovene Step by Step continua ad aprire la strada agli studenti di lingue in tutto il mondo."
+      "text4": "Grazie a metodi di insegnamento innovativi, insegnanti dedicati e un impegno verso l'eccellenza, Slovenščina Korak za Korkom continua ad aprire la strada agli studenti di lingue in tutto il mondo."
     },
     "team": {
       "title": "Le persone dietro il programma",
@@ -214,7 +226,7 @@
     "contact": {
       "title": "Fai il primo passo verso i tuoi obiettivi",
       "subtitle": "Unisciti alla nostra comunità",
-      "text1": "Pronti a iniziare un percorso di apprendimento linguistico su misura per voi? Che stiate cercando di migliorare le vostre competenze, di entrare in contatto con una nuova cultura o di acquisire sicurezza nelle vostre interazioni quotidiane, Slovene Step by Step è qui per guidarvi.",
+      "text1": "Pronti a iniziare un percorso di apprendimento linguistico su misura per voi? Che stiate cercando di migliorare le vostre competenze, di entrare in contatto con una nuova cultura o di acquisire sicurezza nelle vostre interazioni quotidiane, Slovenščina Korak za Korkom è qui per guidarvi.",
       "text2": "Iscriviti oggi stesso a una lezione di prova gratuita e scopri in prima persona quanto personalizzato, coinvolgente ed efficace può essere il nostro programma. Unisciti alla nostra crescente comunità di studenti di lingue e connettiti con tutor esperti che hanno la passione di aiutarti a raggiungere il successo."
     }
   },

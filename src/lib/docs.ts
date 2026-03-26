@@ -154,7 +154,7 @@ export const footerLinks = {
     {name: "about", href: "/about-us"},
     {
       name: "contact",
-      href: "mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.>",
+      href: "mailto:sebastjan.bas@gmail.com?cc=almn140803@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.>",
     },
     {name: "faq", href: "/pricing#FAQ"},
   ],
@@ -175,17 +175,7 @@ export const offers = [
       junior: "€11.00"
     },
     description: "plan1-desc",
-    features: [
-      "plan1-feature1",
-      "plan1-feature2",
-      "plan1-feature3",
-      "plan1-feature4",
-      "plan1-feature5",
-      "plan1-feature6",
-      "plan1-feature7",
-      "plan1-feature8",
-      "plan1-feature9",
-    ],
+    features: 13,
     featured: false,
   },
   {
@@ -197,17 +187,7 @@ export const offers = [
       junior: "€20.00"
     },
     description: "plan2-desc",
-    features: [
-      "plan2-feature1",
-      "plan2-feature2",
-      "plan2-feature3",
-      "plan2-feature4",
-      "plan2-feature5",
-      "plan2-feature6",
-      "plan2-feature7",
-      "plan2-feature8",
-      "plan2-feature9",
-    ],
+    features: 13,
     featured: true,
   },
   {
@@ -219,17 +199,7 @@ export const offers = [
       junior: "€15.00"
     },
     description: "plan3-desc",
-    features: [
-      "plan3-feature1",
-      "plan3-feature2",
-      "plan3-feature3",
-      "plan3-feature4",
-      "plan3-feature5",
-      "plan3-feature6",
-      "plan3-feature7",
-      "plan3-feature8",
-      "plan3-feature9",
-    ],
+    features: 13,
     featured: false,
   },
 ];
@@ -276,7 +246,7 @@ export const SidebarNavigationData = {
     },
     {
       title: "get-help",
-      url: "mailto:almn140803@gmail.com?cc=sebastjan.bas@gmail.com&subject=[Slovene Step By Step] - Support&body=<Enter your message here.>",
+      url: "mailto:almn140803@gmail.com?cc=sebastjan.bas@gmail.com&subject=[Slovenščina Korak za Korkom] - Support&body=<Enter your message here.>",
       icon: IconHelp,
       disabled: false,
     },

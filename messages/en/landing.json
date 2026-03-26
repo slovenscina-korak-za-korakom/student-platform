@@ -89,50 +89,62 @@
     "hero": {
       "title": "Choose the right plan for you",
       "subtitle": "Pricing",
-      "description": "Find the perfect plan to master Slovene step by step. Tailored lessons, flexible options, and expert guidance to help you achieve your language goals with ease."
+      "description": "Find the perfect plan to master Slovenščina Korak za Korkom. Tailored lessons, flexible options, and expert guidance to help you achieve your language goals with ease."
     },
     "plans": {
       "session": "session",
       "plan1": {
-        "description": "A flexible plan for learning Slovenian in pairs. Enjoy shared motivation and personalized, interactive 60-minute lessons.",
+        "description": "Slovenian language learning in pairs. A joint learning plan with a family member, friend, or a partner selected by us. Personalized pair lessons with a flexible schedule, duration 60 minutes.",
         "features": [
-          "Lessons with a native speaker and a professional tutor",
-          "Practice with a friend or family member",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
+          "Lessons with a professional tutor, a native speaker",
+          "Option to study with a friend or family member",
+          "Flexible schedule",
+          "Duration 60 minutes",
+          "Books, workbooks, and other learning materials",
+          "Personalized teaching methods",
+          "Access to learning materials for exams A1, A2, B1, B2, C1",
+          "Free trial lesson",
+          "Access to school materials for pupils and students",
           "Private Telegram group",
-          "Access to recordings of past lectures"
+          "Access to recordings of previous lessons",
+          "Online lessons via Microsoft Teams",
+          "Preparation for state exams"
         ]
       },
       "plan2": {
-        "description": "A flexible plan if you're just starting out in Slovenian. Take advantage of 60-minute interactive sessions and a flexible schedule that works for you.",
+        "description": "Individual Slovenian language lessons. A personalized learning plan tailored to your goals and needs. Individual lessons with a flexible schedule, duration 60 minutes.",
         "features": [
-          "60 min individual lessons tailored to your goals",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "Lessons with a native speaker and a professional tutor",
-          "Private tutor",
-          "Access to recordings of past lectures"
+          "Lessons with a professional tutor, a native speaker",
+          "Free trial lesson",
+          "Flexible schedule",
+          "Duration 60 minutes",
+          "Books, workbooks, and other learning materials",
+          "Personalized teaching methods",
+          "Access to learning materials for exams A1, A2, B1, B2, C1",
+          "Access to school materials for pupils and students",
+          "Private Telegram group",
+          "Access to recordings of previous lessons",
+          "Online lessons via Microsoft Teams",
+          "Preparation for state exams, NPZ, Matura exams",
+          "Preparation for professional exams for doctors"
         ]
       },
       "plan3": {
-        "description": "A flexible plan if you're just starting out in Slovenian. Take advantage of 45-minute interactive sessions and a flexible schedule that works for you.",
+        "description": "Individual Slovenian language lessons. A personalized learning plan tailored to your goals and needs. Individual lessons with a flexible schedule, duration 45 minutes.",
         "features": [
+          "Lessons with a professional tutor, a native speaker",
+          "Free trial lesson",
+          "Flexible schedule",
+          "Duration 45 minutes",
+          "Books, workbooks, and other learning materials",
+          "Personalized teaching methods",
+          "Access to learning materials for exams A1, A2, B1, B2, C1",
+          "Access to school materials for pupils and students",
           "Private Telegram group",
-          "Access to school materials for pupils, students and students",
-          "Practice with a friend or family member",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Lessons with a native speaker and a professional tutor",
-          "Access to recordings of past lectures",
-          "Flexible schedule and materials"
+          "Access to recordings of previous lessons",
+          "Online lessons via Microsoft Teams",
+          "Preparation for state exams, NPZ, Matura exams",
+          "Preparation for professional exams for doctors"
         ]
       }
     },
@@ -169,13 +181,13 @@
       "title": "Frequently asked questions",
       "subtitle": "Find answers to common questions about our plans and services. If you can’t find what you’re looking for, feel free to contact",
       "questions": {
-        "q1": "What makes Slovene Step by Step different from other language learning programs?",
+        "q1": "What makes Slovenščina Korak za Korkom different from other language learning programs?",
         "q2": " Do I need any prior knowledge of Slovene (or other languages) to start?",
         "q3": "How do online lessons work?",
         "q4": "Can I try a lesson before committing to a full course?"
       },
       "answers": {
-        "a1": "Slovene Step by Step offers a personalized learning experience tailored to your needs. We focus on practical communication skills rather than just memorizing vocabulary. Our lessons are interactive and flexible, with experienced tutors who guide you step by step. Whether you’re a beginner or improving your fluency, we ensure a structured and engaging learning journey.",
+        "a1": "Slovenščina Korak za Korkom offers a personalized learning experience tailored to your needs. We focus on practical communication skills rather than just memorizing vocabulary. Our lessons are interactive and flexible, with experienced tutors who guide you step by step. Whether you’re a beginner or improving your fluency, we ensure a structured and engaging learning journey.",
         "a2": "Not at all! Our program is designed for all levels, from complete beginners to advanced learners. If you already have some knowledge, we will assess your level and customize the lessons to help you progress efficiently.",
         "a3": "Our lessons are conducted via live video sessions with experienced tutors. You’ll have interactive exercises, real-time feedback, and customized materials. You can choose your schedule and learn at your own pace, making it easy to fit language learning into your daily routine.",
         "a4": "Yes! We offer a trial lesson so you can experience our teaching approach firsthand. This helps you understand how our program works and allows us to assess your level and learning goals. Sign up today and start your language journey with confidence!"
@@ -191,16 +203,16 @@
     "hero": {
       "title": "Discover Our Story",
       "subtitle": "Building Connections Through Language",
-      "text1": "At Slovene Step by Step, we help individuals from all backgrounds master new languages and confidently embrace new cultures. Our personalized approach, expert instructors, and supportive community create an engaging learning experience that empowers students to achieve their goals.",
+      "text1": "At Slovenščina Korak za Korkom, we help individuals from all backgrounds master new languages and confidently embrace new cultures. Our personalized approach, expert instructors, and supportive community create an engaging learning experience that empowers students to achieve their goals.",
       "text2": "Join our community, sign up for a free trial lesson, and take the first step toward achieving your language goals today!"
     },
     "mission": {
       "title": "Bridging Cultures, Empowering People",
       "subtitle": "Why We Do What We Do",
-      "text1": "At Slovene Step by Step, our mission is to empower individuals from diverse backgrounds by providing personalized, engaging, and effective language learning experiences. We strive to bridge cultural gaps and foster connections by helping our students not only learn a language but also feel at home in their new environments. Through expert guidance, flexible learning options, and a supportive community, we aim to make language learning accessible and enjoyable for everyone.",
+      "text1": "At Slovenščina Korak za Korkom, our mission is to empower individuals from diverse backgrounds by providing personalized, engaging, and effective language learning experiences. We strive to bridge cultural gaps and foster connections by helping our students not only learn a language but also feel at home in their new environments. Through expert guidance, flexible learning options, and a supportive community, we aim to make language learning accessible and enjoyable for everyone.",
       "text2": "We envision a world where language barriers no longer hinder opportunities or integration. What began as a platform to support Russian-speaking migrants navigating life in Slovenia has grown into a vibrant hub for learners from various linguistic and cultural backgrounds.",
       "text3": "Our goal is to become a leading language learning platform in Slovenia and beyond, helping individuals unlock their full potential through language mastery. We aspire to build a global community of learners, united by their passion for growth, connection, and cultural exchange.",
-      "text4": "Through innovative teaching methods, dedicated instructors, and a commitment to excellence, Slovene Step by Step continues to pave the way for language learners worldwide."
+      "text4": "Through innovative teaching methods, dedicated instructors, and a commitment to excellence, Slovenščina Korak za Korkom continues to pave the way for language learners worldwide."
     },
     "team": {
       "title": "The People Behind the Program",
@@ -214,7 +226,7 @@
     "contact": {
       "title": "Take the First Step Towards Your Goals",
       "subtitle": "Join Our Community",
-      "text1": "Ready to start a language-learning journey tailored just for you? Whether you’re looking to improve your skills, connect with a new culture, or gain confidence in your everyday interactions, Slovene Step by Step is here to guide you.",
+      "text1": "Ready to start a language-learning journey tailored just for you? Whether you’re looking to improve your skills, connect with a new culture, or gain confidence in your everyday interactions, Slovenščina Korak za Korkom is here to guide you.",
       "text2": "Sign up for a free trial lesson today and experience firsthand how personalized, engaging, and effective our program can be. Join our growing community of language learners and connect with expert tutors who are passionate about helping you succeed."
     }
   },
@@ -249,6 +261,6 @@
       "terms-of-service": "Terms of Service",
       "license": "License"
     },
-    "copyright": "{year} Slovene Step by Step. All rights reserved."
+    "copyright": "{year} Slovenščina Korak za Korkom. All rights reserved."
   }
 }

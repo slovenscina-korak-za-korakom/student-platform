@@ -90,7 +90,7 @@ export default function PricingContent() {
               role="list"
               className={classNames("mt-8 space-y-4 text-sm/6 sm:mt-10")}
             >
-              {tier.features.map((feature, i) => (
+              {[...Array(tier.features)].map((_, i) => (
                 <li key={i} className="flex items-start gap-x-3">
                   <div
                     className={classNames(

@@ -94,45 +94,57 @@
     "plans": {
       "session": "uro",
       "plan1": {
-        "description": "Prilagodljiv načrt za učenje slovenščine v paru. Uživajte v skupni motivaciji in prilagojenih, interaktivnih lekcijah, ki trajajo 60 min.",
+        "description": "Načrt za učenje slovenščine v paru. Skupinski plan učenja slovenščine z družinskim članom, prijateljem ali izbranim učnim partnerjem. Osebno prilagojene skupinske ure v paru s prilagodljivim urnikom, ure trajajo 60 minut.",
         "features": [
-          "Poučne ure z naravnim govorcem in profesionalnim tutorjem",
-          "Vadite s prijateljem ali družinskim članom",
-          "Prilagodljiv urnik in materijali",
-          "Sodobne metode poučevanja.",
-          "Dostop do učnih materialov za izpit A1, A2, B1, B2, C1",
-          "+ 1 dodatna brezplačna ura",
-          "Dostop do šolskih materialov za učence, dijake in študente",
-          "Zasebna telegram skupina",
-          "Dostop do posnetkov preteklih predavanj"
+          "Ure s strokovnim tutorjem, naravnim govorcem",
+          "Ure s prijateljem ali družinskim članom",
+          "Prilagodljiv urnik",
+          "Trajanje 60 min",
+          "Knjige delovni zvezki in druga učna gradiva",
+          "Osebno prilagojene metode poučevanja",
+          "Dostop do učnih gradiv za izpit A1, A2, B1, B2, C1",
+          "Brezplačna testna ura",
+          "Dostop do šolskih vsebin za učence, dijake in študente",
+          "Zasebna Telegram skupina",
+          "Dostop do posnetkov preteklih predavanj",
+          "Ure preko speta na aplikaciji Microsoft Teams",
+          "Priprave na državni izpit"
         ]
       },
       "plan2": {
-        "description": "Prilagodljiv načrt, če šele začenjate s slovenščino. Izkoristite 60 min interaktivne seje in prilagodljiv urnik, ki vam bo ustrezal.",
+        "description": "Individualne ure učenja slovenščine. Osebni plan učenja slovenščine je prilagojen vašim ciljem in željam. Osebno prilagojene individualne ure s prilagodljivim urnikom, ure trajajo 60 minut.",
         "features": [
-          "60 min individualne ure, prilagojene vašim ciljem",
-          "+ 1 dodatna brezplačna ura",
-          "Dostop do šolskih materialov za učence, dijake in študente",
-          "Prilagodljiv urnik in materijali",
-          "Sodobne metode poučevanja.",
-          "Dostop do učnih materialov za izpit A1, A2, B1, B2, C1",
-          "Poučne ure z naravnim govorcem in profesionalnim tutorjem",
-          "Zaseben tutor",
-          "Dostop do posnetkov preteklih predavanj"
+          "Ure s strokovnim tutorjem, naravnim govorcem",
+          "Brezplačna testna ura",
+          "Prilagodljiv urnik",
+          "Trajanje 60 min",
+          "Knjige delovni zvezki in druga učna gradiva",
+          "Osebno prilagojene metode poučevanja",
+          "Dostop do učnih gradiv za izpit A1, A2, B1, B2, C1",
+          "Dostop do šolskih vsebin za učence, dijake in študente",
+          "Zasebna Telegram skupina",
+          "Dostop do posnetkov preteklih predavanj",
+          "Ure preko speta na aplikaciji Microsoft Teams",
+          "Priprave na državni izpit, NPZ in maturo",
+          "Priprave na strokovne izpite za zdravnike"
         ]
       },
       "plan3": {
-        "description": "Prilagodljiv načrt, če šele začenjate s slovenščino. Izkoristite 45 min interaktivne seje in prilagodljiv urnik, ki vam bo ustrezal.",
+        "description": "Individualne ure učenja slovenščine. Osebni plan učenja slovenščine je prilagojen vašim ciljem in željam. Osebno prilagojene individualne ure s prilagodljivim urnikom, ure trajajo 45 minut",
         "features": [
-          "45 min individualne ure, prilagojene vašim ciljem",
-          "+ 1 dodatna brezplačna ura",
-          "Dostop do šolskih materialov za učence, dijake in študente",
-          "Prilagodljiv urnik in materijali",
-          "Sodobne metode poučevanja.",
-          "Dostop do učnih materialov za izpit A1, A2, B1, B2, C1",
-          "Poučne ure z naravnim govorcem in profesionalnim tutorjem",
-          "Zaseben tutor",
-          "Dostop do posnetkov preteklih predavanj"
+          "Ure s strokovnim tutorjem, naravnim govorcem",
+          "Brezplačna testna ura",
+          "Prilagodljiv urnik",
+          "Trajanje 45 min",
+          "Knjige delovni zvezki in druga učna gradiva",
+          "Osebno prilagojene metode poučevanja",
+          "Dostop do učnih gradiv za izpit A1, A2, B1, B2, C1",
+          "Dostop do šolskih vsebin za učence, dijake in študente",
+          "Zasebna Telegram skupina",
+          "Dostop do posnetkov preteklih predavanj",
+          "Ure preko speta na aplikaciji Microsoft Teams",
+          "Priprave na državni izpit, NPZ in maturo",
+          "Priprave na strokovne izpite za zdravnike"
         ]
       }
     },
@@ -249,6 +261,6 @@
       "terms-of-service": "Pogoji uporabe",
       "license": "Licenca"
     },
-    "copyright": "{year} Slovene Step by Step. Vse pravice pridržane."
+    "copyright": "{year} Slovenščina Korak za Korkom. Vse pravice pridržane."
   }
 }

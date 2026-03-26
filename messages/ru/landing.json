@@ -94,45 +94,57 @@
     "plans": {
       "session": "час",
       "plan1": {
-        "description": "A flexible plan for learning Slovenian in pairs. Enjoy shared motivation and personalized, interactive 60-minute lessons.",
+        "description": "Изучение словенского языка в парах. Совместный план изучения словенского языка с членом семьи, другом или подобранным нами партнёром для обучения. Персонализированные занятия в паре с гибким графиком, длительностью 60 минут.",
         "features": [
-          "Lessons with a native speaker and a professional tutor",
-          "Practice with a friend or family member",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
-          "Private Telegram group",
-          "Access to recordings of past lectures"
+          "Занятия с профессиональным преподавателем — носителем языка",
+          "Возможность занятий с другом или членом семьи",
+          "Бесплатное пробное занятие",
+          "Гибкое расписание",
+          "Длительность 60 минут",
+          "Книги, рабочие тетради и другие материалы",
+          "Персонализированные методы обучения",
+          "Доступ к учебным материалам для экзаменов A1, A2, B1, B2, C1",
+          "Доступ к школьным материалам для школьников и студентов",
+          "Приватная группа в Telegram",
+          "Доступ к записям прошедших занятий",
+          "Занятия онлайн через платформу Microsoft Teams",
+          "Подготовка к государственным экзаменам"
         ]
       },
       "plan2": {
-        "description": "A flexible plan if you're just starting out in Slovenian. Take advantage of 45-minute interactive sessions and a flexible schedule that works for you.",
+        "description": "Индивидуальный план изучения словенского языка. Программа адаптируется под ваши цели и потребности. Индивидуальные персонализированные занятия с гибким графиком, длительностью 60 минут.",
         "features": [
-          "45 min individual lessons tailored to your goals",
-          "+ 1 additional free class",
-          "Access to school materials for pupils, students and students",
-          "Flexible schedule and materials",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "Lessons with a native speaker and a professional tutor",
-          "Private tutor",
-          "Access to recordings of past lectures"
+          "Занятия с профессиональным преподавателем — носителем языка",
+          "Бесплатное пробное занятие",
+          "Гибкое расписание",
+          "Длительность 60 минут",
+          "Книги, рабочие тетради и другие материалы",
+          "Персонализированные методы обучения, Личный преподаватель",
+          "Доступ к учебным материалам для экзаменов A1, A2, B1, B2, C1",
+          "Доступ к школьным материалам для школьников и студентов",
+          "Приватный чат в Telegram",
+          "Доступ к записям прошедших занятий",
+          "Занятия онлайн через платформу Microsoft Teams",
+          "Подготовка к государственным экзаменам, NPZ, матуре",
+          "Подготовка к специальным экзаменам для врачей"
         ]
       },
       "plan3": {
-        "description": "A flexible plan for small groups, ideal for families or friends. Enjoy 60 min lessons with group activities and shared goals.",
+        "description": "Индивидуальный план изучения словенского языка. Программа адаптируется под ваши цели и потребности. Индивидуальные персонализированные занятия с гибким графиком, длительностью 45 минут.",
         "features": [
-          "Private Telegram group",
-          "Access to school materials for pupils, students and students",
-          "Practice with a friend or family member",
-          "Modern teaching methods.",
-          "Access to study materials for the A1, A2, B1, B2, C1 exam",
-          "+ 1 additional free class",
-          "Lessons with a native speaker and a professional tutor",
-          "Access to recordings of past lectures",
-          "Flexible schedule and materials"
+          "Занятия с профессиональным преподавателем — носителем языка",
+          "Длительность 45 минут",
+          "Бесплатное пробное занятие",
+          "Доступ к школьным материалам для школьников и студентов",
+          "Гибкое расписание",
+          "Книги, рабочие тетради и другие материалы",
+          "Персонализированные методы обучения, Личный преподаватель",
+          "Доступ к учебным материалам для экзаменов A1, A2, B1, B2, C1",
+          "Приватный чат в Telegram",
+          "Доступ к записям прошедших занятий",
+          "Занятия онлайн через платформу Microsoft Teams",
+          "Подготовка к государственным экзаменам, NPZ, матуре",
+          "Подготовка к специальным экзаменам для врачей"
         ]
       }
     },
