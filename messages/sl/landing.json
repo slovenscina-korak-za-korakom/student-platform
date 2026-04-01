@@ -92,8 +92,13 @@
       "description": "Izberite paket, ki vam najbolj ustreza. Učite se slovenščino v svojem tempu, s prilagodljivim urnikom in ob času, ki vam ustreza."
     },
     "plans": {
+      "type": {
+        "senior": "Senior",
+        "junior": "Junior"
+      },
       "session": "uro",
       "plan1": {
+        "name": "Duo Plan",
         "description": "Načrt za učenje slovenščine v paru. Skupinski plan učenja slovenščine z družinskim članom, prijateljem ali izbranim učnim partnerjem. Osebno prilagojene skupinske ure v paru s prilagodljivim urnikom, ure trajajo 60 minut.",
         "features": [
           "Ure s strokovnim tutorjem, naravnim govorcem",
@@ -112,6 +117,7 @@
         ]
       },
       "plan2": {
+        "name": "Individual 60",
         "description": "Individualne ure učenja slovenščine. Osebni plan učenja slovenščine je prilagojen vašim ciljem in željam. Osebno prilagojene individualne ure s prilagodljivim urnikom, ure trajajo 60 minut.",
         "features": [
           "Ure s strokovnim tutorjem, naravnim govorcem",
@@ -130,6 +136,7 @@
         ]
       },
       "plan3": {
+        "name": "Individual 45",
         "description": "Individualne ure učenja slovenščine. Osebni plan učenja slovenščine je prilagojen vašim ciljem in željam. Osebno prilagojene individualne ure s prilagodljivim urnikom, ure trajajo 45 minut",
         "features": [
           "Ure s strokovnim tutorjem, naravnim govorcem",

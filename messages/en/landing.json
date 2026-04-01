@@ -92,8 +92,13 @@
       "description": "Find the perfect plan to master Slovenščina Korak za Korkom. Tailored lessons, flexible options, and expert guidance to help you achieve your language goals with ease."
     },
     "plans": {
+      "type": {
+        "senior": "Senior",
+        "junior": "Junior"
+      },
       "session": "session",
       "plan1": {
+        "name": "Duo Plan",
         "description": "Slovenian language learning in pairs. A joint learning plan with a family member, friend, or a partner selected by us. Personalized pair lessons with a flexible schedule, duration 60 minutes.",
         "features": [
           "Lessons with a professional tutor, a native speaker",
@@ -112,6 +117,7 @@
         ]
       },
       "plan2": {
+        "name": "Individual 60",
         "description": "Individual Slovenian language lessons. A personalized learning plan tailored to your goals and needs. Individual lessons with a flexible schedule, duration 60 minutes.",
         "features": [
           "Lessons with a professional tutor, a native speaker",
@@ -130,6 +136,7 @@
         ]
       },
       "plan3": {
+        "name": "Individual 45",
         "description": "Individual Slovenian language lessons. A personalized learning plan tailored to your goals and needs. Individual lessons with a flexible schedule, duration 45 minutes.",
         "features": [
           "Lessons with a professional tutor, a native speaker",

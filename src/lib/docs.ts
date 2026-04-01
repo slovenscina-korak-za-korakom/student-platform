@@ -43,14 +43,14 @@ export const people = [
   {
     id: 3,
     name: ["Sofiya", "Tyutyunnyk"],
-    role: "Teacher/Tutor",
+    role: "Social Media & Teacher/Tutor",
     fluentIn: ["Slovene", "English", "Russian"],
     imageUrl: "/staff-images/foto-sofia.jpg",
   },
   {
     id: 4,
     name: ["Manca", "Levašič"],
-    role: "Social Media Manager",
+    role: "Teacher/Tutor",
     fluentIn: ["Slovene", "English"],
     imageUrl: "/staff-images/foto-manca.png",
   },
@@ -64,7 +64,7 @@ export const people = [
   {
     id: 6,
     name: ["Albina", "Kolesnikova"],
-    role: "Teacher/Tutor",
+    role: "Social Media & Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-albina.jpeg",
   },
@@ -167,7 +167,6 @@ export const footerLinks = {
 
 export const offers = [
   {
-    name: "Duo Plan",
     id: "tier-duo",
     href: "/dashboard",
     priceMonthly: {
@@ -179,7 +178,6 @@ export const offers = [
     featured: false,
   },
   {
-    name: "Individual 60",
     id: "tier-individual",
     href: "dashboard",
     priceMonthly: {
@@ -191,7 +189,6 @@ export const offers = [
     featured: true,
   },
   {
-    name: "Individual 45",
     id: "tier-family",
     href: "/dashboard",
     priceMonthly: {

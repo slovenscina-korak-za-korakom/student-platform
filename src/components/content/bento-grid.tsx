@@ -231,7 +231,7 @@ export default function BentoGrid() {
                 {t("community.title")}
               </h2>
               <p className="mt-2 max-w-lg text-sm/6 text-sl-secondary dark:text-white/90 max-lg:text-center">
-                {t("community.description", {members: 1700})}
+                {t("community.description", {members: 1800})}
               </p>
               <div className="relative min-h-[20rem] w-full grow mt-6 [container-type:inline-size] max-lg:mx-auto max-lg:max-w-sm">
                 <div className="absolute inset-x-1 sm:inset-x-4 md:inset-x-8">

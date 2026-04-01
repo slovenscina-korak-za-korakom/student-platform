@@ -11,7 +11,7 @@ function classNames(...classes: string[]) {
 export default function PricingContent() {
   const t = useTranslations("pricing.plans");
   const t2 = useTranslations("pricing.cta");
-  const [role, setRole] = useState<"senior" | "junior">("junior");
+  const [role, setRole] = useState<"senior" | "junior">("senior");
   return (
     <>
 
@@ -23,11 +23,11 @@ export default function PricingContent() {
         />
         <button onClick={() => setRole("junior")}
                 className={`${role === "junior" ? "text-foreground" : "text-foreground/50"} relative z-10 px-5 py-2 text-base tracking-wide cursor-pointer font-semibold transition-colors duration-300`}>
-          Junior
+          {t("type.junior")}
         </button>
         <button onClick={() => setRole("senior")}
                 className={`${role === "senior" ? "text-foreground" : "text-foreground/50"} relative z-10 px-5 py-2 text-base tracking-wide cursor-pointer font-semibold transition-colors duration-300`}>
-          Senior
+          {t("type.senior")}
         </button>
       </div>
 
@@ -53,7 +53,7 @@ export default function PricingContent() {
                 "text-sm font-bold uppercase tracking-wider mb-2 text-sl-accent",
               )}
             >
-              {tier.name}
+              {t(`plan${tierIdx + 1}.name`)}
             </h3>
             <p className="mt-4 flex items-baseline gap-x-2">
             <span

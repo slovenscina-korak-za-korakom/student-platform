@@ -92,8 +92,13 @@
       "description": "Trova il piano perfetto per padroneggiare lo sloveno passo dopo passo. Lezioni su misura, opzioni flessibili e guida esperta per aiutarti a raggiungere i tuoi obiettivi linguistici con facilità."
     },
     "plans": {
+      "type": {
+        "senior": "Senior",
+        "junior": "Junior"
+      },
       "session": "ora",
       "plan1": {
+        "name": "Duo Plan",
         "description": "Slovenian language learning in pairs. A joint learning plan with a family member, friend, or a partner selected by us. Personalized pair lessons with a flexible schedule, duration 60 minutes.",
         "features": [
           "Lezioni con un tutor professionista madrelingua",
@@ -112,6 +117,7 @@
         ]
       },
       "plan2": {
+        "name": "Individual 60",
         "description": "Lezioni individuali di lingua slovena. Un piano di apprendimento personalizzato, studiato su misura per i tuoi obiettivi e le tue esigenze. Lezioni individuali con orario flessibile, della durata di 60 minuti.",
         "features": [
           "Lezioni con un tutor professionista madrelingua",
@@ -130,6 +136,7 @@
         ]
       },
       "plan3": {
+        "name": "Individual 45",
         "description": "Lezioni individuali di lingua slovena. Un piano di apprendimento personalizzato, studiato su misura per i tuoi obiettivi e le tue esigenze. Lezioni individuali con orario flessibile, della durata di 45 minuti.",
         "features": [
           "Lezioni con un tutor professionista madrelingua",
