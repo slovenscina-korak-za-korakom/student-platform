@@ -3,11 +3,11 @@
     "hero": {
       "announcement": "Obvestilo",
       "title": {
-        "part1": "Postani",
-        "strong": "mojster",
-        "part2": "Slovenskega jezika"
+        "part1": "Začni",
+        "strong": "govoriti",
+        "part2": "Slovensko"
       },
-      "subtitle": "Najboljša platforma za učenje slovenščine",
+      "subtitle": "Najlažji način za učenje slovenščine",
       "cta": {
         "primary": "Začni zdaj",
         "secondary": "Izvedi več"
@@ -15,47 +15,47 @@
     },
     "why-slovene": {
       "title": "Zakaj bi se morali učiti slovenščino?",
-      "subtitle": "Slovenščina – srce slovenije",
-      "intro": "Jezik je več kot le besede. Je vaš ključ do pripadnosti. Izkoristite ves potencial življenja v osrčju Evrope.",
+      "subtitle": "Slovenščina za življenje v Sloveniji",
+      "intro": "Slovenščina vam olajša vsakdanje življenje in vam pomaga, da se počutite kot doma.",
       "benefits": {
         "career": {
-          "title": "Nadgradite svojo kariero.",
-          "description": "Znanje jezika odpira vrata do zahtevnejših delovnih mest in delodajalcem sporoča, da ste resno predani svoji prihodnosti tukaj."
+          "title": "Napredujte na delovnem mestu",
+          "description": "Znanje jezika odpira vrata do zahtevnejših delovnih mest in pokaže, da želite ostati in delati v Sloveniji. "
         },
         "integration": {
-          "title": "Pripadajte, ne le obiskujte",
-          "description": "Doživite lahkotnost vsakdana. Od tržnice do pisarne, slovenščina osmisli vsako vašo interakcijo."
+          "title": "Lažja integracija",
+          "description": "Slovenščina vam pomaga pri komunikaciji v vsakdanjem življenju, v trgovini, na delu in drugje."
         },
         "education": {
-          "title": "Izobraževanje in osebna rast.",
-          "description": "Razširite svoja obzorja z akademsko odličnostjo. Slovenščina je dragoceno darilo, ki vas bo bogatilo celo življenje"
+          "title": "Izobraževanje.",
+          "description": "Slovenščina vam prinese več znanja in več priložnosti."
         }
       },
-      "conclusion": "Slovenija je dežela bogate tradicije in dih jemajoče lepote. Z učenjem jezika ne obiskujete le pokrajine, temveč postajate del njene zgodbe. Pridružite se živahni družbi in pustite svoj pečat v tej redki in čudoviti jezikovni dediščini."
+      "conclusion": "Slovenija ponuja veliko priložnosti. Z znanjem jezika jih lahko resnično izkoristite in postanete del družbe."
     },
     "features": {
       "title": "Zakaj izbrati nas  ",
-      "subtitle": "Do znanja slovenščine še hitreje",
+      "subtitle": "Učenje slovenščine na preprost način",
       "cards": {
         "online-lessons": {
-          "title": "Prilagodljiva spletna predavanja",
-          "description": "Učite se iz udobja lastnega doma preko platforme Microsoft Teams. Povežite se z izkušenimi učitelji na interaktivnih srečanjih, ki so popolnoma prilagojena vašim specifičnim ciljem."
+          "title": "Ure preko spleta",
+          "description": "Učite se od doma preko Microsoft Teams z izkušenimi učitelji. Ure so popolnoma prilagojeni vašim ciljam in željam."
         },
         "trial-lesson": {
-          "title": "Prva ura je na nas",
-          "description": "Spoznajte našo edinstveno metodologijo, podrobno raziščite program in prejmite odgovore na vsa vaša vprašanja, še preden se odločite."
+          "title": "Brezplačna prva ura.",
+          "description": "Preizkusite naš način učenja, podrobno raziščite program in prejmite odgovore na vsa vaša vprašanja, še preden se odločite."
         },
         "community": {
-          "title": "Postanite član",
-          "description": "Pridružite se spodbudni mreži več kot {members} učencev v naši Telegram skupini! Delite izkušnje, postavljajte vprašanja in vadite slovenščino s sošolci, saj je učenje v družbi lažje."
+          "title": "Skupnost učencev",
+          "description": "Pridružite se več kot {members} učenceam v naši Telegram skupini! Delite izkušnje, postavljajte vprašanja in vadite slovenščino skupaj z drugimi."
         },
         "support": {
-          "title": "Podpora na vsakem koraku",
-          "description": "Ostanite na pravi poti s pomočjo osebnega kuratorja tečaja. Od strokovnih povratnih informacij do vodenja – poskrbeli bomo, da bo vaša pot do znanja tekoča in uspešna."
+          "title": "Podpora med učenjem",
+          "description": "Ostanite na pravi poti s pomočjo osebnega voditelja tečaja. Pomagamo vam na vsakem koraku in vas vodimo do cilja."
         },
         "personalized": {
-          "title": "Personalizirani učni načrti",
-          "description": "Hitreje dosežite svoje cilje s programom, zasnovanim samo za vas. Ne glede na to, ali gre za potovanja, delo ali selitev, naš prilagojen pristop zagotavlja učinkovitost vsake ure."
+          "title": "Prilagojeno učenje",
+          "description": "Hitreje dosežite svoje cilje s programom, narejenim samo za vas. Ure prilagodimo vašim potrebam za delo, življenje ali selitev., naš prilagojen pristop zagotavlja učinkovitost vsake ure."
         }
       }
     },
@@ -64,7 +64,7 @@
       "subtitle": "Statistika",
       "metrics": {
         "happy-students": "Zadovolni učenci",
-        "lessons-conducted": "Opravljenih lekcij",
+        "lessons-conducted": "Opravljenih ur",
         "student-satisfaction": "Uspešnost učencev"
       }
     },
@@ -89,7 +89,7 @@
     "hero": {
       "title": "Izberi pravi plan zate",
       "subtitle": "Cenik",
-      "description": "Poiščite popoln načrt za osvajanje slovenščine korak za korakom. Prilagojene lekcije, prilagodljive možnosti in strokovna navodila, ki vam bodo pomagali z lahkoto doseči jezikovne cilje."
+      "description": "Izberite paket, ki vam najbolj ustreza. Učite se slovenščino v svojem tempu, s prilagodljivim urnikom in ob času, ki vam ustreza."
     },
     "plans": {
       "session": "uro",
@@ -154,70 +154,70 @@
     "language-club": {
       "badge": "Pogovorni klub",
       "title": "Pridružite se našemu pogovornemu klubu",
-      "description": "Izkušite potopne skupinske učne seje, kjer učitelj vodi tematske pogovore z majhno skupino približno 8 ljudi. Vadite slovenščino v resničnih situacijah z vključujočimi razpravami v podpornem, interaktivnem okolju.",
+      "description": "Vadi govor v skupini in izboljšaj svojo pogovorno samozavest, kjer učitelj vodi tematske pogovore z majhno skupino do 8 ljudi. Vadite slovenščino v resničnih situacijah v prijaznem in interaktivnem okolju.",
       "price-label": "na osebo na dogodek",
       "group-size": "oseb v skupini",
       "features": {
         "1": {
-          "title": "Tematski pogovori",
-          "description": "Vsaka seja se osredotoča na specifično temo, ki jo izbere učitelj, kar ustvarja osredotočene in privlačne razprave."
+          "title": "Tema pogovornega kluba",
+          "description": "Vsako srečanje se osredotoča na specifično temo, ki jo izbere učitelj, kar vsakič ustvarja zanimive in različne razprave."
         },
         "2": {
-          "title": "Učenje v majhnih skupinah",
-          "description": "Učite se v intimnem okolju s približno 8 udeleženci, kar zagotavlja, da ima vsak dovolj časa za govorjenje."
+          "title": "Število udeležencev",
+          "description": "Pogovor potrka v skupini s približno 8 udeleženci, kar zagotavlja, da ima vsak dovolj časa za pogovor in pozornost učitelja."
         },
         "3": {
-          "title": "Naravna vadba",
-          "description": "Vadite konverzacijsko slovenščino v sproščenem vzdušju, ki posnema resnične jezikovne situacije."
+          "title": "Živa praksa",
+          "description": "Vadite pogovorno slovenščino v sproščenem vzdušju in v realnih situacijah."
         },
         "4": {
-          "title": "Strokovno vodstvo",
-          "description": "Izkoristite prednosti naših izkušenih učiteljev, ki vodijo pogovore in nudijo koristne povratne informacije."
+          "title": "Vodstvo kluba",
+          "description": "Izkoristite znanje in izkušnje naših učiteljev, ki vodijo pogovore in usmerjajo in pomagajo."
         }
       },
       "cta": "Pridruži se pogovornemu klubu"
     },
     "faq": {
       "title": "Pogosta vprašanja",
-      "subtitle": "Poiščite odgovore na pogosta vprašanja o naših načrtih in storitvah. Če ne najdete, kar iščete, se obrnite na nas",
+      "subtitle": "Poiščite odgovore na pogosta vprašanja o naših programih in storitvah. Če ne najdete, kar iščete, se obrnite na nas.",
       "questions": {
-        "q1": "V čem se slovenščina Step by Step razlikuje od drugih programov učenja jezikov?",
+        "q1": "V čem se Slovenščina Korak za Korakom razlikuje od drugih programov učenja jezikov?",
         "q2": "Ali za začetek potrebujem predznanje slovenščine (ali drugih jezikov)?",
-        "q3": "Kako potekajo spletne lekcije?",
-        "q4": "Ali lahko preizkusim lekcijo, preden se posvetim celotnemu tečaju?"
+        "q3": "Kako potekajo ure preko spleta?",
+        "q4": "Ali lahko preizkusim tečaj, preden se posvetim celotnemu tečaju?"
       },
       "answers": {
-        "a1": "Slovenščina Korak za korakom ponuja personalizirano učno izkušnjo, prilagojeno vašim potrebam. Osredotočeni smo na praktične komunikacijske veščine in ne le na pomnjenje besedišča. Naše lekcije so interaktivne in prilagodljive, z izkušenimi mentorji, ki vas vodijo korak za korakom. Ne glede na to, ali ste začetnik ali izboljšujete svojo tekočnost, zagotavljamo strukturirano in privlačno učno pot.",
-        "a2": "sploh ne! Naš program je zasnovan za vse stopnje, od popolnih začetnikov do naprednih učencev. Če že imate nekaj znanja, bomo ocenili vašo raven in prilagodili lekcije, da boste lažje napredovali.",
-        "a3": "Naše lekcije potekajo prek video sej v živo z izkušenimi mentorji. Imeli boste interaktivne vaje, povratne informacije v realnem času in prilagojena gradiva. Izberete lahko svoj urnik in se učite s svojim tempom, s čimer olajšate vključitev učenja jezikov v svojo dnevno rutino.",
-        "a4": "Ja! Ponujamo vam poskusno lekcijo, da lahko izkusite naš pristop poučevanja iz prve roke. To vam pomaga razumeti, kako deluje naš program, in nam omogoča, da ocenimo vašo raven in učne cilje. Prijavite se še danes in samozavestno začnite svoje jezikovno potovanje!"
+        "a1": "Poučevanja ponuja personalizirano učenje, prilagojeno vašim potrebam. Osredotočeni smo na pogovor in na pomnjenje vsebine ki pomagajo pri hitrejšem doseganje vami določenih ciljev. Naše ure so interaktivne in prilagodljive. Ne glede na to, ali ste začetnik ali izboljšujete svoje znanje vam zagotavljamo strukturirano in privlačno učno pot.",
+        "a2": "Sploh ne! Naš program je zasnovan za vse stopnje, od popolnih začetnikov do naprednih učencev. Če že imate nekaj znanja, bomo ocenili vašo raven na brezplačni test uri in prilagodili pouk, da boste lažje napredovali.",
+        "a3": "Naše lekcije potekajo prek spletnih video sej, prko programa Microsoft Teams. Imeli boste ndividualno odene ure, povratne informacije in prilagojena gradiva. Izberete lahko svoj urnik in se učite s svojim tempom.",
+        "a4": "Ja! Ponujamo vam poskusno uro, da lahko izkusite naš pristop poučevanja. To vam pomaga razumeti, kako deluje naš program, in nam omogoča, da ocenimo vašo raven."
       }
     },
     "contact": {
       "title": "Imaš vprašanje?",
-      "subtitle": "Zastavite nam vprašanje ali nam pošljite sporočilo. Tukaj smo, da vam pomagamo.",
+      "subtitle": "Zastavite nam vprašanje in nam pošljite sporočilo. Tukaj smo, da vam pomagamo.",
       "button": "Kontaktiraj nas"
     }
   },
   "about": {
     "hero": {
-      "title": "Spoznaj našo zgodbo",
-      "subtitle": "Razvijanje odnosov skozi jezik",
-      "text1": "V Slovenskem Korak za korakom posameznikom iz vseh okolij pomagamo osvojiti nove jezike in samozavestno sprejeti nove kulture. Naš osebni pristop, strokovni inštruktorji in podporna skupnost ustvarjajo privlačno učno izkušnjo, ki študentom omogoča doseganje njihovih ciljev.",
-      "text2": "Pridružite se naši skupnosti, prijavite se na brezplačno poskusno lekcijo in naredite prvi korak k doseganju svojih jezikovnih ciljev še danes!"
+      "title": "O nas",
+      "subtitle": "Pomagamo vam prijti do znanja",
+      "text1": "V Slovenščini Korak za korakom posameznikom pomagamo osvojiti slovenščino. Naš osebni pristop, strokovni inštruktorji in aktivna skupnost pomaga ljudem, da se naučijo slovenščino in se lažje vključijo v življenje.",
+      "text2": "Pridružite se nam in se prijavite na brezplačno poskusno uro in naredite prvi korak k doseganju svojih jezikovnih ciljev!"
     },
     "mission": {
-      "title": "Preprečevanje kulturnih preprek, osvobajanje ljudi",
-      "subtitle": "Zakaj delamo, kar delamo",
-      "text1": "Pri Slovenščina Korak za Korakom je naše poslanstvo opolnomočiti posameznike iz različnih okolij z zagotavljanjem prilagojenih, privlačnih in učinkovitih izkušenj pri učenju jezikov. Prizadevamo si za premostitev kulturnih vrzeli in spodbujanje povezav tako, da našim učencem pomagamo ne le pri učenju jezika, ampak se tudi počutijo kot doma v novih okoljih. S strokovnim vodenjem, prilagodljivimi možnostmi učenja in podporno skupnostjo želimo narediti učenje jezikov dostopno in prijetno za vse.",
-      "text2": "Predstavljamo si svet, kjer jezikovne ovire ne ovirajo več priložnosti ali integracije. Kar se je začelo kot platforma za podporo rusko govorečim migrantom, ki živijo v Sloveniji, je preraslo v živahno središče za učence iz različnih jezikovnih in kulturnih okolij.",
-      "text3": "Naš cilj je postati vodilna platforma za učenje jezikov v Sloveniji in širše, ki posameznikom pomaga sprostiti njihov polni potencial z obvladovanjem jezika. Prizadevamo si zgraditi globalno skupnost učencev, ki jih združuje njihova strast do rasti, povezovanja in kulturne izmenjave.",
-      "text4": "Z inovativnimi metodami poučevanja, predanimi inštruktorji in zavezanostjo k odličnosti slovenščina korak za korakom še naprej utira pot za učence jezikov po vsem svetu."
+      "title": "Brez jezikovnih ovir",
+      "subtitle": "Naš cilj",
+      "text1": "Naš cilj je pomagati ljudem, da se naučijo slovenščino in se lažje vključijo v življenje v Sloveniji. Verjamemo, da je jezik ključ do samozavesti, boljših priložnosti in občutka pripadnosti. Zato učenje prilagodimo vsakemu posamezniku in njegovim ciljem, da je napredek čim bolj enostaven, naraven in učinkovit.",
+      "text2": "Začeli smo z željo pomagati ljudem iz tujine, ki živijo v Sloveniji. Danes pa smo zrasli v skupnost učencev iz različnih držav in okolij, ki jih povezuje isti cilj, razumeti, govoriti in uporabljati slovenščino v vsakdanjem življenju.",
+      "text3": "Naš cilj je postati ena vodilnih platform za učenje slovenščine in pomagati še več ljudem na njihovi poti. Z izkušenimi učitelji, prilagojenim pristopom in podporo na vsakem koraku ustvarjamo okolje, kjer se lahko vsak uči samozavestno in brez stresa.",
+      "text4": "Z modernimi metodami, izkušenimi učitelji in podporo na vsakem koraku pomagamo učencem, da uspešno napredujejo pri učenju slovenščine."
     },
     "team": {
-      "title": "Ljudje za programom",
-      "subtitle": "Strastni. Izkušeni. Predan.",
-      "text1": "Smo dinamična skupina posameznikov, ki so navdušeni nad tem, kar počnemo, in predani zagotavljanju najboljših rezultatov za naše stranke."
+      "title": "Ekipa",
+      "subtitle": "Izkušeni, fleksebilni, priazni",
+      "text1": "Tukaj smo, da pomagamo."
     },
     "testimonials": {
       "title": "Resnične zgodbe, resnični rezultati",
@@ -225,9 +225,9 @@
     },
     "contact": {
       "title": "Naredite prvi korak k svojim ciljem",
-      "subtitle": "Pridružite se naši skupnosti",
-      "text1": "Ste pripravljeni začeti potovanje učenja jezikov, prilagojeno samo vam? Ne glede na to, ali želite izboljšati svoje veščine, se povezati z novo kulturo ali pridobiti zaupanje v vsakodnevnih interakcijah, je Slovenščina korak za korakom tukaj, da vas vodi.",
-      "text2": "Prijavite se na brezplačno poskusno lekcijo še danes in na lastni koži izkusite, kako prilagojen, privlačen in učinkovit je lahko naš program. Pridružite se naši rastoči skupnosti učencev jezikov in se povežite s strokovnimi mentorji, ki vam strastno pomagajo do uspeha."
+      "subtitle": "Pridružite se nam",
+      "text1": "Ste pripravljeni začeti? Ne glede na to, ali želite izboljšati svoje znanje, se lažje vključiti v življenje v Sloveniji ali postati bolj samozavestni pri komunikaciji, smo tukaj, da vam pomagamo na vsakem koraku.",
+      "text2": "Prijavite se na brezplačno poskusno uro in preverite, kako poteka učenje pri nas. Spoznajte naš način dela, učitelje in pristop. Pridružite se naši skupnosti in začnite govoriti slovensko samozavestno."
     }
   },
   "not-found": {
@@ -236,7 +236,7 @@
     "button": "Nazaj domov"
   },
   "footer": {
-    "title": "Najboljši način za učenje slovenščine in doseganje svojih sanj.",
+    "title": "Najboljši način za učenje slovenščine in doseganje svojih ciljev.",
     "personal": {
       "title": "Osebno",
       "profile": "Profil",
