@@ -125,6 +125,14 @@
       "dialog": {
         "title": "Izberite možnost rezervacije",
         "subtitle": "Izberite način rezervacije za to srečanje jezikovnega kluba",
+        "left-side": {
+          "book-spot": "Rezerviraj svoje mesto",
+          "topic": "Tema",
+          "date-time": "Datum in čas",
+          "price": "Cena",
+          "spots" : "Prosta mesta",
+          "spots-num": "{num, plural, =1 {1 mesto} =2 {2 mesti} few {# mesta} other {# mest}}"
+        },
         "free-card": {
           "title": "Rezervirajte zdaj, plačajte na dogodku",
           "desc": "Rezervirajte takoj in plačajte osebno ob prihodu.",

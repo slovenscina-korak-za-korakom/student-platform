@@ -125,6 +125,14 @@
       "dialog": {
         "title": "Choose Booking Option",
         "subtitle": "Select how you would like to book this language club session",
+        "left-side": {
+          "book-spot": "Book you spot",
+          "topic": "Topic",
+          "date-time": "Date & Time",
+          "price": "Price",
+          "spots" : "Spots left",
+          "spots-num": "{num, plural, =1 {1 spot} other {# spots}}"
+        },
         "free-card": {
           "title": "Reserve Now, Pay at Event",
           "desc": "Book instantly and pay in person when you arrive.",

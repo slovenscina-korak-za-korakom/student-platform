@@ -294,11 +294,8 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
                 <div className="w-9 h-9 rounded-xl bg-white/15 flex items-center justify-center mb-4">
                   <IconCalendar className="h-5 w-5 text-white"/>
                 </div>
-                <p className="text-white/50 text-[10px] font-semibold uppercase tracking-widest mb-1">
-                  {t("dialog.title")}
-                </p>
                 <h2 className="text-white text-lg font-bold leading-snug">
-                  Book<br/>Your Spot
+                  {t("dialog.left-side.book-spot")}
                 </h2>
               </div>
 
@@ -307,7 +304,7 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
               <div className="px-5 py-4 flex-1 space-y-3.5">
                 <div>
                   <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
-                    Topic
+                    {t("dialog.left-side.topic")}
                   </p>
                   <p className="text-white text-sm font-semibold leading-snug line-clamp-3">
                     {event.theme}
@@ -318,7 +315,7 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
 
                 <div>
                   <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1.5">
-                    Date & Time
+                    {t("dialog.left-side.date-time")}
                   </p>
                   <p className="text-white text-sm font-semibold tabular-nums">
                     {eventDate.toLocaleDateString(locale, {
@@ -341,7 +338,7 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
 
                 <div>
                   <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
-                    Price
+                    {t("dialog.left-side.price")}
                   </p>
                   <p className="text-white text-2xl font-extrabold tabular-nums leading-none">
                     €{price.toFixed(2)}
@@ -352,13 +349,13 @@ const LangCard = ({locale, event}: {locale: localeType, event: LangEvent}) => {
 
                 <div>
                   <p className="text-white/40 text-[10px] font-semibold uppercase tracking-widest mb-1">
-                    Spots Left
+                    {t("dialog.left-side.spots")}
                   </p>
                   <p className={cn(
                     "text-sm font-semibold",
                     spotsLeft <= 2 ? "text-amber-300" : "text-white"
                   )}>
-                    {spotsLeft} {spotsLeft === 1 ? "spot" : "spots"}
+                    {t("dialog.left-side.spots-num", {num: spotsLeft})}
                   </p>
                 </div>
               </div>
