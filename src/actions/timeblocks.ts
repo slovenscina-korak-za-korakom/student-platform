@@ -72,6 +72,43 @@ export const getAvailableDbSlots = async () => {
   }
 };
 
+export const getDashboardPersonalSessions = async () => {
+  const { userId } = await auth();
+  if (!userId) return { error: "Unauthorized", status: 401 };
+
+  try {
+    const sessions = await db
+      .select({
+        id: timeblocksTable.id,
+        tutorId: timeblocksTable.tutorId,
+        startTime: timeblocksTable.startTime,
+        duration: timeblocksTable.duration,
+        status: timeblocksTable.status,
+        sessionType: timeblocksTable.sessionType,
+        location: timeblocksTable.location,
+        studentId: timeblocksTable.studentId,
+        tutorName: tutorsTable.name,
+        tutorAvatar: tutorsTable.avatar,
+        tutorColor: tutorsTable.color,
+      })
+      .from(timeblocksTable)
+      .where(
+        and(
+          eq(timeblocksTable.studentId, userId),
+          eq(timeblocksTable.status, "booked"),
+          gt(timeblocksTable.startTime, new Date()),
+        ),
+      )
+      .innerJoin(tutorsTable, eq(timeblocksTable.tutorId, tutorsTable.id))
+      .orderBy(timeblocksTable.startTime);
+
+    return { sessions, status: 200 };
+  } catch (error) {
+    console.error("Error getting dashboard personal sessions:", error);
+    return { error: "Internal server error", status: 500 };
+  }
+};
+
 export const bookSession = async (data: TutoringSession) => {
   const { userId } = await auth();
   const client = await clerkClient();

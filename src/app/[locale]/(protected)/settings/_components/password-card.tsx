@@ -2,17 +2,14 @@
 
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
 import {Dialog, DialogContent, DialogHeader, DialogTitle,} from "@/components/ui/dialog";
-import {useUser} from "@clerk/nextjs";
 import {useState} from "react";
 import {Lock} from "lucide-react";
 import {IconDots} from "@tabler/icons-react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,} from "@/components/ui/dropdown-menu";
-import {Skeleton} from "@/components/ui/skeleton";
 import PasswordForm from "./password-form";
 import {useTranslations} from "next-intl";
 
 const PasswordCard = () => {
-  const {isLoaded} = useUser();
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const t = useTranslations("settings.account.password")
@@ -29,13 +26,9 @@ const PasswordCard = () => {
       </CardHeader>
       <CardContent
         className="bg-white dark:bg-background border border-foreground/10 rounded-2xl px-4 py-6 flex items-center justify-between">
-        {isLoaded ? (
-          <div className="inline-flex justify-start items-center gap-2 text-foreground/80 text-xl">
-            <Lock size={14} className="text-foreground/60"/> ••••••••••••••
-          </div>
-        ) : (
-          <Skeleton></Skeleton>
-        )}
+        <div className="inline-flex justify-start items-center gap-2 text-foreground/80 text-xl">
+          <Lock size={14} className="text-foreground/60"/> ••••••••••••••
+        </div>
         <Dialog open={open} onOpenChange={setOpen}>
           <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
             <DropdownMenuTrigger

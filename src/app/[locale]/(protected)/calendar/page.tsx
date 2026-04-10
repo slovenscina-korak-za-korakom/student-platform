@@ -5,12 +5,14 @@ import React from "react";
 import {auth, clerkClient} from "@clerk/nextjs/server";
 
 const CalendarPage = async () => {
-  const schedule = await getSchedule();
-  const timeblocks = await getTimeblocks();
-  const tutors = await getTutors();
-  const regularSessions = await getRegularSessions();
-  const availableDbSlots = await getAvailableDbSlots();
-  const {userId} = await auth();
+  const [schedule, timeblocks, tutors, regularSessions, availableDbSlots, { userId }] = await Promise.all([
+    getSchedule(),
+    getTimeblocks(),
+    getTutors(),
+    getRegularSessions(),
+    getAvailableDbSlots(),
+    auth(),
+  ]);
 
   if (schedule.status !== 200 || timeblocks.status !== 200 || tutors.status !== 200 || !userId) {
     return (

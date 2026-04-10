@@ -209,6 +209,16 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* react-loading-skeleton theme */
+.react-loading-skeleton {
+  --base-color: oklch(0.93 0 0);
+  --highlight-color: oklch(0.98 0 0);
+}
+.dark .react-loading-skeleton {
+  --base-color: oklch(0.20 0 0);
+  --highlight-color: oklch(0.24 0 0);
+}
 /* Modern gradient utilities */
 @layer utilities {
   .gradient-primary {

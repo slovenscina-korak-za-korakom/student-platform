@@ -20,26 +20,21 @@ import {
 } from "@tabler/icons-react";
 import {toast} from "sonner";
 import {
-  getTutors,
   getEmailLocale,
+  getTutors,
   getUserPreferences,
   updateEmailLocale,
   updateUserPreferences,
   UserPreferences,
 } from "@/actions/user-actions";
-import {Skeleton} from "@/components/ui/skeleton";
+import Skeleton from "react-loading-skeleton";
 import {languageLevels, learningGoals} from "@/lib/docs";
 import {useLocale, useTranslations} from "next-intl";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import {Dialog, DialogContent, DialogDescription, DialogTitle,} from "@/components/ui/dialog";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {cn} from "@/lib/utils";
 
-const SectionLabel = ({children}: {children: React.ReactNode}) => (
+const SectionLabel = ({children}: { children: React.ReactNode }) => (
   <div className="flex items-center gap-2.5 mb-3">
     <div className="w-[3px] h-3.5 rounded-full gradient-primary shrink-0"/>
     <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>
@@ -54,8 +49,9 @@ const PreferencesForm = () => {
   const [tutors, setTutors] = useState<Awaited<ReturnType<typeof getTutors>>>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [draft, setDraft] = useState<{preferences: UserPreferences; emailLocale: string} | null>(null);
+  const [draft, setDraft] = useState<{ preferences: UserPreferences; emailLocale: string } | null>(null);
   const [bioTutor, setBioTutor] = useState<Awaited<ReturnType<typeof getTutors>>[0] | null>(null);
+  const [everythingLoaded, setEverythingLoaded] = useState<boolean>(false);
 
   const t = useTranslations("settings.account.learning-preferences");
   const t2 = useTranslations("common.buttons");
@@ -63,11 +59,13 @@ const PreferencesForm = () => {
 
   useEffect(() => {
     const fetchPreferences = async () => {
+      setEverythingLoaded(false);
       if (isLoaded && user) {
         const userPrefs = await getUserPreferences();
         if (userPrefs) setPreferences(userPrefs as UserPreferences);
         const userEmailLocale = await getEmailLocale();
         if (userEmailLocale && typeof userEmailLocale === "string") setEmailLocale(userEmailLocale);
+        setEverythingLoaded(true);
       }
     };
     fetchPreferences();
@@ -132,14 +130,32 @@ const PreferencesForm = () => {
     it: t3("languages.it"),
   };
 
-  if (!isLoaded) {
+  if (!everythingLoaded) {
     return (
       <Card className="w-full max-w-4xl rounded-2xl p-1 bg-accent border-none">
-        <CardHeader className="pt-5">
-          <CardTitle>{t("title")}</CardTitle>
+        <CardHeader className="pt-5 pb-3">
+          <div className="flex items-center justify-between">
+            <CardTitle>{t("title")}</CardTitle>
+            <Skeleton width={64} height={30} borderRadius={6}/>
+          </div>
         </CardHeader>
-        <CardContent className="bg-white dark:bg-background border border-foreground/10 rounded-2xl p-4">
-          <Skeleton className="h-32 w-full"/>
+        <CardContent
+          className="bg-white dark:bg-background border border-foreground/10 rounded-2xl p-0 overflow-hidden">
+          {[0, 1, 2, 3].map((i) => (
+            <React.Fragment key={i}>
+              <div className="flex items-center justify-between px-5 py-2.5">
+                <div className="flex items-center gap-2">
+                  <Skeleton width={36} height={36} borderRadius={12}/>
+                  <div>
+                    <Skeleton width={80} height={10} containerClassName="leading-0"/>
+                    <Skeleton width={120} height={14} containerClassName="leading-0"/>
+                  </div>
+                </div>
+                <Skeleton width={56} height={22} borderRadius={9999}/>
+              </div>
+              {i < 3 && <Separator/>}
+            </React.Fragment>
+          ))}
         </CardContent>
       </Card>
     );
@@ -171,7 +187,8 @@ const PreferencesForm = () => {
             </Button>
           </div>
         </CardHeader>
-        <CardContent className="bg-white dark:bg-background border border-foreground/10 rounded-2xl p-0 overflow-hidden">
+        <CardContent
+          className="bg-white dark:bg-background border border-foreground/10 rounded-2xl p-0 overflow-hidden">
 
           {/* Language Level */}
           <div className="flex items-center justify-between px-5 py-4">
@@ -267,7 +284,8 @@ const PreferencesForm = () => {
           )}
         >
           <DialogTitle className="sr-only">Edit Preferences</DialogTitle>
-          <DialogDescription className="sr-only">Update your tutor, learning goals and email language</DialogDescription>
+          <DialogDescription className="sr-only">Update your tutor, learning goals and email
+            language</DialogDescription>
 
           {/* ── LEFT gradient panel (desktop only) ── */}
           <div
@@ -554,7 +572,8 @@ const PreferencesForm = () => {
             </div>
 
             {/* Mobile sticky footer (mobile only) */}
-            <div className="sm:hidden flex gap-3 px-4 py-4 border-t border-border/60 shrink-0 bg-background dark:bg-sidebar">
+            <div
+              className="sm:hidden flex gap-3 px-4 py-4 border-t border-border/60 shrink-0 bg-background dark:bg-sidebar">
               <Button
                 variant="outline"
                 onClick={() => setIsDialogOpen(false)}
@@ -581,7 +600,8 @@ const PreferencesForm = () => {
 
           {/* ── BIO panel (third column, desktop only) ── */}
           {bioTutor && (
-            <div className="hidden sm:flex sm:w-[220px] sm:shrink-0 flex-col border-l border-border/60 bg-background dark:bg-sidebar">
+            <div
+              className="hidden sm:flex sm:w-[220px] sm:shrink-0 flex-col border-l border-border/60 bg-background dark:bg-sidebar">
               {/* Header */}
               <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border/60 shrink-0">
                 <div>

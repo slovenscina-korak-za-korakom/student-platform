@@ -15,6 +15,44 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 // Direct booking without Stripe checkout
+export const getDashboardLangClubEvents = async () => {
+  const { userId } = await auth();
+  if (!userId) return { error: "Unauthorized", status: 401 };
+
+  try {
+    const events = await db
+      .select({
+        id: langClubTable.id,
+        description: langClubTable.description,
+        date: langClubTable.date,
+        tutor: langClubTable.tutor,
+        level: langClubTable.level,
+        location: langClubTable.location,
+        duration: langClubTable.duration,
+        theme: langClubTable.theme,
+        bookingId: langClubBookingsTable.id,
+        bookingStatus: langClubBookingsTable.status,
+      })
+      .from(langClubBookingsTable)
+      .where(
+        and(
+          eq(langClubBookingsTable.userId, userId),
+          or(
+            eq(langClubBookingsTable.status, "paid"),
+            eq(langClubBookingsTable.status, "booked"),
+          ),
+        ),
+      )
+      .innerJoin(langClubTable, eq(langClubBookingsTable.eventId, langClubTable.id))
+      .orderBy(langClubTable.date);
+
+    return { events, status: 200 };
+  } catch (error) {
+    console.error("Error getting dashboard lang club events:", error);
+    return { error: "Internal server error", status: 500 };
+  }
+};
+
 export const bookEventDirect = async (eventId: string) => {
   const { userId } = await auth();
   const client = await clerkClient();

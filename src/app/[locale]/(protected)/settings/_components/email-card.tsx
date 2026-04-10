@@ -3,7 +3,7 @@
 import { useUser } from "@clerk/nextjs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "react-loading-skeleton";
 import { VerifiedIcon } from "lucide-react";
 import { IconMail } from "@tabler/icons-react";
 import {
@@ -25,7 +25,15 @@ const EmailCard = () => {
       </CardHeader>
       <CardContent className="bg-white dark:bg-background border border-foreground/10 rounded-2xl p-4">
         {!isLoaded ? (
-          <Skeleton className="h-10 w-full" />
+          <div className="flex flex-wrap justify-between items-center gap-y-1">
+            <div className="flex gap-3 flex-row justify-start items-center flex-wrap min-w-0">
+              <IconMail size={16} className="shrink-0 text-foreground/50" />
+              <Skeleton width={200} height={14} />
+              <Skeleton width={14} height={14} />
+              <Skeleton width={64} height={14} />
+            </div>
+            <Skeleton width={120} height={12} />
+          </div>
         ) : (
           <ul className="space-y-4">
             {user.emailAddresses.map((email) => {

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import React, { useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "react-loading-skeleton";
 import { Input } from "@/components/ui/input";
 import {
   Form,
@@ -62,9 +62,11 @@ const PersonalForm = ({ user, isLoaded }: { user: any; isLoaded: boolean }) => {
                   {isLoaded ? (
                     <Input {...field} />
                   ) : (
-                    <Skeleton className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm">
-                      <div className="h-full w-full bg-muted animate-pulse rounded-md" />
-                    </Skeleton>
+                    <Skeleton
+                      height={36}
+                      containerClassName="w-full block leading-none"
+                      style={{ border: "1px solid var(--input)", borderRadius: "var(--radius-md)" }}
+                    />
                   )}
                 </FormControl>
                 <FormMessage />
@@ -81,9 +83,11 @@ const PersonalForm = ({ user, isLoaded }: { user: any; isLoaded: boolean }) => {
                   {isLoaded ? (
                     <Input {...field} />
                   ) : (
-                    <Skeleton className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm">
-                      <div className="h-full w-full bg-muted animate-pulse rounded-md" />
-                    </Skeleton>
+                    <Skeleton
+                      height={36}
+                      containerClassName="w-full block leading-none"
+                      style={{ border: "1px solid var(--input)", borderRadius: "var(--radius-md)" }}
+                    />
                   )}
                 </FormControl>
                 <FormMessage />

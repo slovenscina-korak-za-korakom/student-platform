@@ -12,7 +12,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "react-loading-skeleton";
 import { Link } from "@/i18n/routing";
 import { usePathname } from "next/navigation";
 import {
@@ -41,17 +41,11 @@ export function SiteHeader() {
         <h1 className="text-base font-medium capitalize">
           {title.replaceAll("-", " ")}
         </h1>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center h-full gap-2">
           {!user ? (
-            <Skeleton className="bg-transparent px-4">
-              <div className="inline-flex justify-end items-center gap-5">
-                <div className="hidden md:flex flex-col justify-end items-end flex-1 gap-1">
-                  <div className="bg-foreground/20 rounded-full w-20 h-3" />
-                  <div className="bg-foreground/10 rounded-full w-40 h-2" />
-                </div>
-                <div className="h-11 w-11 rounded-full bg-foreground/30" />
-              </div>
-            </Skeleton>
+            <div className="inline-flex items-center px-4">
+              <Skeleton circle width={40} height={40} containerClassName="leading-none" />
+            </div>
           ) : (
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="cursor-pointer">

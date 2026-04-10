@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUser } from "@clerk/nextjs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PersonalForm from "./personal-form";
-import { Skeleton } from "@/components/ui/skeleton";
+import Skeleton from "react-loading-skeleton";
 import { Input } from "@/components/ui/input";
 import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ const AccountCard = () => {
             <div className="flex flex-row items-center gap-4">
               <div className="relative h-20 w-20 rounded-full overflow-hidden border">
                 {isUploading ? (
-                  <Skeleton className="h-full w-full" />
+                  <Skeleton width={80} height={80} circle  containerClassName="leading-0 block" />
                 ) : (
                   <Avatar className="w-20 h-20">
                     <AvatarImage src={user?.imageUrl} />

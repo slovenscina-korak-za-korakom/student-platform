@@ -3,6 +3,7 @@ import { LocaleProvider } from "@/contexts/locale-context";
 import { DynamicClerkProvider } from "@/components/providers/dynamic-clerk-provider";
 import { Suspense } from "react";
 import {Metadata} from "next";
+import "react-loading-skeleton/dist/skeleton.css"
 
 export const metadata : Metadata = {
   title: {
