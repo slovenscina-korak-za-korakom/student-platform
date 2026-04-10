@@ -1,8 +1,10 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
   text,
   timestamp,
+  boolean,
   varchar,
   decimal,
   // pgEnum,
@@ -18,6 +20,7 @@ import {
 // ]);
 
 export const tutorLevelEnum = pgEnum("tutor_level", ["junior", "senior"]);
+export const courseLevelEnum = pgEnum("course_level", ["A1", "A2", "B1", "B2", "C1"]);
 
 export const langClubTable = pgTable("lang_club", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -126,3 +129,45 @@ export const availableSlotsTable = pgTable("available_slots", {
   location: varchar({length: 255}).notNull(),
   createdAt: timestamp({withTimezone: true}).notNull().defaultNow(),
 });
+
+export const coursesTable = pgTable("courses", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar({length: 128}).notNull(),
+  description: text(),
+  thumbnail: varchar({length: 255}).notNull().default("https://www.slovenscinakzk.com/meta-image-link.jpg"),
+  level: courseLevelEnum().notNull().default("A1"),
+  order: integer().notNull().default(0),
+});
+
+export const sectionsTable = pgTable("sections", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar({length: 128}).notNull(),
+  description: text(),
+  courseId: integer().notNull().references(() => coursesTable.id),
+  isFinished: boolean().default(false),
+  order: integer().notNull().default(0),
+})
+
+export const videosTable = pgTable("videos", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  title: varchar({length: 128}).notNull(),
+  description: text(),
+  duration: integer().notNull().default(0),
+  videoLink: varchar({length: 128}).notNull().default(""),
+  order: integer().notNull().default(0),
+  sectionId: integer().notNull().references(() => sectionsTable.id),
+  isFinished: boolean().default(false),
+})
+
+export const coursesRelations = relations(coursesTable, ({ many }) => ({
+  sections: many(sectionsTable),
+}));
+
+export const sectionsRelations = relations(sectionsTable, ({ one, many }) => ({
+  course: one(coursesTable, { fields: [sectionsTable.courseId], references: [coursesTable.id] }),
+  videos: many(videosTable),
+}));
+
+export const videosRelations = relations(videosTable, ({ one }) => ({
+  section: one(sectionsTable, { fields: [videosTable.sectionId], references: [sectionsTable.id] }),
+}));
