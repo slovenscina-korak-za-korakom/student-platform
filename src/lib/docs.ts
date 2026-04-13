@@ -482,7 +482,7 @@ export const learningGoals = [
     icon: "🇸🇮",
   },
   {
-    value: "šolanje",
+    value: "school",
     label: {
       ru: "Экзамены и школа (Matura / NPZ)",
       en: "Exams & School (Matura / NPZ)",

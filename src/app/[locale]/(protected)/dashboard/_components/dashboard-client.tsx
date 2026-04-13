@@ -92,8 +92,7 @@ const DashboardClient = ({
     return events.sort((a, b) => a.date.getTime() - b.date.getTime());
   }, [langClubEvents, personalSessions, regularSessions]);
 
-  // const nextEvent = allEvents.length > 0 ? allEvents[0] : null;
-  const nextEvent = null;
+  const nextEvent = allEvents.length > 0 ? allEvents[0] : null;
 
 
   return (
