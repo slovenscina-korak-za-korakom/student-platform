@@ -6,16 +6,16 @@ import interactionPlugin from "@fullcalendar/interaction";
 import { Button } from "@/components/ui/button";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
-import { useSidebar } from "@/components/ui/sidebar";
 import "@/components/calendar/calendar-styles.css";
 import {LangEvent} from "@/types/interfaces";
+import {useCalendarResize} from "@/hooks/use-calendar-resize";
 
 const LangCalendar = ({ locale, events, setDate }: {locale: string, events: LangEvent[], setDate: (date: Date) => void}) => {
   const calendarRef = useRef<FullCalendar>(null);
+  const containerRef = useCalendarResize(calendarRef)
   const [title, setTitle] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const t = useTranslations("dashboard.calendar");
-  const { state } = useSidebar();
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768);
@@ -23,13 +23,6 @@ const LangCalendar = ({ locale, events, setDate }: {locale: string, events: Lang
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      calendarRef.current?.getApi().updateSize();
-    }, 300);
-    return () => clearTimeout(timer);
-  }, [state]);
 
   const calendarEvents = events.map((event) => ({
     id: event.id.toString(),
@@ -77,7 +70,7 @@ const LangCalendar = ({ locale, events, setDate }: {locale: string, events: Lang
       </div>
 
       {/* Calendar */}
-      <div className="flex-1 min-h-0 px-3 pb-3">
+      <div ref={containerRef} className="flex-1 min-h-0 px-3 pb-3">
         <style>{`
           @media (min-width: 768px) {
             .fc-dayGridMonth-view .fc-daygrid-day-events {

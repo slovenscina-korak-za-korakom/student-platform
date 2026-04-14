@@ -179,7 +179,6 @@ export interface RegularInvitation {
   duration: number;
   location: string;
   description: string | null;
-  color: string | null;
   timezone: string | null; // IANA timezone name, e.g. 'Europe/Ljubljana'
   tutorName: string;
   tutorAvatar: string;

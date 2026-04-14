@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import { useRouter } from "@/i18n/routing";
 import RescheduleDialog from "./reschedule-dialog";
 import "@/components/calendar/calendar-styles.css";
-import {useSidebar} from "@/components/ui/sidebar";
+import { useCalendarResize } from "@/hooks/use-calendar-resize";
 import {LangClubEvent, PersonalSession, RegularSession} from "@/types/interfaces";
 import { SESSION_COLORS, getSessionColor, hexToRgba } from "@/lib/session-colors";
 import { DayEventsSheet, type DayEventItem } from "./day-events-sheet";
@@ -36,10 +36,10 @@ const UnifiedCalendar = ({
   locale,
 }: UnifiedCalendarProps) => {
   const fullLocale = useLocale();
-  const {state} = useSidebar();
   const tD = useTranslations("dashboard.calendar");
   const router = useRouter();
   const calendarRef = useRef<FullCalendar>(null);
+  const containerRef = useCalendarResize(calendarRef);
   const [calendarTitle, setCalendarTitle] = useState("Calendar");
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     new Date(),
@@ -219,18 +219,6 @@ const UnifiedCalendar = ({
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Update calendar dimensions when sidebar state changes
-  useEffect(() => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      // Add a small delay to allow sidebar transition to complete
-      const timer = setTimeout(() => {
-        calendarApi.updateSize();
-      }, 300); // Match this with your sidebar transition duration
-      return () => clearTimeout(timer);
-    }
-  }, [state]);
-
   const handleCancel = async (event: DayEventItem) => {
     setIsCancelling(event.id);
     try {
@@ -374,7 +362,7 @@ const UnifiedCalendar = ({
             </div>
 
             {/* FullCalendar Component */}
-            <div className="md:flex-1 md:min-h-0 md:overflow-hidden px-3 pb-2">
+            <div ref={containerRef} className="md:flex-1 md:min-h-0 md:overflow-hidden px-3 pb-2">
               <FullCalendar
                 ref={calendarRef}
                 locale={fullLocale}

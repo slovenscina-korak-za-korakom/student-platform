@@ -15,7 +15,7 @@ import { NoSlotsOverlay } from "@/components/calendar/no-slots-overlay";
 import "@/components/calendar/calendar-styles.css";
 import {useLocale, useTranslations} from "next-intl";
 import {fromZonedTime} from "date-fns-tz";
-import {useSidebar} from "@/components/ui/sidebar";
+import { useCalendarResize } from "@/hooks/use-calendar-resize";
 import { SESSION_COLORS, getSessionColor } from "@/lib/session-colors";
 // Transform database tutors to the format expected by the calendar
 const transformTutors = (tutorsData: TutorData[]) => {
@@ -195,8 +195,6 @@ export default function Calendar({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("calendar.event-type")
-  const {state} = useSidebar();
-
   // Transform the data from a database
   const transformedTutors = transformTutors(tutorsData);
 
@@ -364,6 +362,7 @@ export default function Calendar({
     transformedTutors,
   ]);
   const calendarRef = useRef<FullCalendar>(null);
+  const containerRef = useCalendarResize(calendarRef);
   const isUpdatingViewRef = useRef(false);
 
   // Update URL parameters when view or other state changes
@@ -492,19 +491,6 @@ export default function Calendar({
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
-
-  // Update calendar dimensions when sidebar state changes
-  useEffect(() => {
-    const calendarApi = calendarRef.current?.getApi();
-    if (calendarApi) {
-      // Add a small delay to allow sidebar transition to complete
-      const timer = setTimeout(() => {
-        calendarApi.updateSize();
-      }, 300); // Match this with your sidebar transition duration
-      return () => clearTimeout(timer);
-    }
-  }, [state]);
-
 
   const handleEventClick = (arg: EventClickArg) => {
     // Convert FullCalendar event back to TutoringSession
@@ -639,7 +625,7 @@ export default function Calendar({
       </div>
 
       {/* FullCalendar Component */}
-      <div className={`relative ${isMobileMonth ? "" : "flex-1 min-h-0 md:h-screen"}`}>
+      <div ref={containerRef} className={`relative ${isMobileMonth ? "" : "flex-1 min-h-0 md:h-screen"}`}>
         {noSlotsOverlay && (
           <NoSlotsOverlay
             type={noSlotsOverlay.type}

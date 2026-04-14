@@ -4,6 +4,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { redirect as redirectI18n } from "@/i18n/routing";
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 interface ProtectedLayoutProps {
   children: React.ReactNode;
@@ -24,9 +25,14 @@ const ProtectedLayout = async ({ children, params }: ProtectedLayoutProps) => {
     redirectI18n({ href: "/welcome", locale: locale });
   }
 
+  const cookieStore = await cookies();
+  const sidebarCookie = cookieStore.get("sidebar_state")?.value;
+  const defaultSidebarOpen = sidebarCookie !== undefined ? sidebarCookie === "true" : true;
+
   return (
     <>
       <SidebarProvider
+        defaultOpen={defaultSidebarOpen}
         style={
           {
             "--sidebar-width": "calc(var(--spacing) * 72)",
