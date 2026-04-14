@@ -21,6 +21,7 @@ import {
 
 export const tutorLevelEnum = pgEnum("tutor_level", ["junior", "senior"]);
 export const courseLevelEnum = pgEnum("course_level", ["A1", "A2", "B1", "B2", "C1"]);
+export const courseStatusEnum = pgEnum("course_status", ["upcoming", "active", "deleted"]);
 
 export const langClubTable = pgTable("lang_club", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -82,7 +83,7 @@ export const schedulesTable = pgTable("schedules", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   ownerId: varchar({length: 255}).notNull(),
   schedule: jsonb().notNull(),
-  timezone: varchar({length: 100}), // IANA name, e.g. 'America/Los_Angeles'
+  timezone: varchar({length: 100}).notNull(), // IANA name, e.g. 'America/Los_Angeles'
   createdAt: timestamp().notNull().defaultNow(),
   updatedAt: timestamp().notNull().defaultNow(),
 });
@@ -101,7 +102,6 @@ export const regularInvitationsTable = pgTable("regular_invitations", {
   duration: integer().notNull(),
   location: varchar({length: 255}).notNull(),
   description: text(),
-  color: varchar({length: 50}),
   pricePerSession: decimal({precision: 10, scale: 2}),
   timezone: varchar({length: 100}), // IANA name, e.g. 'America/Los_Angeles'
   createdAt: timestamp({withTimezone: true}).notNull().defaultNow(),
@@ -137,6 +137,7 @@ export const coursesTable = pgTable("courses", {
   thumbnail: varchar({length: 255}).notNull().default("https://www.slovenscinakzk.com/meta-image-link.jpg"),
   level: courseLevelEnum().notNull().default("A1"),
   order: integer().notNull().default(0),
+  status: courseStatusEnum().notNull().default("upcoming"),
 });
 
 export const sectionsTable = pgTable("sections", {

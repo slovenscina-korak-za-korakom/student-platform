@@ -16,6 +16,7 @@ export const getCourses = async () => {
       description: coursesTable.description,
       thumbnail: coursesTable.thumbnail,
       level: coursesTable.level,
+      status: coursesTable.status,
       order: coursesTable.order,
       sections: sql<number>`(select count(*) from sections where sections.${sql.identifier(sectionsTable.courseId.name)} = courses.id)
                             ::int`,
