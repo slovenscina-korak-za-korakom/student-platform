@@ -9,7 +9,7 @@ import {useTranslations} from "next-intl";
 export const SettingTabs = () => {
   const t = useTranslations("settings.tabs");
   return (
-  <Tabs defaultValue="account" className="w-full">
+  <Tabs defaultValue="account" className="max-w-2xl mx-auto">
     <div className="flex justify-center items-center">
       <TabsList className="hidden">
         <TabsTrigger

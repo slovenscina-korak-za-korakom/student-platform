@@ -1,17 +1,17 @@
 import React from "react";
 import "../globals.css";
-import { NextIntlClientProvider } from "next-intl";
-import { getMessages } from "next-intl/server";
-import { notFound } from "next/navigation";
-import { routing } from "@/i18n/routing";
-import { setRequestLocale } from "next-intl/server";
-import { ThemeProvider } from "@/components/ui/theme-provider";
-import { Toaster } from "sonner";
-import { WelcomeRedirectProvider } from "@/components/providers/welcome-redirect-provider";
-import { Analytics } from "@vercel/analytics/next";
+import {NextIntlClientProvider} from "next-intl";
+import {getMessages, setRequestLocale} from "next-intl/server";
+import {notFound} from "next/navigation";
+import {routing} from "@/i18n/routing";
+import {ThemeProvider} from "@/components/ui/theme-provider";
+import {Toaster} from "sonner";
+import {WelcomeRedirectProvider} from "@/components/providers/welcome-redirect-provider";
+import {Analytics} from "@vercel/analytics/next";
 
-import { Manrope } from "next/font/google";
+import {Manrope} from "next/font/google";
 import localFont from "next/font/local";
+import {TooltipProvider} from "@/components/ui/tooltip";
 
 const manropeFont = Manrope({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -25,11 +25,11 @@ const tankerFont = localFont({
 });
 
 export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
+  return routing.locales.map((locale) => ({locale}));
 }
 
-export default async function LocaleLayout({ children, params }) {
-  const { locale } = await params;
+export default async function LocaleLayout({children, params}) {
+  const {locale} = await params;
 
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale)) {
@@ -63,26 +63,28 @@ export default async function LocaleLayout({ children, params }) {
 
   return (
     <html lang={locale} suppressHydrationWarning className={`${manropeFont.variable} ${tankerFont.variable}`}>
-      <body className={"font-manrope font-medium"}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <Toaster richColors position="bottom-right" />
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <WelcomeRedirectProvider>
-              <main>{children}</main>
-            </WelcomeRedirectProvider>
-          </ThemeProvider>
-        </NextIntlClientProvider>
-        <Analytics />
-      </body>
+    <body className={"font-manrope font-medium"}>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}}
+    />
+    <Toaster richColors position="bottom-right"/>
+    <NextIntlClientProvider messages={messages}>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="system"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <WelcomeRedirectProvider>
+          <TooltipProvider>
+            <main>{children}</main>
+          </TooltipProvider>
+        </WelcomeRedirectProvider>
+      </ThemeProvider>
+    </NextIntlClientProvider>
+    <Analytics/>
+    </body>
     </html>
   );
 }

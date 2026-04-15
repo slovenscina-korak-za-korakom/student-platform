@@ -35,8 +35,8 @@ const PasswordCard = () => {
               className="p-1 cursor-pointer rounded-sm border bg-white dark:bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:border-input dark:hover:bg-input/50">
               <IconDots size={14}/>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="shadow-lg">
-              <DropdownMenuItem className="py-0" onClick={handleOpenDialog}>
+            <DropdownMenuContent align="end" className="shadow-lg w-fit">
+              <DropdownMenuItem className="py-0 px-2 text-nowrap" onClick={handleOpenDialog}>
                 {t("change-password")}
               </DropdownMenuItem>
             </DropdownMenuContent>
