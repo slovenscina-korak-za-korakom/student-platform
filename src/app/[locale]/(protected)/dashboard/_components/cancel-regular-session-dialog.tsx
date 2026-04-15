@@ -115,6 +115,7 @@ export default function CancelRegularSessionDialog({
               e.preventDefault();
               handleCancel();
             }}
+            variant="destructive"
             disabled={isCancelling}
             className={buttonVariants({ variant: "destructive" })}
           >

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {Sheet, SheetContent, SheetDescription, SheetTitle} from "@/components/ui/sheet";
 import {
   AlertDialog,
@@ -135,14 +136,14 @@ function EventCard({
       });
 
   return (
-    <div className="relative bg-white dark:bg-[#252525] rounded-2xl border border-border/10 dark:border-white/5 overflow-hidden shadow-sm">
+    <Card className="relative bg-white dark:bg-[#252525] rounded-2xl border-border/10 dark:border-white/5 shadow-sm gap-0 py-0">
       {/* Left colour stripe */}
       <div
-        className="absolute left-0 top-0 bottom-0 w-[3px]"
+        className="absolute left-0 top-0 bottom-0 w-[3px] rounded-l-2xl"
         style={{ backgroundColor: activeColor }}
       />
 
-      <div className="pl-5 pr-4 pt-4 pb-3">
+      <CardContent className="pl-5 pr-4 pt-4 pb-3">
         {/* Icon + title row */}
         <div className="flex items-start gap-3 mb-3.5">
           <div
@@ -206,11 +207,11 @@ function EventCard({
             </span>
           )}
         </div>
-      </div>
+      </CardContent>
 
       {/* Actions footer */}
       {!isPast && (
-        <div className="border-t border-border/10 dark:border-white/5 px-4 py-2.5 flex items-center justify-end gap-1.5 bg-muted/10 dark:bg-white/[0.02]">
+        <CardFooter className="border-border/50 dark:border-white/5 px-4 py-2.5 justify-end gap-1.5 bg-muted/50 dark:bg-white/[0.02] rounded-b-2xl">
           {isRegular ? (
             <Button
               variant="ghost"
@@ -280,6 +281,7 @@ function EventCard({
                   <AlertDialogFooter>
                     <AlertDialogCancel>{tButtons("cancel")}</AlertDialogCancel>
                     <AlertDialogAction
+                      variant="destructive"
                       onClick={() =>
                         toast.promise(onCancel(event), {
                           loading: tButtons("cancelling"),
@@ -302,9 +304,9 @@ function EventCard({
               </AlertDialog>
             </>
           )}
-        </div>
+        </CardFooter>
       )}
-    </div>
+    </Card>
   );
 }
 
@@ -347,6 +349,7 @@ export function DayEventsSheet({
     <>
       <Sheet open={open} onOpenChange={onOpenChange}>
         <SheetContent
+          showCloseButton={false}
           side="right"
           className="w-full sm:max-w-[420px] p-0 flex flex-col overflow-hidden bg-background dark:bg-[#1a1a1a]"
         >

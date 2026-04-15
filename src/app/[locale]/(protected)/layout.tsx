@@ -40,7 +40,7 @@ const ProtectedLayout = async ({ children, params }: ProtectedLayoutProps) => {
           } as React.CSSProperties
         }
       >
-        <AppSidebar variant="inset" locale={locale} />
+        <AppSidebar variant="sidebar" locale={locale} />
         <SidebarInset>
           <SiteHeader />
           <main className="h-full">{children}</main>

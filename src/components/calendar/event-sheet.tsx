@@ -142,7 +142,7 @@ export const EventSheet = (props: EventSheetProps) => {
   return (
     <>
       <Sheet open={props.isEventSheetOpen} onOpenChange={props.setIsEventSheetOpen}>
-        <SheetContent className="w-full sm:max-w-md p-0 flex flex-col overflow-hidden gap-0">
+        <SheetContent showCloseButton={false} className="w-full sm:max-w-md p-0 flex flex-col overflow-hidden gap-0">
           <SheetTitle className="sr-only">
             {session?.sessionType} with {session?.tutorName}
           </SheetTitle>

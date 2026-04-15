@@ -228,7 +228,7 @@ const NextEventCard = ({event, locale}: NextEventCardProps) => {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-row gap-3 pt-6 border-t border-border/30">
+        <CardFooter className="flex flex-row gap-3 pt-6 border-t border-border/30 bg-background dark:bg-[#1a1a1a]">
           {isRegular ? (
             (() => {
               const hoursUntilSession = (new Date(event.date).getTime() - currentTime.getTime()) / (1000 * 60 * 60);
@@ -291,6 +291,7 @@ const NextEventCard = ({event, locale}: NextEventCardProps) => {
                   <AlertDialogFooter>
                     <AlertDialogCancel>{tC("cancel")}</AlertDialogCancel>
                     <AlertDialogAction
+                      variant="destructive"
                       onClick={() =>
                         toast.promise(handleCancel, {
                           loading: tC("cancelling"),
