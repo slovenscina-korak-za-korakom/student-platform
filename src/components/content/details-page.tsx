@@ -17,7 +17,6 @@ export default function DetailsPageHero() {
       "#subtitle",
       "#title",
       "#text1",
-      "#text2",
       "#point1",
       "#point2",
       "#point3",

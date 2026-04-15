@@ -25,6 +25,7 @@ const SectionTitle = ({
 }: SectionTitleProps) => {
   const t = useTranslations(translations);
   useGSAP(() => {
+    if (!id) return;
     gsap.from(`#${id}`, {
       y: "40%",
       opacity: 0,

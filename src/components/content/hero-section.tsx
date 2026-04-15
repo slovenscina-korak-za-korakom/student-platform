@@ -104,6 +104,7 @@ export default function Hero() {
               className="aspect-[9/16] w-full h-[70vh] object-cover sm:rounded-full"
               src="/herro-picture.png"
               alt=""
+              loading="eager"
             />
           </div>
         </div>
@@ -118,6 +119,7 @@ export default function Hero() {
                 className="relative aspect-square w-auto sm:h-56 md:h-64 lg:h-[32rem] object-cover rounded-3xl bg-gradient-primary-subtle shadow-2xl ring-1 ring-border/50"
                 src="/herro-picture.png"
                 alt=""
+                loading="eager"
               />
             </div>
             <div className="w-full py-[calc(100vh-90vh)] sm:py-32 lg:py-40">
