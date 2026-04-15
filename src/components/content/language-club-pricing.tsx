@@ -1,7 +1,7 @@
 "use client";
 import {useLocale, useTranslations} from "next-intl";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import {Link} from "@/i18n/routing";
+import {IconCheck} from "@tabler/icons-react";
 
 export default function LanguageClub() {
   const locale = useLocale()
@@ -72,9 +72,10 @@ export default function LanguageClub() {
                 className="flex items-start gap-4 p-6 rounded-2xl bg-gradient-primary-subtle/50 border border-border/30 hover:border-sl-accent/40 transition-all duration-300 hover:shadow-lg hover:shadow-sl-accent/10"
               >
                 <div className="flex-shrink-0 mt-0.5 flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-sl-accent/40 to-sl-purple/40 shadow-sm">
-                  <CheckIcon
+                  <IconCheck
+                    size={16}
                     aria-hidden="true"
-                    className="text-white h-4 w-4"
+                    className="text-white"
                   />
                 </div>
                 <div>

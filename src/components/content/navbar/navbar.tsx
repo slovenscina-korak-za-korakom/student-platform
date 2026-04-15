@@ -2,7 +2,6 @@
 "use client";
 import { useState } from "react";
 import { webNavigation } from "@/lib/docs";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import LanguageSwitcher from "./language-switcher";
@@ -12,6 +11,7 @@ import { IconLogo } from "@/components/icons/icon-logo";
 import { ThemButton } from "@/components/ui/appearance-switch-button";
 import { Link } from "@/i18n/routing";
 import { Button } from "@/components/ui/button";
+import {IconMenu2} from "@tabler/icons-react";
 
 export default function NavBar({ locale }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,7 +24,7 @@ export default function NavBar({ locale }) {
   }
 
   return (
-    <header className="fixed dark:glass glass py-2 lg:py-3 border-b border-border/50 dark:border-border/30 inset-x-0 top-0 z-50 transition-all duration-300">
+    <header className="fixed bg-background/90 dark:bg-[#131014]/90 py-2 lg:py-3 border-b border-border/50 dark:border-border/30 inset-x-0 top-0 z-50">
       <nav
         aria-label="Global"
         className="relative flex justify-between items-center h-16 mx-auto lg:container lg:px-16 xl:px-20"
@@ -91,13 +91,13 @@ export default function NavBar({ locale }) {
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="text-foreground-lighter focus:ring-transparent bg-transparent hover:text-foreground-light transition-colors hover:bg-overlay inline-flex items-center justify-center rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-inset cursor-pointer"
+            className="text-foreground-lighter cursor-pointer"
             aria-expanded="false"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon
+            <IconMenu2
+              size={20}
               aria-hidden="true"
-              className="size-6 text-gray-400 dark:text-gray-400"
             />
           </button>
         </div>

@@ -1,12 +1,9 @@
 "use client";
 import {offers} from "@/lib/docs";
-import {CheckIcon} from "@heroicons/react/20/solid";
 import {useTranslations} from "next-intl";
 import {useState} from "react";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
+import {IconCheck} from "@tabler/icons-react";
+import {cn} from "@/lib/utils";
 
 export default function PricingContent() {
   const t = useTranslations("pricing.plans");
@@ -36,12 +33,11 @@ export default function PricingContent() {
         {offers.map((tier, tierIdx) => (
           <div
             key={tier.id}
-            className={classNames(
-              tier.featured
-                ? "relative bg-gradient-primary shadow-2xl ring-2 ring-sl-accent/50 scale-105"
-                : "bg-gradient-primary-subtle border border-border/50 sm:mx-0 md:mx-0",
+            className={cn(
               "rounded-3xl p-8 sm:p-10 transition-all duration-300 hover:shadow-xl hover:shadow-sl-accent/20",
-              tier.featured ? "z-10" : "hover:scale-[1.01]",
+              tier.featured
+                ? "relative bg-gradient-primary shadow-2xl ring-2 ring-sl-accent/50 scale-105 z-10"
+                : "bg-gradient-primary-subtle border border-border/50 sm:mx-0 md:mx-0 hover:scale-[1.01]",
             )}
           >
             {tier.featured && (
@@ -49,66 +45,38 @@ export default function PricingContent() {
             )}
             <h3
               id={tier.id}
-              className={classNames(
-                "text-sm font-bold uppercase tracking-wider mb-2 text-sl-accent",
-              )}
+              className="text-sm font-bold uppercase tracking-wider mb-2 text-sl-accent"
             >
               {t(`plan${tierIdx + 1}.name`)}
             </h3>
             <p className="mt-4 flex items-baseline gap-x-2">
-            <span
-              className={classNames(
-                "text-5xl font-bold font-sans tracking-tight text-sl-primary",
-              )}
-            >
+            <span className="text-5xl font-bold font-sans tracking-tight text-sl-primary">
               {tier.priceMonthly[role].split(".")[0]}
               <span className="text-4xl">
                 {tier.priceMonthly[role].split(".").length > 1 &&
                   "." + tier.priceMonthly[role].split(".")[1]}
               </span>
             </span>
-              <span
-                className={classNames(
-                  tier.featured ? "text-foreground" : "text-sl-secondary",
-                  "text-base font-medium",
-                )}
-              >
+              <span className={cn("text-base font-medium", tier.featured ? "text-foreground" : "text-sl-secondary")}>
               /{t("session")}
             </span>
             </p>
-            <p
-              className={classNames(
-                tier.featured
-                  ? "text-sl-secondary dark:text-foreground"
-                  : "text-sl-secondary",
-                "mt-6 text-base/7",
-              )}
-            >
+            <p className={cn("mt-6 text-base/7", tier.featured ? "text-sl-secondary dark:text-foreground" : "text-sl-secondary")}>
               {t(`plan${tierIdx + 1}.description`)}
             </p>
             <ul
               role="list"
-              className={classNames("mt-8 space-y-4 text-sm/6 sm:mt-10")}
+              className="mt-8 space-y-4 text-sm/6 sm:mt-10"
             >
               {[...Array(tier.features)].map((_, i) => (
                 <li key={i} className="flex items-start gap-x-3">
-                  <div
-                    className={classNames(
-                      "flex-shrink-0 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-sl-accent/40",
-                    )}
-                  >
-                    <CheckIcon
+                  <div className="flex-shrink-0 mt-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-sl-accent/40">
+                    <IconCheck
                       aria-hidden="true"
-                      className={classNames("text-white", "h-3.5 w-3.5")}
+                      className="text-white h-3.5 w-3.5"
                     />
                   </div>
-                  <span
-                    className={classNames(
-                      tier.featured
-                        ? "text-sl-secondary dark:text-foreground"
-                        : "text-sl-secondary",
-                    )}
-                  >
+                  <span className={tier.featured ? "text-sl-secondary dark:text-foreground" : "text-sl-secondary"}>
                   {t(`plan${tierIdx + 1}.features.${i}`)}
                 </span>
                 </li>
@@ -117,11 +85,11 @@ export default function PricingContent() {
             <a
               href={tier.href}
               aria-describedby={tier.id}
-              className={classNames(
+              className={cn(
+                "mt-8 block rounded-xl px-4 py-3 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sl-accent sm:mt-10 border-sl-accent/50 border-[1px]",
                 tier.featured
                   ? "bg-background text-sl-accent dark:text-foreground hover:bg-background/90 shadow-lg hover:shadow-xl transition-all duration-300 dark:shadow-sl-accent/20 dark:shadow-xl"
                   : "bg-gradient-primary text-sl-secondary hover:opacity-90 shadow-lg shadow-sl-accent/20 hover:shadow-xl hover:shadow-sl-accent/30 transition-all duration-300",
-                "mt-8 block rounded-xl px-4 py-3 text-center text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sl-accent sm:mt-10 border-sl-accent/50 border-[1px]",
               )}
             >
               {t2("button")}

@@ -24,8 +24,6 @@
     "@fullcalendar/react": "^6.1.19",
     "@fullcalendar/timegrid": "^6.1.19",
     "@gsap/react": "^2.1.1",
-    "@headlessui/react": "^2.2.4",
-    "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.1.1",
     "@react-email/components": "1.0.6",
     "@splidejs/react-splide": "^0.7.12",
