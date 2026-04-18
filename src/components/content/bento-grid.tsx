@@ -4,12 +4,12 @@ import Lottie from "lottie-react";
 import teacherAnimation from "@/animations/teacher-animation.json";
 import personalizedLearningAnimation from "@/animations/personalized-learning.json";
 import videoCallAnimation from "@/animations/video-call.json";
-import { useRef } from "react";
-import { useTranslations } from "next-intl";
-import { useGSAP } from "@gsap/react";
-import gsap, { ScrollTrigger } from "gsap/all";
+import {useEffect, useRef, useState} from "react";
+import {useTranslations} from "next-intl";
+import {useGSAP} from "@gsap/react";
+import gsap, {ScrollTrigger} from "gsap/all";
 import Image from "next/image";
-import { IconLogo } from "../icons/icon-logo";
+import {IconLogo} from "../icons/icon-logo";
 import {useTheme} from "next-themes";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -22,6 +22,7 @@ export default function BentoGrid() {
   const personalizedA = useRef<any>(null);
   const videoCallA = useRef<any>(null);
   const {theme} = useTheme()
+  const [phoneView, setPhoneView] = useState<"ig" | "tel">("tel")
 
   useGSAP(() => {
     gsap.from("#card1", {
@@ -149,13 +150,25 @@ export default function BentoGrid() {
       };
     }, []);
 
-    return { rootRef, cardRef, shineRef };
+    return {rootRef, cardRef, shineRef};
   };
 
   const card1Refs = use3DCard();
   const card2Refs = use3DCard();
   const card3Refs = use3DCard();
   const card4Refs = use3DCard();
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      if (phoneView === "tel") setPhoneView("ig" as "ig" | "tel");
+      else setPhoneView("tel" as "ig" | "tel");
+    }, 5000)
+
+    return () => {
+      clearTimeout(timeout);
+    }
+
+  }, [phoneView])
 
   return (
     <>
@@ -169,8 +182,9 @@ export default function BentoGrid() {
             ref={card1Refs.cardRef}
             className="relative h-full px-8 py-8 gap-8 flex flex-col justify-around items-center rounded-3xl will-change-transform transition-[box-shadow] duration-300 shadow-2xl hover:shadow-[0_25px_50px_-12px] hover:shadow-indigo-300/50 bg-gradient-primary border border-border/50 dark:border-border/30 backdrop-blur-xl overflow-hidden"
           >
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent"/>
+            <div
+              className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300"/>
             <div
               ref={card1Refs.shineRef}
               className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 mix-blend-screen"
@@ -198,9 +212,10 @@ export default function BentoGrid() {
               id="card1-start"
               className="relative z-10 flex flex-col lg:flex-row items-center gap-5"
             >
-              <Lottie lottieRef={teacherA} animationData={teacherAnimation} />
+              <Lottie lottieRef={teacherA} animationData={teacherAnimation}/>
               <div>
-                <h2 className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
+                <h2
+                  className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
                   {t("trial-lesson.title")}
                 </h2>
                 <p className="mt-2 max-w-lg text-sm/6 text-sl-secondary dark:text-white/90 max-lg:text-center">
@@ -220,26 +235,38 @@ export default function BentoGrid() {
             ref={card2Refs.cardRef}
             className="relative h-full px-8 py-8 flex flex-col justify-center items-center rounded-3xl will-change-transform transition-[box-shadow] duration-300 shadow-2xl hover:shadow-[0_25px_50px_-12px] hover:shadow-sl-purple/50 bg-gradient-primary-subtle border border-border/50 dark:border-border/30 backdrop-blur-xl overflow-hidden"
           >
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent"/>
+            <div
+              className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300"/>
             <div
               ref={card2Refs.shineRef}
               className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 mix-blend-screen"
             />
             <div className="relative z-10 w-full">
-              <h2 className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
+              <h2
+                className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
                 {t("community.title")}
               </h2>
               <p className="mt-2 max-w-lg text-sm/6 text-sl-secondary dark:text-white/90 max-lg:text-center">
                 {t("community.description", {members: 1800})}
               </p>
-              <div className="relative min-h-[20rem] w-full grow mt-6 [container-type:inline-size] max-lg:mx-auto max-lg:max-w-sm">
+              <div
+                className="relative min-h-[20rem] w-full grow mt-6 [container-type:inline-size] max-lg:mx-auto max-lg:max-w-sm">
                 <div className="absolute inset-x-1 sm:inset-x-4 md:inset-x-8">
                   <Image
                     width={720}
                     height={1280}
-                    className="size-full object-cover bg-transparent object-top"
-                    src={theme === "light" ? "/telegram-phone-mockup-light.png" : "/telegram-phone-mockup.png"}
+                    className="size-full object-cover bg-transparent object-top transition-opacity duration-700 ease-in-out"
+                    style={{opacity: phoneView === "tel" ? 1 : 0}}
+                    src={theme === "light" ? "/telegram-mockup-light.png" : "/telegram-mockup-dark.png"}
+                    alt="phone demo"
+                  />
+                  <Image
+                    width={720}
+                    height={1280}
+                    className="absolute inset-0 size-full object-cover bg-transparent object-top transition-opacity duration-700 ease-in-out"
+                    style={{opacity: phoneView === "ig" ? 1 : 0}}
+                    src={theme === "light" ? "/instagram-mockup-light.png" : "/instagram-mockup-dark.png"}
                     alt="phone demo"
                   />
                 </div>
@@ -257,8 +284,9 @@ export default function BentoGrid() {
             ref={card3Refs.cardRef}
             className="relative h-full px-8 py-8 flex flex-col justify-center items-center rounded-3xl will-change-transform transition-[box-shadow] duration-300 shadow-2xl hover:shadow-[0_25px_50px_-12px] hover:shadow-sl-pink/50 bg-gradient-primary border border-border/50 dark:border-border/30 backdrop-blur-xl overflow-hidden"
           >
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent"/>
+            <div
+              className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300"/>
             <div
               ref={card3Refs.shineRef}
               className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 mix-blend-screen"
@@ -276,7 +304,7 @@ export default function BentoGrid() {
 
         {/* <div className="hidden lg:gap-3 lg:px-8 lg:py-8 lg:col-span-2 lg:row-span-1 lg:flex flex-col justify-center items-center shadow-lg dark:border-[1px] dark:border-gray-700 border rounded-3xl"> */}
         <div className="hidden">
-          <IconLogo className="size-10" />
+          <IconLogo className="size-10"/>
           <h1 className="uppercase text-center text-[0.590rem] text-sl-accent font-bold">
             Slovenščina Korak za Korkom
           </h1>
@@ -291,15 +319,17 @@ export default function BentoGrid() {
             ref={card4Refs.cardRef}
             className="relative h-full px-8 py-8 flex flex-col lg:flex-row justify-center items-center rounded-3xl will-change-transform transition-[box-shadow] duration-300 shadow-2xl hover:shadow-[0_25px_50px_-12px] hover:shadow-sl-accent/50 bg-gradient-primary-subtle border border-border/50 dark:border-border/30 backdrop-blur-xl overflow-hidden"
           >
-            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent" />
-            <div className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300" />
+            <div className="pointer-events-none absolute inset-0 rounded-3xl bg-transparent"/>
+            <div
+              className="pointer-events-none absolute inset-0 rounded-3xl ring-1 ring-inset ring-indigo-500 dark:ring-indigo-300"/>
             <div
               ref={card4Refs.shineRef}
               className="pointer-events-none absolute inset-0 rounded-3xl opacity-0 mix-blend-screen"
             />
             <div className="relative z-10 flex flex-col lg:flex-row items-center gap-6 lg:gap-8 w-full">
               <div>
-                <h2 className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
+                <h2
+                  className="mt-2 text-lg font-semibold tracking-tight text-sl-primary dark:text-white max-lg:text-center">
                   {t("personalized.title")}
                 </h2>
                 <p

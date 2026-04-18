@@ -10,23 +10,6 @@ const Carousel = ({ data, stars = false }) => {
   return (
     <>
       <div className="relative select-none lg:px-4">
-        <blockquote>
-          <Image
-            width={600}
-            height={600}
-            className="hidden absolute -z-1 top-1 -left-2 lg:block size-40"
-            src={"/blockquote.svg"}
-            alt="quote sign"
-          />
-          <Image
-            width={600}
-            height={600}
-            className="hidden absolute -z-1 -bottom-3 -right-2 rotate-180 lg:block size-40"
-            src={"/blockquote.svg"}
-            alt="quote sign"
-          />
-        </blockquote>
-
         <Splide
           options={{
             perPage: 1,
