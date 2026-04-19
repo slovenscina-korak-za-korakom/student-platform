@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { useSession } from "@clerk/clerk-react";
+import { useSession } from "@clerk/nextjs";
 import {
   EmailCodeFactor,
   SessionVerificationLevel,
