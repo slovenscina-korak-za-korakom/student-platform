@@ -12,19 +12,17 @@ const DashboardLoading = () => {
         <Skeleton width={240} height={24} />
       </div>
 
-      {/* Stat cards — hidden on mobile, matches `hidden md:grid` */}
-      <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Stat cards — hidden on mobile, matches `hidden md:grid grid-cols-4 gap-3` */}
+      <div className="hidden md:grid grid-cols-4 gap-3">
         {Array.from({ length: 4 }).map((_, i) => (
           <div
             key={i}
-            className="rounded-xl border border-border/40 bg-sidebar/50 dark:bg-sidebar/15 px-5 py-4 space-y-4"
+            className="rounded-xl border border-border/40 bg-white dark:bg-[#1a1a1a] px-5 py-4 overflow-hidden"
           >
-            <div className="flex items-start justify-between">
-              <Skeleton width={100} height={14} />
-              <Skeleton width={20} height={20} borderRadius={6} />
+            <div className="flex items-center justify-between gap-4">
+              <Skeleton width={100} height={16} />
+              <Skeleton width={64} height={36} />
             </div>
-            <Skeleton width={60} height={48} />
-            <Skeleton width={140} height={14} />
           </div>
         ))}
       </div>

@@ -89,7 +89,7 @@ const DashboardStats = ({
         return (
           <Card
             key={index}
-            className="group relative bg-white dark:bg-[#1a1a1a] border shadow-[0_2px_8px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)] rounded-xl overflow-hidden"
+            className="group relative bg-white dark:bg-[#1a1a1a] shadow-[0_2px_8px_rgba(0,0,0,0.08),0_1px_3px_rgba(0,0,0,0.06)]  rounded-xl overflow-hidden"
             style={{borderColor: hexToRgba(stat.color, 0.35)}}
           >
             <div
@@ -97,7 +97,7 @@ const DashboardStats = ({
               style={{clipPath: "polygon(50% 0, 100% 0, 100% 100%, 0% 100%)"}}
             />
             <svg className="absolute inset-0 w-full h-full pointer-events-none" preserveAspectRatio="none">
-              <line x1="80%" y1="0%" x2="60%" y2="100%" stroke={stat.color} strokeOpacity={0.6} strokeWidth="1"/>
+              <line x1="80%" y1="0%" x2="60%" y2="100%" stroke={"var(--foreground)"} strokeOpacity={0.5} strokeWidth="1"/>
             </svg>
             <CardContent className="relative z-10 px-5 py-4">
               <div className="flex items-center justify-between gap-4">
@@ -107,11 +107,11 @@ const DashboardStats = ({
                 {stat.id === 2 ? (
                   <div className="inline-flex items-baseline gap-0.5 shrink-0">
                     <span
-                      className="text-3xl font-bold text-foreground tabular-nums">{Math.floor(stat.value / 60)}</span>
+                      className="text-3xl font-bold text-foreground tabular-nums">{Math.floor(stat.value as number / 60)}</span>
                     <span className="text-base text-muted-foreground">h</span>
-                    {stat.value % 60 !== 0 && (
+                    {stat.value as number % 60 !== 0 && (
                       <>
-                        <span className="text-3xl font-bold text-foreground tabular-nums ml-1">{stat.value % 60}</span>
+                        <span className="text-3xl font-bold text-foreground tabular-nums ml-1">{stat.value as number % 60}</span>
                         <span className="text-base text-muted-foreground">m</span>
                       </>
                     )}
