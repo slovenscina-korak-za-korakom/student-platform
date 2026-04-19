@@ -32,6 +32,7 @@ export async function getRegularInvitations(): Promise<RegularInvitation[]> {
       location: regularInvitationsTable.location,
       description: regularInvitationsTable.description,
       timezone: regularInvitationsTable.timezone,
+      updatedAt: regularInvitationsTable.updatedAt,
       tutorName: tutorsTable.name,
       tutorAvatar: tutorsTable.avatar,
       tutorColor: tutorsTable.color,

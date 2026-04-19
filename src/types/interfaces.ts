@@ -180,6 +180,7 @@ export interface RegularInvitation {
   location: string;
   description: string | null;
   timezone: string | null; // IANA timezone name, e.g. 'Europe/Ljubljana'
+  updatedAt: Date; // when the invitation was accepted
   tutorName: string;
   tutorAvatar: string;
   tutorColor: string;

@@ -1,11 +1,29 @@
 import "./globals.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import React, { Suspense } from "react";
+import { Metadata } from "next";
+import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
+import { getLocale } from "next-intl/server";
 import { LocaleProvider } from "@/contexts/locale-context";
+import type { localeType } from "@/i18n/routing";
 import { DynamicClerkProvider } from "@/components/providers/dynamic-clerk-provider";
-import { Suspense } from "react";
-import {Metadata} from "next";
-import "react-loading-skeleton/dist/skeleton.css"
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "sonner";
+import { Analytics } from "@vercel/analytics/next";
 
-export const metadata : Metadata = {
+const manropeFont = Manrope({
+  weight: ["200", "300", "400", "500", "600", "700", "800"],
+  subsets: ["latin", "latin-ext", "cyrillic", "cyrillic-ext"],
+  variable: "--font-manrope",
+});
+
+const tankerFont = localFont({
+  src: "./fonts/tanker-regular.woff2",
+  variable: "--font-tanker",
+});
+
+export const metadata: Metadata = {
   title: {
     default: "Slovenscina Korak za Korakom | Become fluent in Slovene",
     template: "%s | Slovenscina Korak za Korakom",
@@ -52,15 +70,55 @@ export const metadata : Metadata = {
   },
 };
 
-export default function RootLayout({ children, params }) {
-  const { locale } = params || {};
-  const initialLocale = locale || "en";
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Slovenscina Korak za Korakom",
+  url: "https://slovenscinakzk.com",
+  description:
+    "Personalized Slovene lessons tailored to your goals. Learn online with experienced teachers and join a community of over 1,700 members.",
+  publisher: {
+    "@type": "Organization",
+    name: "Slovenscina Korak za Korakom",
+    url: "https://slovenscinakzk.com",
+    logo: {
+      "@type": "ImageObject",
+      url: "https://slovenscinakzk.com/logo-image.png",
+    },
+  },
+};
+
+export default async function RootLayout({ children }) {
+  const locale = await getLocale();
 
   return (
-    <Suspense>
-      <LocaleProvider initialLocale={initialLocale}>
-        <DynamicClerkProvider>{children}</DynamicClerkProvider>
-      </LocaleProvider>
-    </Suspense>
+    <html
+      lang={locale}
+      suppressHydrationWarning
+      className={`${manropeFont.variable} ${tankerFont.variable}`}
+    >
+      <body className="font-manrope font-medium">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        <Toaster richColors position="bottom-right" />
+        <Suspense>
+          <LocaleProvider initialLocale={locale as localeType}>
+            <DynamicClerkProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </DynamicClerkProvider>
+          </LocaleProvider>
+        </Suspense>
+        <Analytics />
+      </body>
+    </html>
   );
 }

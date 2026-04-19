@@ -87,13 +87,8 @@
       "personal-sessions": "Индивидуальные занятия",
       "regular-sessions": "Регулярные занятия",
       "completed": "Завершенные уроки",
-      "description": {
-        "upcoming": "Запланированные события",
-        "language-club": "Групповые занятия",
-        "personal-sessions": "Индивидуальные занятия",
-        "regular-sessions": "Еженедельные повторяющиеся",
-        "completed": "Прошедшие уроки"
-      }
+      "total-hours": "Всего часов",
+      "current-level": "Текущий уровень"
     },
     "events": {
       "events": "Events",

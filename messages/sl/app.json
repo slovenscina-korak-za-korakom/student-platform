@@ -86,14 +86,9 @@
       "language-club": "Dogodki pogovornega kluba",
       "personal-sessions": "Ostale ure",
       "regular-sessions": "Redne ure",
-      "completed": "Zaključene seje",
-      "description": {
-        "upcoming": "Načrtovani dogodki",
-        "language-club": "Skupinske seje",
-        "personal-sessions": "Individualne lekcije",
-        "regular-sessions": "Tedensko ponavljajoče",
-        "completed": "Pretekle seje"
-      }
+      "completed": "Dokončane ure",
+      "total-hours": "Skupen čas",
+      "current-level": "Trenutni nivo"
     },
     "events": {
       "events": "Dogodki",

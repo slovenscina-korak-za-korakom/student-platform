@@ -1,7 +1,7 @@
 import Greeting from "@/components/dashboard/content/greeting";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import React from "react";
-import { getRegularSessions } from "@/actions/regulars";
+import {getRegularInvitations, getRegularSessions, getStudentCancelledSessions} from "@/actions/regulars";
 import { getDashboardLangClubEvents } from "@/actions/stripe-actions";
 import { getDashboardPersonalSessions } from "@/actions/timeblocks";
 
@@ -14,16 +14,20 @@ const DashboardPage = async ({ params }) => {
   const { locale } = await params;
   const { userId } = await auth();
 
-  const [clerkUser, langClubResult, personalResult, regularSessions] = await Promise.all([
+  const [clerkUser, langClubResult, personalResult, regularSessions, invitations, cancelledSessions] = await Promise.all([
     clerkClient().then((c) => c.users.getUser(userId)),
     getDashboardLangClubEvents(),
     getDashboardPersonalSessions(),
     getRegularSessions(),
+    getRegularInvitations(),
+    getStudentCancelledSessions(),
   ]);
+
 
   const showWelcomeDialog = clerkUser.unsafeMetadata.showWelcomeDialog === true;
   const langClubEvents = langClubResult.status === 200 ? langClubResult.events : [];
   const personalSessions = personalResult.status === 200 ? personalResult.sessions : [];
+  const languageLevel = (clerkUser.privateMetadata.languageLevel as string) || "";
 
   return (
     <main className="w-full h-full flex flex-col gap-8 p-0 md:p-10 lg:p-12">
@@ -34,9 +38,10 @@ const DashboardPage = async ({ params }) => {
 
       {/* Stats Cards */}
       <DashboardStats
-        langClubEvents={langClubEvents}
         personalSessions={personalSessions}
-        regularSessions={regularSessions}
+        invitations={invitations}
+        cancelledSessions={cancelledSessions}
+        languageLevel={languageLevel}
       />
 
       {/* Main Content: Calendar and Events */}

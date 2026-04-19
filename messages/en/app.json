@@ -87,13 +87,8 @@
       "personal-sessions": "Personal Sessions",
       "regular-sessions": "Regular Sessions",
       "completed": "Completed Sessions",
-      "description": {
-        "upcoming": "Scheduled events",
-        "language-club": "Group sessions",
-        "personal-sessions": "One-on-one lessons",
-        "regular-sessions": "Weekly recurring",
-        "completed": "Past sessions"
-      }
+      "total-hours": "Total Hours",
+      "current-level": "Current Level"
     },
     "events": {
       "events": "Events",
