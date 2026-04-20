@@ -54,7 +54,7 @@ const DashboardPage = async ({ params }) => {
             locale={locale}
           />
         </div>
-        <div className="lg:col-span-1 p-4">
+        <div className="lg:col-span-1 p-4 pt-0">
           <DashboardClient
             langClubEvents={langClubEvents}
             personalSessions={personalSessions}

@@ -1,7 +1,6 @@
 "use client";
 import React, { useMemo, useState } from "react";
 import NextEventCard from "./next-event-card";
-import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { IconCalendar } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
@@ -135,8 +134,6 @@ const DashboardClient = ({
         {allEvents.length > 0 && (
           <ViewAllScheduledSheet events={allEvents} locale={locale} />
         )}
-
-        <Separator />
       </div>
     </div>
   );
