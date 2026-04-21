@@ -202,7 +202,7 @@
           "verification": {
             "title": "Verify your email",
             "subtitle": "Enter verification code sent to your email",
-            "no-code": "Did't receice a code?"
+            "no-code": "Didn't receive a code?"
           }
         }
       },
