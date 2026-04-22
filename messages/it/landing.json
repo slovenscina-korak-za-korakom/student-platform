@@ -208,33 +208,45 @@
   },
   "about": {
     "hero": {
-      "title": "Scopri la nostra storia",
-      "subtitle": "Costruire connessioni attraverso il linguaggio",
-      "text1": "In Slovenščina Korak za Korakom, aiutiamo persone di ogni estrazione a padroneggiare nuove lingue e ad abbracciare con sicurezza nuove culture. Il nostro approccio personalizzato, gli insegnanti esperti e la comunità di supporto creano un'esperienza di apprendimento coinvolgente che consente agli studenti di raggiungere i propri obiettivi.",
-      "text2": "Unisciti alla nostra community, registrati per una lezione di prova gratuita e fai oggi stesso il primo passo verso il raggiungimento dei tuoi obiettivi linguistici!"
+      "title": "Chi siamo",
+      "subtitle": "Slovenščina Korak za Korakom è una piattaforma per l'apprendimento della lingua slovena, pensata per chiunque abbia bisogno di imparare lo sloveno in modo efficace nella vita reale, non solo sulla carta.",
+      "text1": "Che tu ti sia appena trasferito in Slovenia, ti stia preparando per un esame o voglia semplicemente entrare in sintonia più profonda con il Paese e la sua gente, siamo qui per guidarti in ogni passo."
     },
     "mission": {
-      "title": "Creare ponti tra culture, dare potere alle persone",
-      "subtitle": "Perché facciamo quello che facciamo",
-      "text1": "In Slovenščina Korak za Korakom, la nostra missione è quella di dare potere a persone con background diversi offrendo esperienze di apprendimento linguistico personalizzate, coinvolgenti ed efficaci. Ci impegniamo a colmare le lacune culturali e a promuovere connessioni aiutando i nostri studenti non solo a imparare una lingua, ma anche a sentirsi a casa nei loro nuovi ambienti. Attraverso una guida esperta, opzioni di apprendimento flessibili e una comunità di supporto, puntiamo a rendere l'apprendimento delle lingue accessibile e piacevole per tutti.",
-      "text2": "Immaginiamo un mondo in cui le barriere linguistiche non ostacolano più le opportunità o l'integrazione. Quella che è iniziata come una piattaforma per supportare i migranti di lingua russa che si muovono nella vita in Slovenia è cresciuta fino a diventare un vivace hub per studenti provenienti da diversi background linguistici e culturali.",
-      "text3": "Il nostro obiettivo è diventare una piattaforma leader per l'apprendimento delle lingue in Slovenia e oltre, aiutando gli individui a liberare il loro pieno potenziale attraverso la padronanza della lingua. Aspiriamo a costruire una comunità globale di studenti, uniti dalla loro passione per la crescita, la connessione e lo scambio culturale.",
-      "text4": "Grazie a metodi di insegnamento innovativi, insegnanti dedicati e un impegno verso l'eccellenza, Slovenščina Korak za Korkom continua ad aprire la strada agli studenti di lingue in tutto il mondo."
+      "title": "Da dove veniamo",
+      "subtitle": "La nostra storia",
+      "text1": "La nostra storia non inizia in un'aula scolastica, ma in una piccola cittadina chiamata Mozirje, 5.000 abitanti, dove due ragazzi sono arrivati dall'Ucraina senza conoscere lo sloveno e senza una tabella di marcia.",
+      "text2": "Si trattava di Oleksandr e Sofia (i nostri fondatori), che 12 anni fa si sono trasferiti in Slovenia con la loro famiglia. Non potendo contare su una comunità di lingua russa a cui appoggiarsi, non hanno avuto altra scelta se non quella di immergersi completamente nella nuova realtà: scuola, società sportive, lezioni di musica, amicizie — tutto in sloveno, fin dal primo giorno. Non si sono limitati ad adattarsi: hanno prosperato. Entrambi hanno superato gli esami NPZ e la Matura con ottimi risultati presso il I Gimnazija di Celje. Sofia ha intrapreso gli studi in giurisprudenza, mentre Oleksandr ha conseguito la laurea in economia e sta attualmente completando il master.",
+      "text3": "Quel viaggio ha dato loro qualcosa di cui la maggior parte dei programmi linguistici è priva: una comprensione autentica di cosa significhi partire da zero e di cosa serva realmente per raggiungere la fluidità."
+    },
+    "built": {
+      "title": "Ciò che abbiamo costruito",
+      "subtitle": "Dalle lezioni informali a una piattaforma completa",
+      "text1": "Ciò che era iniziato come lezioni informali per amici appena arrivati in Slovenia si è gradualmente trasformato in qualcosa di molto più grande.",
+      "text2": "Nel corso di oltre tre anni, Oleksandr e Sofia hanno strutturato la loro esperienza in una vera e propria metodologia didattica, sperimentando approcci, elaborando materiali e perfezionando ciò che si rivelava efficace. Con l'aumentare della domanda, hanno ampliato la loro iniziativa trasformandola in una piattaforma completa, dotata di un team accuratamente selezionato di insegnanti madrelingua sloveni, una ricca libreria digitale per l'apprendimento, un club di conversazione e contenuti didattici gratuiti diffusi tramite Instagram e Telegram.",
+      "text3": "Oggi, Slovenščina Korak za Korakom si rivolge a studenti di ogni livello: dai principianti assoluti a coloro che si preparano per esami statali e specializzati, con un programma strutturato, collaudato e costruito attorno a progressi concreti."
     },
     "team": {
-      "title": "Le persone dietro il programma",
-      "subtitle": "Appassionato. Esperto. Dedito.",
-      "text1": "Siamo un gruppo dinamico di persone appassionate di ciò che facciamo e impegnate a fornire i migliori risultati per i nostri clienti."
+      "title": "Il nostro team",
+      "subtitle": "Insegnanti madrelingua, formati secondo la nostra metodologia",
+      "text1": "Ogni insegnante sulla nostra piattaforma è madrelingua slovena e possiede esperienza pratica nell'insegnamento. Ciascuno è stato formato personalmente secondo la nostra metodologia e testato con studenti reali prima di unirsi al team."
+    },
+    "different": {
+      "title": "What Makes Us Different",
+      "subtitle": "La Slovenia come esperienza vissuta",
+      "text1": "La maggior parte dei programmi linguistici insegna lo sloveno come materia. Noi lo insegniamo come un'esperienza vissuta.",
+      "text2": "Poiché i nostri fondatori hanno vissuto in prima persona il processo di integrazione, il nostro approccio va oltre le regole grammaticali e gli esercizi da manuale. Ci concentriamo su come la lingua viene effettivamente utilizzata: il ritmo della conversazione, le espressioni che non compaiono in nessun manuale, la sicurezza che deriva dal comprendere davvero ciò che viene detto intorno a te.",
+      "text3": "Questa prospettiva plasma ogni cosa: il modo in cui strutturiamo le lezioni, in cui selezioniamo gli insegnanti, in cui supportiamo gli studenti al di fuori dell'aula e in cui continuiamo a migliorare."
     },
     "testimonials": {
       "title": "Storie vere, risultati veri",
       "subtitle": "Ascolta i nostri studenti"
     },
     "contact": {
-      "title": "Fai il primo passo verso i tuoi obiettivi",
-      "subtitle": "Unisciti alla nostra comunità",
-      "text1": "Pronti a iniziare un percorso di apprendimento linguistico su misura per voi? Che stiate cercando di migliorare le vostre competenze, di entrare in contatto con una nuova cultura o di acquisire sicurezza nelle vostre interazioni quotidiane, Slovenščina Korak za Korkom è qui per guidarvi.",
-      "text2": "Iscriviti oggi stesso a una lezione di prova gratuita e scopri in prima persona quanto personalizzato, coinvolgente ed efficace può essere il nostro programma. Unisciti alla nostra crescente comunità di studenti di lingue e connettiti con tutor esperti che hanno la passione di aiutarti a raggiungere il successo."
+      "title": "Cosa succederà dopo",
+      "subtitle": "Abbiamo appena iniziato.",
+      "text1": "Non restiamo fermi. Corsi video e uno strumento per l'apprendimento dello sloveno basato sull'IA sono attualmente in fase di sviluppo e arriveranno presto sulla piattaforma. Stiamo costruendo l'esperienza di apprendimento dello sloveno più completa e accessibile disponibile — e siamo solo all'inizio.",
+      "text2": "Vuoi vedere come lavoriamo? Registrati e prova la tua prima lezione gratuitamente."
     }
   },
   "not-found": {

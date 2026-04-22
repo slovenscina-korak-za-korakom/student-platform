@@ -209,32 +209,44 @@
   "about": {
     "hero": {
       "title": "O nas",
-      "subtitle": "Pomagamo vam prijti do znanja",
-      "text1": "V Slovenščini Korak za korakom posameznikom pomagamo osvojiti slovenščino. Naš osebni pristop, strokovni inštruktorji in aktivna skupnost pomaga ljudem, da se naučijo slovenščino in se lažje vključijo v življenje.",
-      "text2": "Pridružite se nam in se prijavite na brezplačno poskusno uro in naredite prvi korak k doseganju svojih jezikovnih ciljev!"
+      "subtitle": "Slovenščina Korak za Korakom je sodobna platforma, ki učenje jezika prenese iz učbenikov naravnost v vsakdanje življenje. Naučite se slovenščine, ki jo boste dejansko uporabljali.",
+      "text1": "Ne glede na to, ali je Slovenija vaš novi dom, se pripravljate na izpit ali pa želite le bolje spoznati našo kulturo in ljudi. Tukaj smo, da vas podpremo pri vsakem koraku."
     },
     "mission": {
-      "title": "Brez jezikovnih ovir",
-      "subtitle": "Naš cilj",
-      "text1": "Naš cilj je pomagati ljudem, da se naučijo slovenščino in se lažje vključijo v življenje v Sloveniji. Verjamemo, da je jezik ključ do samozavesti, boljših priložnosti in občutka pripadnosti. Zato učenje prilagodimo vsakemu posamezniku in njegovim ciljem, da je napredek čim bolj enostaven, naraven in učinkovit.",
-      "text2": "Začeli smo z željo pomagati ljudem iz tujine, ki živijo v Sloveniji. Danes pa smo zrasli v skupnost učencev iz različnih držav in okolij, ki jih povezuje isti cilj, razumeti, govoriti in uporabljati slovenščino v vsakdanjem življenju.",
-      "text3": "Naš cilj je postati ena vodilnih platform za učenje slovenščine in pomagati še več ljudem na njihovi poti. Z izkušenimi učitelji, prilagojenim pristopom in podporo na vsakem koraku ustvarjamo okolje, kjer se lahko vsak uči samozavestno in brez stresa.",
-      "text4": "Z modernimi metodami, izkušenimi učitelji in podporo na vsakem koraku pomagamo učencem, da uspešno napredujejo pri učenju slovenščine."
+      "title": "Kako se je vse začelo",
+      "subtitle": "Naša zgodba",
+      "text1": "Naša zgodba se ne začne v učilnici, temveč v majhnem mestu Mozirje s 5000 prebivalci, kamor sta se dva otroka priselila iz Ukrajine brez slovenščine in brez načrta kako se jezika naučiti.",
+      "text2": "To sta bila Oleksandr in Sofija (naša ustanovitelja), ki sta se pred 12 leti z družino preselila v Slovenijo. Brez rusko govoreče skupnosti, na katero bi se lahko oprla, sta bila prepuščena sama sebi. Šola, šport, glasba in prijateljstva – vse se je od prvega dne odvijalo v slovenščini. A nista se le prilagodila, temveč v novem okolju sta uspela. Oba sta na I. gimnaziji Celje z odličnimi rezultati opravila izpite NPZ in maturo. Sofija trenutno študira pravo, Oleksandr pa je končal študij ekonomije in trenutno končuje magisterij.",
+      "text3": "Ta izkušnja jima je podelila edinstveno znanje, ki ga večina jezikovnih programov pogreša. Pristno razumevanje izzivov ob začetku iz nič in poznavanje ključnih veščin, potrebnih za doseganje tekočega govora."
+    },
+    "built": {
+      "title": "Kaj smo ustvarili",
+      "subtitle": "Od prvih lekcij do spletne platforme",
+      "text1": "Kar se je začelo kot kratke ure za prijatelje, ki so potrebovali pomoč s slovenščino, je postopoma preraslo v nekaj veliko večjega.",
+      "text2": "V treh letih sta Oleksandr in Sofija svoje osebne izkušnje preoblikovala v strukturirano metodo poučevanja, ki temelji na nenehnem izpopolnjevanju preizkušenih pristopov. Zaradi vse večjega zanimanja se je njuna pobuda razvila v celovito spletno platformo. Danes jo dopolnjujejo skrbno izbrana ekipa, obsežna digitalna knjižnica, pogovorni klubi ter brezplačne izobraževalne vsebine na družbenih omrežjih Instagram in Telegram.",
+      "text3": "Danes Slovenščina Korak za Korakom nudi podporo učencem na vseh stopnjah znanja. Naš program je zasnovan za vsakogar. Od tistih, ki se s slovenščino srečujejo prvič, do kandidatov, ki se pripravljajo na zahtevne državne ali specializirane izpite. Vsaka učna pot temelji na preizkušeni strukturi, ki zagotavlja merljiv in resničen napredek."
     },
     "team": {
-      "title": "Ekipa",
-      "subtitle": "Izkušeni, fleksebilni, priazni",
-      "text1": "Tukaj smo, da pomagamo."
+      "title": "Naša ekipa",
+      "subtitle": "",
+      "text1": "Vsakemu učitelju na naši platformi je slovenščina materni jezik. Prav tako imajo vsi izkušnje s poučevanjem. Vsak je bil osebno usposobljen za našo metodologijo in preizkušen s učenci, preden se je pridružil ekipi."
+    },
+    "different": {
+      "title": "Kaj nas loči od kunkorence",
+      "subtitle": "Naučite se slovenščine na drugačen način",
+      "text1": "Večina jezikovnih programov poučuje slovenščino kot predmet. Mi vas pripravimo za komunikacijo v vsakdanjem življenju",
+      "text2": "Ker so naši ustanovitelji sami šli skozi integracijo, naš pristop presega slovnična pravila in vaje iz učbenikov. Osredotočamo se na to, kako se jezik dejansko uporablja. Ritem pogovora, izrazi, ki se ne pojavljajo v nobenem učbeniku, samozavest, ki izhaja iz resničnega razumevanja tega, kar se govori okoli vas.",
+      "text3": "Ta perspektiva oblikuje vse: kako strukturiramo pouk, kako izbiramo učitelje, kako podpiramo učence zunaj učilnice in kako se nenehno izboljšujemo."
     },
     "testimonials": {
-      "title": "Resnične zgodbe, resnični rezultati",
-      "subtitle": "Poslušajte naše študente"
+      "title": "Kaj pravijo naši učenci",
+      "subtitle": "Resnične zgodbe, resnični rezultati"
     },
     "contact": {
-      "title": "Naredite prvi korak k svojim ciljem",
-      "subtitle": "Pridružite se nam",
-      "text1": "Ste pripravljeni začeti? Ne glede na to, ali želite izboljšati svoje znanje, se lažje vključiti v življenje v Sloveniji ali postati bolj samozavestni pri komunikaciji, smo tukaj, da vam pomagamo na vsakem koraku.",
-      "text2": "Prijavite se na brezplačno poskusno uro in preverite, kako poteka učenje pri nas. Spoznajte naš način dela, učitelje in pristop. Pridružite se naši skupnosti in začnite govoriti slovensko samozavestno."
+      "title": "Kaj sledi",
+      "subtitle": "To je šele začetek",
+      "text1": "Trenutno razvijamo video tečaje in orodja za učenje slovenščine, ki jih poganja umetna inteligenca, in kmalu bo na voljo na platformi. Gradimo najpopolnejšo in najdostopnejšo izkušnjo učenja slovenščine – in to je šele začetek.",
+      "text2": "Želite videti, kako delujemo? Registrirajte se in preizkusite svojo prvo lekcijo brezplačno."
     }
   },
   "not-found": {

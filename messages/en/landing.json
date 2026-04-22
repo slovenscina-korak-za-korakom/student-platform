@@ -208,33 +208,45 @@
   },
   "about": {
     "hero": {
-      "title": "Discover Our Story",
-      "subtitle": "Building Connections Through Language",
-      "text1": "At Slovenščina Korak za Korkom, we help individuals from all backgrounds master new languages and confidently embrace new cultures. Our personalized approach, expert instructors, and supportive community create an engaging learning experience that empowers students to achieve their goals.",
-      "text2": "Join our community, sign up for a free trial lesson, and take the first step toward achieving your language goals today!"
+      "title": "About us",
+      "subtitle": "Slovenščina Korak za Korakom is a Slovenian language learning platform built for anyone who needs to learn Slovenian that actually works in real life, not just on paper.",
+      "text1": "Whether you’ve just moved to Slovenia, are preparing for an exam, or simply want to connect more deeply with the country and its people, we’re here to guide you through every step."
     },
     "mission": {
-      "title": "Bridging Cultures, Empowering People",
-      "subtitle": "Why We Do What We Do",
-      "text1": "At Slovenščina Korak za Korkom, our mission is to empower individuals from diverse backgrounds by providing personalized, engaging, and effective language learning experiences. We strive to bridge cultural gaps and foster connections by helping our students not only learn a language but also feel at home in their new environments. Through expert guidance, flexible learning options, and a supportive community, we aim to make language learning accessible and enjoyable for everyone.",
-      "text2": "We envision a world where language barriers no longer hinder opportunities or integration. What began as a platform to support Russian-speaking migrants navigating life in Slovenia has grown into a vibrant hub for learners from various linguistic and cultural backgrounds.",
-      "text3": "Our goal is to become a leading language learning platform in Slovenia and beyond, helping individuals unlock their full potential through language mastery. We aspire to build a global community of learners, united by their passion for growth, connection, and cultural exchange.",
-      "text4": "Through innovative teaching methods, dedicated instructors, and a commitment to excellence, Slovenščina Korak za Korkom continues to pave the way for language learners worldwide."
+      "title": "Where We Come From",
+      "subtitle": "Our story",
+      "text1": "Our story starts not in a classroom, but in a small town called Mozirje, population 5,000, where two kids arrived from Ukraine with no Slovenian and no roadmap.",
+      "text2": "That was Oleksandr and Sofia (our founders) who moved to Slovenia with their family 12 years ago. With no Russian-speaking community to lean on, they had no choice but to dive in: school, sports clubs, music lessons, friendships — all in Slovenian, from day one. They didn’t just adapt. They thrived. Both went on to pass their NPZ exams and Matura with strong results at the I Gimnazija Celje. Sofia pursued law and Oleksandr completed his economics degree and is currently finishing his master’s.",
+      "text3": "That journey gave them something most language programs are built without, a genuine understanding of what it feels like to start from zero, and what it actually takes to get fluent."
+    },
+    "built": {
+      "title": "What We Built",
+      "subtitle": "From informal lessons to a full platform",
+      "text1": "What started as informal lessons for friends who had just arrived in Slovenia gradually grew into something much bigger.",
+      "text2": "Over three years, Oleksandr and Sofia structured their experience into a proper teaching methodology, testing approaches, building materials, and refining what works. As demand grew, they expanded into a full platform with a carefully selected team of native Slovenian teachers, a rich digital learning library, a speaking club, and free educational content across Instagram and Telegram.",
+      "text3": "Today, Slovenščina Korak za Korakom serves students at every level. From complete beginners to those preparing for state and specialized exams with a program that is structured, proven, and built around real progress."
     },
     "team": {
-      "title": "The People Behind the Program",
-      "subtitle": "Passionate. Experienced. Dedicated.",
-      "text1": "We’re a dynamic group of individuals who are passionate about what we do and dedicated to delivering the best results for our clients."
+      "title": "Our Team",
+      "subtitle": "Native teachers, trained in our methodology",
+      "text1": "Every teacher on our platform is a native Slovenian speaker, with hands-on teaching experience. Each one was personally trained in our methodology and tested with real students before joining the team."
+    },
+    "different": {
+      "title": "What Makes Us Different",
+      "subtitle": "Slovenian as a lived experience",
+      "text1": "Most language programs teach Slovenian as a subject. We teach it as a lived experience.",
+      "text2": "Because our founders went through integration themselves, our approach goes beyond grammar rules and textbook exercises. We focus on how the language is actually used. The rhythm of conversation, the expressions that don’t appear in any textbook, the confidence that comes from truly understanding what’s being said around you.",
+      "text3": "That perspective shapes everything: how we structure lessons, how we select teachers, how we support students outside the classroom, and how we keep improving."
     },
     "testimonials": {
-      "title": "What Our Students Say",
+      "title": "Real Stories, Real Results",
       "subtitle": "Hear from Our Students"
     },
     "contact": {
-      "title": "Take the First Step Towards Your Goals",
-      "subtitle": "Join Our Community",
-      "text1": "Ready to start a language-learning journey tailored just for you? Whether you’re looking to improve your skills, connect with a new culture, or gain confidence in your everyday interactions, Slovenščina Korak za Korkom is here to guide you.",
-      "text2": "Sign up for a free trial lesson today and experience firsthand how personalized, engaging, and effective our program can be. Join our growing community of language learners and connect with expert tutors who are passionate about helping you succeed."
+      "title": "What’s Next",
+      "subtitle": "We’re just getting started",
+      "text1": "We’re not standing still. Video courses and an AI-powered Slovenian learning tool are currently in development and coming to the platform soon. We’re building the most complete and accessible Slovenian learning experience available — and we’re just getting started.",
+      "text2": "Want to see how we work? Register and try your first lesson for free."
     }
   },
   "not-found": {

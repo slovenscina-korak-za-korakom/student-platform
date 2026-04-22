@@ -31,7 +31,7 @@ export const people = [
     name: ["Oleksandr", "Tyutyunnyk"],
     role: "CEO / Main Teacher",
     fluentIn: ["Slovene", "English", "Russian"],
-    imageUrl: "/staff-images/foto-oleksandr3.jpg",
+    imageUrl: "/staff-images/foto-oleksandr.jpg",
   },
   {
     id: 2,

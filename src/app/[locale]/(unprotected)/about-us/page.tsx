@@ -39,7 +39,6 @@ export default function MeetTheTeamPage() {
             </h2>
             <div className="mt-8 text-sl-secondary text-base/7 space-y-4">
               <p>{t("hero.text1")}</p>
-              <p>{t("hero.text2")}</p>
             </div>
           </div>
           <div className="">
@@ -114,18 +113,10 @@ export default function MeetTheTeamPage() {
           paragraph={t("mission.title")}
           textOrientation="text-start"
         >
-          <div className="flex w-full gap-10 flex-row justify-between">
-            <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
-              <p>{t("mission.text1")}</p>
-              <div className="space-y-4">
-                <p>{t("mission.text2")}</p>
-                <p>{t("mission.text3")}</p>
-                <p>{t("mission.text4")}</p>
-              </div>
-            </div>
-            <div className="hidden lg:block w-full">
-              <Stats vertical size={{ text: "text-3xl", space: "px-6 py-4" }} />
-            </div>
+          <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
+            <p>{t("mission.text1")}</p>
+            <p>{t("mission.text2")}</p>
+            <p>{t("mission.text3")}</p>
           </div>
         </SectionTitle>
         <div className="mx-auto mt-20 lg:mt-40">
@@ -154,19 +145,46 @@ export default function MeetTheTeamPage() {
           </Button>
         </div>
         <SectionTitle
+          header={t("built.subtitle")}
+          paragraph={t("built.title")}
+          textOrientation="text-start"
+        >
+          <div className="flex w-full gap-10 flex-row justify-between">
+            <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
+              <p>{t("built.text1")}</p>
+              <p>{t("built.text2")}</p>
+              <p>{t("built.text3")}</p>
+            </div>
+            <div className="hidden lg:block w-full">
+              <Stats vertical size={{ text: "text-3xl", space: "px-6 py-4" }} />
+            </div>
+          </div>
+        </SectionTitle>
+        <SectionTitle
           paragraph={t("team.title")}
           header={t("team.subtitle")}
           textOrientation="text-center"
         >
           <div className="flex items-center justify-center">
-            <div className="max-w-5xl text-center">
-              <p className="text-lg ">{t("team.text1")}</p>
+            <div className="max-w-5xl text-center space-y-4">
+              <p className="text-lg">{t("team.text1")}</p>
             </div>
           </div>
         </SectionTitle>
         <div className="w-full mt-10">
           <People people={people} />
         </div>
+        <SectionTitle
+          header={t("different.subtitle")}
+          paragraph={t("different.title")}
+          textOrientation="text-start"
+        >
+          <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
+            <p className="font-medium text-foreground">{t("different.text1")}</p>
+            <p>{t("different.text2")}</p>
+            <p>{t("different.text3")}</p>
+          </div>
+        </SectionTitle>
         <SectionTitle
           header={t("testimonials.subtitle")}
           paragraph={t("testimonials.title")}
