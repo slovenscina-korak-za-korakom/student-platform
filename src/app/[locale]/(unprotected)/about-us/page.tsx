@@ -8,7 +8,6 @@ import { people, reviews } from "@/lib/docs";
 import { useTranslations } from "next-intl";
 import { getTranslations } from "next-intl/server";
 import Image from "next/image";
-import { Link } from "@/i18n/routing";
 import {Metadata} from "next";
 import { getAlternates } from "@/lib/seo";
 
@@ -24,7 +23,6 @@ export async function generateMetadata({ params }): Promise<Metadata> {
 
 export default function MeetTheTeamPage() {
   const t = useTranslations("about");
-  const t2 = useTranslations("common.buttons");
   return (
     <section className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10 gradient-primary-subtle-reversed opacity-60 dark:opacity-40" />
@@ -117,6 +115,12 @@ export default function MeetTheTeamPage() {
             <p>{t("mission.text1")}</p>
             <p>{t("mission.text2")}</p>
             <p>{t("mission.text3")}</p>
+            <p>{t("mission.text4")}</p>
+            <p>{t("mission.text5")}</p>
+            <p>{t("mission.text6")}</p>
+            <p>{t("mission.text7")}</p>
+            <p>{t("mission.text8")}</p>
+            <p>{t("mission.text9")}</p>
           </div>
         </SectionTitle>
         <div className="mx-auto mt-20 lg:mt-40">
@@ -154,6 +158,14 @@ export default function MeetTheTeamPage() {
               <p>{t("built.text1")}</p>
               <p>{t("built.text2")}</p>
               <p>{t("built.text3")}</p>
+              <p>{t("built.text4")}</p>
+              <p>{t("built.text5")}</p>
+              <p>{t("built.text6")}</p>
+              <p>{t("built.text7")}</p>
+              <p>{t("built.text8")}</p>
+              <p>{t("built.text9")}</p>
+              <p>{t("built.text10")}</p>
+              <p>{t("built.text11")}</p>
             </div>
             <div className="hidden lg:block w-full">
               <Stats vertical size={{ text: "text-3xl", space: "px-6 py-4" }} />
@@ -175,49 +187,15 @@ export default function MeetTheTeamPage() {
           <People people={people} />
         </div>
         <SectionTitle
-          header={t("different.subtitle")}
-          paragraph={t("different.title")}
-          textOrientation="text-start"
-        >
-          <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
-            <p className="font-medium text-foreground">{t("different.text1")}</p>
-            <p>{t("different.text2")}</p>
-            <p>{t("different.text3")}</p>
-          </div>
-        </SectionTitle>
-        <SectionTitle
           header={t("testimonials.subtitle")}
           paragraph={t("testimonials.title")}
           textOrientation="text-center lg:text-start"
         />
-        <div className="w-full flex justify-center items-center">
+        <div className="w-full flex justify-center items-center mb-20">
           <div className="max-w-sm sm:max-w-xl md:max-w-3xl lg:max-w-5xl">
             <Carousel data={reviews} />
           </div>
         </div>
-        <SectionTitle
-          header={t("contact.subtitle")}
-          paragraph={t("contact.title")}
-          textOrientation="text-center lg:text-start"
-        >
-          <div className="text-center lg:text-start text-lg/7 space-y-6 text-sl-secondary">
-            <p>{t("contact.text1")}</p>
-            <p>{t("contact.text2")}</p>
-          </div>
-
-          <div className="flex flex-row mt-12 mb-52 gap-4 items-center justify-center lg:justify-start">
-            <Button variant={"mine"} asChild>
-              <Link href={"/dashboard"}>{t2("start")}</Link>
-            </Button>
-            <Button
-              variant={"link"}
-              asChild
-              className="text-sl-accent hover:text-sl-accent-hover"
-            >
-              <Link href={"/pricing"}>{t2("pricing")}</Link>
-            </Button>
-          </div>
-        </SectionTitle>
       </div>
     </section>
   );

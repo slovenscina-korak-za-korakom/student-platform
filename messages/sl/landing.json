@@ -209,44 +209,45 @@
   "about": {
     "hero": {
       "title": "O nas",
-      "subtitle": "Slovenščina Korak za Korakom je sodobna platforma, ki učenje jezika prenese iz učbenikov naravnost v vsakdanje življenje. Naučite se slovenščine, ki jo boste dejansko uporabljali.",
-      "text1": "Ne glede na to, ali je Slovenija vaš novi dom, se pripravljate na izpit ali pa želite le bolje spoznati našo kulturo in ljudi. Tukaj smo, da vas podpremo pri vsakem koraku."
+      "subtitle": "",
+      "text1": ""
     },
     "mission": {
-      "title": "Kako se je vse začelo",
+      "title": "Kako se je vse zaželo",
       "subtitle": "Naša zgodba",
-      "text1": "Naša zgodba se ne začne v učilnici, temveč v majhnem mestu Mozirje s 5000 prebivalci, kamor sta se dva otroka priselila iz Ukrajine brez slovenščine in brez načrta kako se jezika naučiti.",
-      "text2": "To sta bila Oleksandr in Sofija (naša ustanovitelja), ki sta se pred 12 leti z družino preselila v Slovenijo. Brez rusko govoreče skupnosti, na katero bi se lahko oprla, sta bila prepuščena sama sebi. Šola, šport, glasba in prijateljstva – vse se je od prvega dne odvijalo v slovenščini. A nista se le prilagodila, temveč v novem okolju sta uspela. Oba sta na I. gimnaziji Celje z odličnimi rezultati opravila izpite NPZ in maturo. Sofija trenutno študira pravo, Oleksandr pa je končal študij ekonomije in trenutno končuje magisterij.",
-      "text3": "Ta izkušnja jima je podelila edinstveno znanje, ki ga večina jezikovnih programov pogreša. Pristno razumevanje izzivov ob začetku iz nič in poznavanje ključnih veščin, potrebnih za doseganje tekočega govora."
+      "text1": "Vse se je začelo z nama, z mano in mojo sestro. Ime mi je Oleksandr, njej pa Sofia. Danes sva ustanovitelja programa, vendar sva se v Slovenijo preselila skupaj z družino.",
+      "text2": "V Slovenijo smo se preselili pred 12 leti, v majhno mesto Mozirje v Spodnji Savinjski dolini, s približno 5000 prebivalci. Verjetno mnogi od vas za ta kraj slišite prvič. Takrat sem bil star 11 let, Sofia pa 8. Tako kot večina ljudi ob selitvi smo se soočili s stresom, prilagajanjem, strahom, da ne bomo sprejeti v novo okolje, in seveda z jezikovno oviro.",
+      "text3": "V šoli so nas sprejeli zelo toplo. Učitelji in sošolci so nam pomagali, nas podpirali in usmerjali v  obdobju adaptacije. Nismo se srečali z posmehovanjem ali diskriminacijo, ravno nasprotno, občutili smo odprtost in prijaznost. Kljub temu smo se morali jezika učiti od začetka, s pomočjo učiteljev, sošolcev in dodatnih ur slovenščine v šoli. V Mozirju takrat skoraj ni bilo rusko govoreče skupnosti, kot je danes v Ljubljani ali drugih večjih mestih, zato nismo imeli izbire: morali smo komunicirati, sklepati nova prijateljstva, se učiti jezika in se čim hitreje vključiti v družbo.",
+      "text4": "Obiskovali smo različne dejavnosti, glasbeno šolo, treninge kickboksa in standartne plese v paru, in povsod je komunikacija potekala izključno v slovenščini. Prav v tem okolju smo začeli resnično razumeti pogovorni jezik, sleng in posebnosti vsakodnevne komunikacije ter postopoma širiti besedni zaklad. Zaradi tega smo se slovenščine relativno hitro naučili, postali samozavestni, pridobili nove prijatelje in zgradili številne povezave, ki nam jih je odprl jezik.",
+      "text5": "Zato danes zelo dobro razumemo vse posebnosti jezika, ne le slovnico, ampak tudi to, kako ljudje dejansko govorijo v vsakdanjem življenju. V tem okolju smo odraščali in sami doživeli celotno pot integracije, korak za korakom.",
+      "text6": "Kasneje smo uspešno zaključili osnovno šolo, opravili zaključne izpite (NPZ) in se vpisali na Prvo Gimnazijo v Celju, kjer smo nadaljevali izobraževanje in se še bolj poglobili v jezik. To nam je dalo močno slovnično osnovo in dobro razumevanje strukture slovenskega jezika. Na koncu smo uspešno opravili maturo z visokim povprečnim rezultatom in na lastnih izkušnjah spoznali, kako pravilno pristopiti k pripravi na izpite in učenju jezika.",
+      "text7": "Po tem je Sofia nadaljevala študij prava, jaz pa ekonomije, kjer sem že diplomiral in trenutno zaključujem magistrski študij. Vendar sva že v obdobju med koncem gimnazije in vpisom na fakulteto razumela, da lahko svoje znanje in izkušnje predava naprej tistim, ki šele začenjajo svojo pot v Sloveniji. Tako se je postopoma začela najina dejavnost.",
+      "text8": "Že več kot tri leta razvijava ta projekt, se nenehno izboljšujeva in prilagajava program dejanskim potrebam študentov. V tem času smo prehodili dolgo pot in danes lahko skupaj z našimi učenci rečemo, da znamo poučevati na vseh ravneh, od učenja jezika od začetka do priprave na šolske, državne in specializirane izpite.",
+      "text9": "Še naprej se izpopolnjujemo in smo iskreno zadovoljni s tem, kar počnemo, ter z rezultati naših učencev, saj smo to pot prehodili sami in zelo dobro razumemo vse podrobnosti in izzive, ki se lahko pojavijo med učenjem."
     },
     "built": {
-      "title": "Kaj smo ustvarili",
-      "subtitle": "Od prvih lekcij do spletne platforme",
-      "text1": "Kar se je začelo kot kratke ure za prijatelje, ki so potrebovali pomoč s slovenščino, je postopoma preraslo v nekaj veliko večjega.",
-      "text2": "V treh letih sta Oleksandr in Sofija svoje osebne izkušnje preoblikovala v strukturirano metodo poučevanja, ki temelji na nenehnem izpopolnjevanju preizkušenih pristopov. Zaradi vse večjega zanimanja se je njuna pobuda razvila v celovito spletno platformo. Danes jo dopolnjujejo skrbno izbrana ekipa, obsežna digitalna knjižnica, pogovorni klubi ter brezplačne izobraževalne vsebine na družbenih omrežjih Instagram in Telegram.",
-      "text3": "Danes Slovenščina Korak za Korakom nudi podporo učencem na vseh stopnjah znanja. Naš program je zasnovan za vsakogar. Od tistih, ki se s slovenščino srečujejo prvič, do kandidatov, ki se pripravljajo na zahtevne državne ali specializirane izpite. Vsaka učna pot temelji na preizkušeni strukturi, ki zagotavlja merljiv in resničen napredek."
+      "title": "Zakaj delamo to, kar delamo",
+      "subtitle": "Kako se je razvijal projekt",
+      "text1": "Ko sva sama šla skozi pot integracije in učenja, sva razumela, da lahko drugim pomagava, da jo prehodijo hitreje, lažje in bolj samozavestno.",
+      "text2": "Na začetku so bile to individualne ure in pomoč znancem, ki so se pravkar preselili v Slovenijo. Delila sva svoje izkušnje, učil jezik na preprost in razumljiv način ter pomagala pri reševanju vsakdanjih situacij. Takrat je to bolj spominjalo na hobi kot na pravo pedagoško dejavnost.",
+      "text3": "Sčasoma so naju ljudje začeli prepoznavati, priporočati prijateljem in znancem, in postopoma se je oblikovala vrsta. Hkrati sva bila še študenta, zato je bil najin čas omejen zaradi študija in športnih aktivnosti.",
+      "text4": "Postopoma je število študentov raslo, z njim pa tudi razumevanje, kakšno mora biti resnično učinkovito učenje. Začela sva sistematizirati svoje znanje, graditi strukturo programa, preizkušati različne pristope in nenehno izboljševati učni proces.",
+      "text5": "Sčasoma sva razvila različne pristope, prilagojene ljudem z različnimi cilji učenja jezika. Naučila sva se pravilno izbirati in uporabljati učne materiale, pri čemer sva kombinirala najboljše razpoložljive učbenike z lastnimi ustvarjenimi vsebinami. Tako je nastala elektronska knjižnica gradiv, ki jo deliva z najinimi študenti in jih učiva, kako jo učinkovito uporabljati.",
+      "text6": "Ugotovila sva, da tako ne zmoreva več slediti naraščajočemu številu učencev, zato sva začela ne le sistematizirati, ampak tudi optimizirati proces. Ustvarila sva Instagram in Telegram kanale, kjer se lahko vsak seznani z najinim pristopom in začne učiti slovenščino na dostopen in razumljiv način. Tam objavljava pravila, interaktivne učne posnetke, besedišče, naloge in uporabne vsebine, ki pomagajo ljudem dosegati njihove cilje, pri čemer je vese brezplačno dostopeno vsem.",
+      "text7": "Naslednji pomemben korak je bil oblikovanje ekipe. Zavedala sva se, da lahko naravni govorci jezika poučujejo najbolj natančno in naravno, zato sva začela iskati učitelje med Slovenci, preko srednješolskih in študentskih vez. Tako nama je uspelo zgraditi močno ekipo študentk filoloških smeri in slovenistike, ki so že v šoli in na univerzi študirale ruščino in imajo izkušnje s poučevanjem.",
+      "text8": "Dodatno sva jih usposobila, predala vse razvite metode in posebno pozornost namenila praktičnim vidikom poučevanja. Vsak učitelj je šel skozi selekcijo in preverjanje v realnem delu z učenci. Danes je to ekipa strokovnjakov, v katero popolnoma zaupava, in v nekaterih vidikih nas celo že prehitevajo.",
+      "text9": "Naslednja faza razvoja je bila uvedba dodatnih možnosti za naše učence. Začeli smo uvajati postopke, ki učenje naredijo še bolj učinkovito in udobno. Tako je nastal pogovorni klub ter spletna stran, na kateri se trenutno nahajate, kjer lahko po registraciji takoj začnete z učenjem.",
+      "text10": "Celoten sistem je zasnovan tako, da je proces učenja čim bolj enostaven in učinkovit kot za študenta kot za učitelja. Priporočamo, da se registrirate in preizkusite brezplačno test uro ter se na lastni izkušnji preiskusite naš pristop.",
+      "text11": "Projekt še naprej aktivno razvijamo. V bližnji prihodnosti bodo na spletni strani na voljo novi formati učenja, kot video tečaji in umetna inteligenca za učenje slovenščine. Na tem zdaj aktivno delamo!"
     },
     "team": {
-      "title": "Naša ekipa",
+      "title": "Our Team",
       "subtitle": "",
-      "text1": "Vsakemu učitelju na naši platformi je slovenščina materni jezik. Prav tako imajo vsi izkušnje s poučevanjem. Vsak je bil osebno usposobljen za našo metodologijo in preizkušen s učenci, preden se je pridružil ekipi."
-    },
-    "different": {
-      "title": "Kaj nas loči od kunkorence",
-      "subtitle": "Naučite se slovenščine na drugačen način",
-      "text1": "Večina jezikovnih programov poučuje slovenščino kot predmet. Mi vas pripravimo za komunikacijo v vsakdanjem življenju",
-      "text2": "Ker so naši ustanovitelji sami šli skozi integracijo, naš pristop presega slovnična pravila in vaje iz učbenikov. Osredotočamo se na to, kako se jezik dejansko uporablja. Ritem pogovora, izrazi, ki se ne pojavljajo v nobenem učbeniku, samozavest, ki izhaja iz resničnega razumevanja tega, kar se govori okoli vas.",
-      "text3": "Ta perspektiva oblikuje vse: kako strukturiramo pouk, kako izbiramo učitelje, kako podpiramo učence zunaj učilnice in kako se nenehno izboljšujemo."
+      "text1": ""
     },
     "testimonials": {
-      "title": "Kaj pravijo naši učenci",
-      "subtitle": "Resnične zgodbe, resnični rezultati"
-    },
-    "contact": {
-      "title": "Kaj sledi",
-      "subtitle": "To je šele začetek",
-      "text1": "Trenutno razvijamo video tečaje in orodja za učenje slovenščine, ki jih poganja umetna inteligenca, in kmalu bo na voljo na platformi. Gradimo najpopolnejšo in najdostopnejšo izkušnjo učenja slovenščine – in to je šele začetek.",
-      "text2": "Želite videti, kako delujemo? Registrirajte se in preizkusite svojo prvo lekcijo brezplačno."
+      "title": "Kaj pravijo naše stranke",
+      "subtitle": "Testimoniali"
     }
   },
   "not-found": {

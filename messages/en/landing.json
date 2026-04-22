@@ -209,44 +209,45 @@
   "about": {
     "hero": {
       "title": "About us",
-      "subtitle": "Slovenščina Korak za Korakom is a Slovenian language learning platform built for anyone who needs to learn Slovenian that actually works in real life, not just on paper.",
-      "text1": "Whether you’ve just moved to Slovenia, are preparing for an exam, or simply want to connect more deeply with the country and its people, we’re here to guide you through every step."
+      "subtitle": "",
+      "text1": ""
     },
     "mission": {
-      "title": "Where We Come From",
+      "title": "How it all started",
       "subtitle": "Our story",
-      "text1": "Our story starts not in a classroom, but in a small town called Mozirje, population 5,000, where two kids arrived from Ukraine with no Slovenian and no roadmap.",
-      "text2": "That was Oleksandr and Sofia (our founders) who moved to Slovenia with their family 12 years ago. With no Russian-speaking community to lean on, they had no choice but to dive in: school, sports clubs, music lessons, friendships — all in Slovenian, from day one. They didn’t just adapt. They thrived. Both went on to pass their NPZ exams and Matura with strong results at the I Gimnazija Celje. Sofia pursued law and Oleksandr completed his economics degree and is currently finishing his master’s.",
-      "text3": "That journey gave them something most language programs are built without, a genuine understanding of what it feels like to start from zero, and what it actually takes to get fluent."
+      "text1": "It all started with us, me and my sister. My name is Oleksandr, and hers is Sofia. Today we are the founders of the program, but we moved to Slovenia together with our family.",
+      "text2": "We moved to Slovenia 12 years ago, to a small town called Mozirje in the Lower Savinja Valley, with a population of around 5,000 people. Most of you have probably never even heard of this place. I was 11 at the time, and Sofia was 8. Like most people who move to a new country, we faced stress, adaptation challenges, the fear of not being accepted in a new environment, and of course, the language barrier.",
+      "text3": "At school, we were welcomed very warmly. Teachers and classmates supported us, helped us, and guided us during the first months. We didn’t experience any bullying or discrimination. But opposite, we felt openness and kindness. At the same time, we had to learn the language from the beginning, with the help of teachers, classmates, and additional Slovenian lessons at school. Back then, there was almost no English-speaking community in Mozirje, unlike today in Ljubljana or other larger cities, so we had no choice. We had to communicate, make new friends, learn the language, and integrate into society as quickly as possible.",
+      "text4": "We attended various activities such as music school, kickboxing training, and ballroom dancing, where communication was entirely in Slovenian. It was in this environment that we truly began to understand the living language, slang, and the features of everyday communication, gradually expanding our vocabulary. Because of this, we learned Slovenian relatively quickly, became confident, made new friends, and built strong connections that the language opened for us.",
+      "text5": "That is why today we deeply understand all the nuances of the language, not only grammar, but also how people speak in real life. We grew up in this environment and went through the entire integration process ourselves, step by step.",
+      "text6": "Later, we successfully finished school, passed the final exams (NPZ), and enrolled in the First Gymnasium in Celje, where we continued our education and immersed ourselves even more deeply in the language. This gave us a strong grammatical foundation and a clear understanding of the structure of the Slovenian language. In the end, we successfully passed the Matura exam with a high average score and, through our own experience, learned how to properly approach exam preparation and language learning.",
+      "text7": "After that Sofia pursued a degree in law, while I chose economics, where I have already completed my degree and am currently finishing my master’s studies. However, even in the period between finishing gymnasium and starting university, we realized that we could share our knowledge and experience with others who are just beginning their journey in Slovenia. That is how our work gradually began.",
+      "text8": "For more than three years now, we have been developing this project, continuously improving and adapting our program to the real needs of our students. Over this time, we have come a long way, and today, together with our students, we can confidently say that we work at all levels, from teaching the language from scratch to preparing for school, state, and specialized exams of all levels.",
+      "text9": "We continue to improve and are genuinely passionate about what we do, as well as proud of our students’ results, because we have gone through this journey ourselves and truly understand all the nuances, challenges, and hidden difficulties that can arise during the learning process."
     },
     "built": {
-      "title": "What We Built",
-      "subtitle": "From informal lessons to a full platform",
-      "text1": "What started as informal lessons for friends who had just arrived in Slovenia gradually grew into something much bigger.",
-      "text2": "Over three years, Oleksandr and Sofia structured their experience into a proper teaching methodology, testing approaches, building materials, and refining what works. As demand grew, they expanded into a full platform with a carefully selected team of native Slovenian teachers, a rich digital learning library, a speaking club, and free educational content across Instagram and Telegram.",
-      "text3": "Today, Slovenščina Korak za Korakom serves students at every level. From complete beginners to those preparing for state and specialized exams with a program that is structured, proven, and built around real progress."
+      "title": "Why we do what we do",
+      "subtitle": "How the project developed",
+      "text1": "After going through the process of integration and language learning ourselves, we realized that we could help others go through it faster, more easily, and with greater confidence.",
+      "text2": "At the beginning, it was simply individual lessons and helping friends who had just moved to Slovenia. We shared our experience, explained the language in a simple and understandable way, and helped people in real-life situations. At that stage, it felt more like a small hobby than a professional tutoring.",
+      "text3": "Over time, people started to recognize us, recommend us to their friends, and a waiting list gradually began to form. At the same time, we were still students, so our time was limited due to studies and sports.",
+      "text4": "As the number of students grew, so did our understanding of what truly effective learning should look like. We began to structure our knowledge, build a clear program, test different approaches, and continuously improve the learning process.",
+      "text5": "Over time, we developed various approaches tailored to people with different language-learning goals. We learned how to carefully select and use study materials, combining the best available textbooks with our own resources. As a result, we built an extensive digital library of materials, which we provide to our students and teach them how to use effectively.",
+      "text6": "We realized that in our original format we could no longer keep up with the growing number of students, so we began not only to systematize but also to optimize and scale our work. We created Instagram and Telegram channels where everyone can explore our approach and start learning Slovenian in an accessible and practical way. There we share grammar explanations, interactive learning videos, vocabulary, exercises, and useful resources that help people achieve their goals, and all this content is available for free to everyone.",
+      "text7": "The next important step was building a team. We understood that native speakers can convey the language in the most accurate and natural way, so we started looking for teachers among Slovenians through school and university connections. As a result, we assembled a strong team of philology and Slovene studies students who had already been studying English as a second language and had developed teaching skills.",
+      "text8": "We further trained them in our methodology, shared all our developed systems, and focused on the practical side of teaching. Each teacher went through a careful selection process and was tested in real work with students. Today, this is a team of professionals we fully trust, and in some aspects, they even surpass us.",
+      "text9": "The next stage of development was creating additional opportunities for our students. We began introducing options that make learning more interesting and effective. This led to the creation of a speaking club, as well as the website you are currently on, where you can start learning with us immediately after registering",
+      "text10": "Our entire system is designed to make the learning process as simple and effective as possible for both students and teachers. We recommend registering and trying a free trial lesson to experience our approach firsthand.",
+      "text11": "We continue to actively develop the project. Soon, new learning formats will be available on the platform, including video courses and AI for learning Slovenian. We are already working on this right now."
     },
     "team": {
       "title": "Our Team",
-      "subtitle": "Native teachers, trained in our methodology",
-      "text1": "Every teacher on our platform is a native Slovenian speaker, with hands-on teaching experience. Each one was personally trained in our methodology and tested with real students before joining the team."
-    },
-    "different": {
-      "title": "What Makes Us Different",
-      "subtitle": "Slovenian as a lived experience",
-      "text1": "Most language programs teach Slovenian as a subject. We teach it as a lived experience.",
-      "text2": "Because our founders went through integration themselves, our approach goes beyond grammar rules and textbook exercises. We focus on how the language is actually used. The rhythm of conversation, the expressions that don’t appear in any textbook, the confidence that comes from truly understanding what’s being said around you.",
-      "text3": "That perspective shapes everything: how we structure lessons, how we select teachers, how we support students outside the classroom, and how we keep improving."
+      "subtitle": "",
+      "text1": ""
     },
     "testimonials": {
       "title": "Real Stories, Real Results",
       "subtitle": "Hear from Our Students"
-    },
-    "contact": {
-      "title": "What’s Next",
-      "subtitle": "We’re just getting started",
-      "text1": "We’re not standing still. Video courses and an AI-powered Slovenian learning tool are currently in development and coming to the platform soon. We’re building the most complete and accessible Slovenian learning experience available — and we’re just getting started.",
-      "text2": "Want to see how we work? Register and try your first lesson for free."
     }
   },
   "not-found": {
