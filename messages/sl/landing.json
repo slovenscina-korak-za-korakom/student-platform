@@ -207,6 +207,8 @@
     }
   },
   "about": {
+    "readMore": "Preberi več",
+    "showLess": "Pokaži manj",
     "hero": {
       "title": "O nas",
       "subtitle": "",

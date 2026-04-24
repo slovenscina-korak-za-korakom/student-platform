@@ -2,6 +2,7 @@ import People from "@/components/about/people";
 import Carousel from "@/components/content/testimonials";
 import Stats from "@/components/content/stats";
 import SectionTitle from "@/components/content/titles/section-title";
+import ReadMoreSection from "@/components/content/read-more-section";
 import { Button } from "@/components/ui/button";
 
 import { people, reviews } from "@/lib/docs";
@@ -111,7 +112,7 @@ export default function MeetTheTeamPage() {
           paragraph={t("mission.title")}
           textOrientation="text-start"
         >
-          <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
+          <ReadMoreSection readMoreLabel={t("readMore")} showLessLabel={t("showLess")}>
             <p>{t("mission.text1")}</p>
             <p>{t("mission.text2")}</p>
             <p>{t("mission.text3")}</p>
@@ -121,7 +122,7 @@ export default function MeetTheTeamPage() {
             <p>{t("mission.text7")}</p>
             <p>{t("mission.text8")}</p>
             <p>{t("mission.text9")}</p>
-          </div>
+          </ReadMoreSection>
         </SectionTitle>
         <div className="mx-auto mt-20 lg:mt-40">
           {/* <img className="aspect-video object-cover rounded-none lg:rounded-3xl" src="https://images.pexels.com/photos/25053927/pexels-photo-25053927/free-photo-of-a-river-runs-through-a-city-with-buildings-on-both-sides.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2" alt="Transition photo" /> */}
@@ -154,7 +155,7 @@ export default function MeetTheTeamPage() {
           textOrientation="text-start"
         >
           <div className="flex w-full gap-10 flex-row justify-between">
-            <div className="text-start text-pretty text-lg/7 space-y-6 text-sl-secondary">
+            <ReadMoreSection readMoreLabel={t("readMore")} showLessLabel={t("showLess")}>
               <p>{t("built.text1")}</p>
               <p>{t("built.text2")}</p>
               <p>{t("built.text3")}</p>
@@ -166,7 +167,7 @@ export default function MeetTheTeamPage() {
               <p>{t("built.text9")}</p>
               <p>{t("built.text10")}</p>
               <p>{t("built.text11")}</p>
-            </div>
+            </ReadMoreSection>
             <div className="hidden lg:block w-full">
               <Stats vertical size={{ text: "text-3xl", space: "px-6 py-4" }} />
             </div>

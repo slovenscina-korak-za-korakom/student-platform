@@ -207,6 +207,8 @@
     }
   },
   "about": {
+    "readMore": "Читать далее",
+    "showLess": "Свернуть",
     "hero": {
       "title": "О нас",
       "subtitle": "",

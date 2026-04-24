@@ -207,6 +207,8 @@
     }
   },
   "about": {
+    "readMore": "Read more",
+    "showLess": "Show less",
     "hero": {
       "title": "About us",
       "subtitle": "",
