@@ -147,7 +147,7 @@ export const reviews = [
   },
   {
     id: 8,
-    image: "/placeholder.svg",
+    image: "/testimonials-images/foto-marina.jpg",
     name: "Marina Kurkina",
     role: "student",
     text: "marina-kurkina",
