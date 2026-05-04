@@ -137,6 +137,23 @@ export const reviews = [
     text: "oleg-kotelnikov",
     stars: [true, true, true, true, true],
   },
+  {
+    id: 7,
+    image: "/testimonials-images/foto-michael.jpg",
+    name: "Michael Sverdlov",
+    role: "student",
+    text: "michael-sverdlov",
+    stars: [true, true, true, true, true],
+  },
+  {
+    id: 8,
+    image: "/placeholder.svg",
+    name: "Marina Kurkina",
+    role: "student",
+    text: "marina-kurkina",
+    stars: [true, true, true, true, true],
+  }
+
 ];
 
 export const footerLinks = {
