@@ -72,8 +72,14 @@
       "title": "Testimonials",
       "subtitle": "What members are saying",
       "roles": {
-        "student": "Student",
-        "teacher": "Teacher"
+        "male": {
+          "student": "Student",
+          "teacher": "Teacher"
+        },
+        "female":{
+          "student": "Student",
+          "teacher": "Teacher"
+        }
       },
       "students": {
         "vlad-sirski": "I have been studying for about 6 months now, during which time I have improved my level from zdravo (hello) - hvala (thank you), to full-fledged conversations with Slovenians on a regular basis. I would characterize the teachers as a responsible and professional specialists and therefore I highly recommend this program if you want to learn Slovenian.",
@@ -83,7 +89,8 @@
         "violeta-lisin": "I highly recommend it! It's super comfortable to study Slovenian with the guys, the classes are held in a very friendly atmosphere, everything is clear and not boring!🫶",
         "oleg-kotelnikov": "Hello everyone, my name is Oleg. I highly recommend classes with Sasha to beginners in learning Slovenian. My whole family, my wife and son studied with him and my wife continues to study. We are very pleased with the presentation of the material, Sasha always listens to questions and comments. I am very glad to have met him and am very grateful for the lessons.",
         "michael-sverdlov": "I successfully passed the Slovenian language exam on the fundamentals of quality, safety, and legal aspects of healthcare in Slovenia, and Alex and Ela are largely to thank for that. I started learning Slovenian from scratch. Their classes are methodically designed, structured, and easily adaptable to any age and level. But for me, at 59, it wasn't just the quality of the instruction that was especially important, but also their human approach, and theirs is truly exceptional. They know how to support you, instill confidence, and drive you to results. And the results are clear. If you're unsure where to start or who to study Slovenian with, I highly recommend them.",
-        "marina-kurkina": "I've been teaching languages \u200B\u200Bprofessionally for many years, both as the owner of a language school and as a student. Maintaining a student's interest from the first minute to the last is a sign of a professional teacher. I thank Alex for his work; I'm always wondering with him: \"And what if we try this test, it's more difficult, maybe we can handle it, maybe we can do it.\" And it works! In the year and a half of working with you, Alex, I've been able to communicate normally in Slovenian. Yes, it may not be as fluent as Russian or English, but it's possible, even at my advanced age. Thank you very much."
+        "marina-kurkina": "I've been teaching languagesprofessionally for many years, both as the owner of a language school and as a student. Maintaining a student's interest from the first minute to the last is a sign of a professional teacher. I thank Alex for his work; I'm always wondering with him: \"And what if we try this test, it's more difficult, maybe we can handle it, maybe we can do it.\" And it works! In the year and a half of working with you, Alex, I've been able to communicate normally in Slovenian. Yes, it may not be as fluent as Russian or English, but it's possible, even at my advanced age. Thank you very much.",
+        "kateryna-levytska": "I came to Sasha with a request to learn more vocabulary, all about sports, and I wanted more conversational practice. We really do talk a lot, learning lots of new words after each lesson, and we also practice them in homework. Learning is interesting and easy, the presentation is simple, time flies, and I enjoy learning. I definitely recommend these guys and their project."
       }
     }
   },

@@ -43,7 +43,7 @@ const Carousel = ({ data, stars = false }) => {
                         {review.name}
                       </p>
                       <p className="text-sm font-normal text-sl-accent">
-                        {t(`roles.${review.role}`)}
+                        {t(`roles.${review.gender}.${review.role}`)}
                       </p>
                     </div>
                     {stars && (

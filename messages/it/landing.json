@@ -72,8 +72,15 @@
       "title": "Testimonianze",
       "subtitle": "Cosa dicono i membri",
       "roles": {
-        "student": "Studente",
-        "teacher": "Insegnante"
+        "male": {
+          "student": "Studente",
+          "teacher": "Insegnante"
+        },
+        "female":{
+          "student": "Studente",
+          "teacher": "Insegnante"
+        }
+
       },
       "students": {
         "vlad-sirski": "Studio da circa 6 mesi, durante i quali ho migliorato il mio livello da zdravo (ciao) - hvala (grazie), a conversazioni a pieno titolo con gli sloveni su base regolare. Definirei gli insegnanti come specialisti responsabili e professionali e quindi consiglio vivamente questo programma se vuoi imparare lo sloveno.",
@@ -83,7 +90,8 @@
         "violeta-lisin": "Lo consiglio vivamente! È super comodo studiare lo sloveno con i ragazzi, le lezioni si svolgono in un'atmosfera molto amichevole, tutto è chiaro e non noioso!🫶",
         "oleg-kotelnikov": "Ciao a tutti, mi chiamo Oleg. Consiglio vivamente le lezioni con Sasha ai principianti nell'apprendimento dello sloveno. Tutta la mia famiglia, mia moglie e mio figlio hanno studiato con lui e mia moglie continua a studiare. Siamo molto soddisfatti della presentazione del materiale, Sasha ascolta sempre domande e commenti. Sono molto contento di averlo incontrato e sono molto grato per le lezioni.",
         "michael-sverdlov": "Ho superato con successo l'esame di lingua slovena sui fondamenti di qualità, sicurezza e aspetti legali dell'assistenza sanitaria in Slovenia, e gran parte del merito va ad Alex ed Ela. Ho iniziato a imparare lo sloveno da zero. Le loro lezioni sono progettate in modo metodico, strutturate e facilmente adattabili a qualsiasi età e livello. Ma per me, a 59 anni, non era solo la qualità dell'insegnamento ad essere particolarmente importante, ma anche il loro approccio umano, e il loro è davvero eccezionale. Sanno come supportarti, infonderti fiducia e motivarti a raggiungere i risultati. E i risultati sono evidenti. Se vi state chiedendo da dove iniziare o con chi imparare lo sloveno, li consiglio vivamente.",
-        "marina-kurkina": "Insegno lingue professionalmente da molti anni, sia come titolare di una scuola di lingue che come studentessa. Mantenere vivo l'interesse di uno studente dal primo all'ultimo minuto è segno di un insegnante professionista. Ringrazio Alex per il suo lavoro; con lui mi chiedo sempre: \"E se provassimo con un esercizio più difficile? Forse ce la faremmo, forse potremmo farcela\". E funziona! Nell'anno e mezzo in cui ho lavorato con te, Alex, sono riuscita a comunicare normalmente in sloveno. Certo, forse non con la stessa fluidità del russo o dell'inglese, ma è possibile, anche alla mia età. Grazie mille."
+        "marina-kurkina": "Insegno lingue professionalmente da molti anni, sia come titolare di una scuola di lingue che come studentessa. Mantenere vivo l'interesse di uno studente dal primo all'ultimo minuto è segno di un insegnante professionista. Ringrazio Alex per il suo lavoro; con lui mi chiedo sempre: \"E se provassimo con un esercizio più difficile? Forse ce la faremmo, forse potremmo farcela\". E funziona! Nell'anno e mezzo in cui ho lavorato con te, Alex, sono riuscita a comunicare normalmente in sloveno. Certo, forse non con la stessa fluidità del russo o dell'inglese, ma è possibile, anche alla mia età. Grazie mille.",
+        "kateryna-levytska": "Mi sono rivolto a Sasha con la richiesta di imparare più vocaboli, soprattutto relativi allo sport, e di fare più pratica di conversazione. Parliamo davvero molto, imparando tante parole nuove dopo ogni lezione, e le mettiamo in pratica anche nei compiti a casa. Imparare è interessante e facile, la presentazione è semplice, il tempo vola e mi diverto molto. Consiglio vivamente questo programma e il progetto di Sasha."
       }
     }
   },

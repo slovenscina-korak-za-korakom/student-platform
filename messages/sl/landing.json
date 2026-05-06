@@ -72,8 +72,14 @@
       "title": "Mnenja",
       "subtitle": "Kaj pravijo drugi",
       "roles": {
-        "student": "Učenec",
-        "teacher": "Učitelj"
+        "male": {
+          "student": "Učenec",
+          "teacher": "Učitelj"
+        },
+        "female":{
+          "student": "Učenka",
+          "teacher": "Učiteljica"
+        }
       },
       "students": {
         "vlad-sirski": "Študiram že približno 6 mesecev in v tem času sem svojo raven izboljšal od zdravo (pozdravljeni) - hvala (hvala) do rednih polnopravnih pogovorov s Slovenci. Učitelje bi označil za odgovorne in strokovne strokovnjake, zato vam ta program zelo priporočam, če se želite naučiti slovenščine.",
@@ -83,7 +89,8 @@
         "violeta-lisin": "Toplo priporočam! S fanti se je super udobno učiti slovenščine, pouk poteka v zelo prijaznem vzdušju, vse je jasno in ni dolgočasno!🫶",
         "oleg-kotelnikov": "Pozdravljeni vsi, ime mi je Oleg. Začetnikom v učenju slovenščine toplo priporočam ure s Sašo. Z njim je študirala vsa moja družina, žena in sin, žena pa še naprej študira. Zelo smo zadovoljni s predstavitvijo gradiva, Sasha vedno posluša vprašanja in komentarje. Zelo sem vesel, da sem ga spoznal, in sem zelo hvaležen za lekcije.",
         "michael-sverdlov": "Uspešno sem opravil izpit iz slovenščine o osnovah kakovosti, varnosti in pravnih vidikih zdravstvenega varstva v Sloveniji, za kar se lahko v veliki meri zahvalim Alexu in Eli. Slovenščine sem se začel učiti iz nič. Njihovi tečaji so metodično zasnovani, strukturirani in enostavno prilagodljivi vsaki starosti in ravni. Zame, pri 59 letih, pa ni bila še posebej pomembna le kakovost pouka, temveč tudi njihov človeški pristop, ki je resnično izjemen. Znajo te podpreti, vliti samozavest in te spodbuditi k rezultatom. In rezultati so jasni. Če se sprašujete, kje začeti ali s kom se učiti slovenščine, jih toplo priporočam.",
-        "marina-kurkina": "Že vrsto let profesionalno poučujem jezike, tako kot lastnica jezikovne šole kot tudi kot učenka. Ohranjanje zanimanja učenca od prve do zadnje minute je znak profesionalnega učitelja. Alexu se zahvaljujem za njegovo delo. Z njim se vedno sprašujem: \"In kaj če poskusimo ta test, je težji, morda nam bo uspelo, morda nam bo uspelo.\" In deluje! V letu in pol sodelovanja s tabo, Alex, sem se lahko normalno sporazumevala v slovenščini. Da, morda ni tako tekoča kot ruščina ali angleščina, ampak je mogoče, tudi v mojih visokih letih. Najlepša hvala."
+        "marina-kurkina": "Že vrsto let profesionalno poučujem jezike, tako kot lastnica jezikovne šole kot tudi kot učenka. Ohranjanje zanimanja učenca od prve do zadnje minute je znak profesionalnega učitelja. Alexu se zahvaljujem za njegovo delo. Z njim se vedno sprašujem: \"In kaj če poskusimo ta test, je težji, morda nam bo uspelo, morda nam bo uspelo.\" In deluje! V letu in pol sodelovanja s tabo, Alex, sem se lahko normalno sporazumevala v slovenščini. Da, morda ni tako tekoča kot ruščina ali angleščina, ampak je mogoče, tudi v mojih visokih letih. Najlepša hvala.",
+        "kateryna-levytska": "K Saši sem prišela z zahtevo, da bi se naučila več besedišča, vse o športu, in želela sem si več pogovorne vaje. Res veliko govoriva, po vsaki lekciji se naučim veliko novih besed, ki jih tudi vadiva pri domačih nalogah. Učenje je zanimivo in enostavno, predstavitev je preprosta, čas beži in uživam v učenju. Vsekakor priporočam."
       }
     }
   },
