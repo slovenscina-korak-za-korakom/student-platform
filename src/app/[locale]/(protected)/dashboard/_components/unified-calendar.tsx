@@ -242,7 +242,7 @@ const UnifiedCalendar = ({
         toast.success(response.message || "Event cancelled successfully");
         setIsSheetOpen(false);
       } else {
-        toast.error(response?.message || "Failed to cancel event");
+        toast.error(response?.error || "Failed to cancel event");
       }
     } catch (error) {
       console.error("Cancel error:", error);
