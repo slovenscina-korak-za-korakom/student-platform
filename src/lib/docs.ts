@@ -165,6 +165,15 @@ export const reviews = [
     role: "student",
     text: "kateryna-levytska",
     stars: [true, true, true, true, true],
+  },
+  {
+    id: 10,
+    image: "/testimonials-images/foto-karina.jpg",
+    name: "Karina Lemis",
+    gender: "female",
+    role: "student",
+    text: "karina-lemis",
+    stars: [true, true, true, true, true],
   }
 
 ];
