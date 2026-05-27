@@ -107,6 +107,7 @@
       "regular-session": "Redna ura",
       "test-session": "Testna ura",
       "recurring-note": "Tedensko ponavljajoče",
+      "join-video-call": "Pridruži se video klicu",
       "tooltip": {
         "level": "Priporočen nivo {level}",
         "duration": "{duration} minut",
@@ -275,11 +276,13 @@
       "when": "Kdaj",
       "phone": "Telefon",
       "location": "Lokacija",
+      "video-call": "Video klic",
       "buttons": {
         "book": "Rezerviraj termin",
         "booking": "Rezervavija v teku ...",
         "contact": "Kontaktiraj tutorja",
-        "book-test": "Rezerviraj brezplačno uro"
+        "book-test": "Rezerviraj brezplačno uro",
+        "join-video-call": "Pridruži se video klicu"
       },
       "test-session-title": "Brezplačna testna ura",
       "test-session-description": "To je vaša brezplačna uvodna ura za spoznavanje učitelja in platforme. Plačilo ni potrebno."

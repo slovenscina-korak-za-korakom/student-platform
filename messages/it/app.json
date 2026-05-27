@@ -107,6 +107,7 @@
       "regular-session": "Sessione regolare",
       "test-session": "Sessione di prova",
       "recurring-note": "Ricorrente settimanale",
+      "join-video-call": "Unisciti alla videochiamata",
       "tooltip": {
         "level": "Livello richiesto: {level} livello",
         "duration": "{duration} minuti",
@@ -275,11 +276,13 @@
       "when": "Quando",
       "phone": "Telefono",
       "location": "Luogo",
+      "video-call": "Videochiamata",
       "buttons": {
         "book": "Prenota sessione",
         "booking": "Prenotazione in corso ...",
         "contact": "Contatta il tutor",
-        "book-test": "Prenota sessione gratuita"
+        "book-test": "Prenota sessione gratuita",
+        "join-video-call": "Unisciti alla videochiamata"
       },
       "test-session-title": "Sessione di prova gratuita",
       "test-session-description": "Questa è la tua sessione introduttiva gratuita per conoscere il tuo tutor e familiarizzare con la piattaforma. Nessun pagamento richiesto."

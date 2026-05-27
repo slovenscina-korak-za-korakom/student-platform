@@ -87,6 +87,7 @@ export const getDashboardPersonalSessions = async () => {
         sessionType: timeblocksTable.sessionType,
         location: timeblocksTable.location,
         studentId: timeblocksTable.studentId,
+        videoCallUrl: timeblocksTable.videoCallUrl,
         tutorName: tutorsTable.name,
         tutorAvatar: tutorsTable.avatar,
         tutorColor: tutorsTable.color,
@@ -173,6 +174,7 @@ export const bookSession = async (data: TutoringSession) => {
         sessionType: data.sessionType,
         location: data.location,
         studentId: userId,
+        videoCallUrl: data.videoCallUrl ?? null,
       })
       .returning();
 
@@ -207,7 +209,7 @@ export const bookSession = async (data: TutoringSession) => {
         duration: data.duration,
         tutorName: tutor.name,
         sessionType: data.sessionType,
-        location: data.location,
+        videoCallUrl: data.videoCallUrl ?? null,
       }),
       attachments: [
         {
@@ -371,6 +373,7 @@ export const bookTestSession = async (data: TutoringSession) => {
         sessionType: "test",
         location: data.location,
         studentId: userId,
+        videoCallUrl: data.videoCallUrl ?? null,
       })
       .returning();
 
@@ -409,7 +412,7 @@ export const bookTestSession = async (data: TutoringSession) => {
         duration: data.duration,
         tutorName: tutor.name,
         sessionType: "test",
-        location: data.location,
+        videoCallUrl: data.videoCallUrl ?? null,
       }),
       attachments: [
         {

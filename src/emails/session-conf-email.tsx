@@ -16,7 +16,7 @@ interface SessionConfEmailProps {
   duration: number;
   tutorName: string;
   sessionType: string;
-  location: string;
+  videoCallUrl?: string | null;
 }
 
 export const SessionConfEmail = ({
@@ -26,7 +26,7 @@ export const SessionConfEmail = ({
   duration,
   tutorName,
   sessionType,
-  location,
+  videoCallUrl,
 }: SessionConfEmailProps) => {
   const translations = {
     sl: {
@@ -64,7 +64,7 @@ export const SessionConfEmail = ({
             duration={duration}
             tutorName={tutorName}
             sessionType={sessionType}
-            location={location}
+            videoCallUrl={videoCallUrl}
           />
         </Body>
       </Tailwind>
@@ -82,6 +82,6 @@ SessionConfEmail.PreviewProps = {
   duration: 60,
   tutorName: "Anna Novak",
   sessionType: "Conversational Practice",
-  location: "https://meet.google.com/abc-defg-hij",
+  videoCallUrl: "https://teams.microsoft.com/meet/12345",
 } satisfies SessionConfEmailProps;
 

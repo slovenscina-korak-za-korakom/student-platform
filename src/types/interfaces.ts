@@ -47,6 +47,7 @@ export interface TimeblockData {
   location: string;
   description?: string;
   studentId: string;
+  videoCallUrl?: string | null;
 }
 
 export interface LangEvent {
@@ -90,6 +91,7 @@ export interface PersonalSession {
   tutorName: string;
   tutorAvatar: string;
   tutorColor: string;
+  videoCallUrl?: string | null;
 }
 
 export interface RegularSession {
@@ -125,6 +127,7 @@ export interface UnifiedEvent {
   sessionType?: string;
   isRecurring?: boolean;
   invitationId?: number;
+  videoCallUrl?: string | null;
 }
 
 export interface PlacementTestState {
@@ -201,6 +204,7 @@ export interface AvailableSlotData {
   duration: number;
   sessionType: string;
   location: string;
+  videoCallUrl?: string | null;
 }
 
 

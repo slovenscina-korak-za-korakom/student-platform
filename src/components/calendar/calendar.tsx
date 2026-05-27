@@ -140,6 +140,7 @@ const transformTimeblocksToSessions = (
       status: timeblock.status,
       description: timeblock.description,
       studentId: timeblock.studentId,
+      videoCallUrl: timeblock.videoCallUrl,
     };
   });
 };
@@ -217,6 +218,7 @@ export default function Calendar({
         sessionType: slot.sessionType,
         location: slot.location,
         description: "Available for booking",
+        videoCallUrl: slot.videoCallUrl,
       };
     });
 
@@ -505,6 +507,7 @@ export default function Calendar({
       location: arg.event.extendedProps.location,
       status: arg.event.extendedProps.status,
       description: arg.event.extendedProps.description,
+      videoCallUrl: arg.event.extendedProps.videoCallUrl,
       // Regular session specific fields
       isRecurring: arg.event.extendedProps.isRecurring,
       invitationId: arg.event.extendedProps.invitationId,
@@ -688,6 +691,7 @@ export default function Calendar({
               location: session.location,
               status: session.status,
               description: session.description,
+              videoCallUrl: session.videoCallUrl,
               // Regular session specific fields (only for regular sessions)
               isRecurring: (session as TutoringSession).isRecurring || false,
               invitationId: (session as TutoringSession).invitationId,

@@ -289,6 +289,24 @@ export const EventSheet = (props: EventSheetProps) => {
                   )}
                 </div>
 
+                {/* Video Call Link - shown for booked sessions with a URL */}
+                {session.videoCallUrl && session.status === "booked" && (
+                  <div className="px-5 py-4 border-b border-border/60">
+                    <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">
+                      {t("video-call")}
+                    </p>
+                    <a
+                      href={session.videoCallUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2.5 w-full px-3 py-2.5 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors justify-center"
+                    >
+                      <IconVideo className="h-4 w-4 shrink-0" />
+                      {t("buttons.join-video-call")}
+                    </a>
+                  </div>
+                )}
+
                 {/* Session */}
                 <div className="px-5 py-4">
                   <p className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground mb-3">

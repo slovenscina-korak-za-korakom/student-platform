@@ -107,6 +107,7 @@
       "regular-session": "Regular Session",
       "test-session": "Test Session",
       "recurring-note": "Weekly recurring",
+      "join-video-call": "Join Video Call",
       "tooltip": {
         "level": "Required knowledge: {level} level",
         "duration": "{duration} minutes long",
@@ -275,11 +276,13 @@
       "when": "When",
       "phone": "Phone",
       "location": "Location",
+      "video-call": "Video Call",
       "buttons": {
         "book": "Book Session",
         "booking": "Booking ...",
         "contact": "Contact tutor",
-        "book-test": "Book Free Session"
+        "book-test": "Book Free Session",
+        "join-video-call": "Join Video Call"
       },
       "test-session-title": "Free Test Session",
       "test-session-description": "This is your free introductory session to meet your tutor and get familiar with the platform. No payment required."

@@ -22,6 +22,7 @@ export interface TutoringSession {
   location: string;
   status: string;
   description: string;
+  videoCallUrl?: string | null;
   // Regular session specific fields
   isRecurring?: boolean;
   invitationId?: number;

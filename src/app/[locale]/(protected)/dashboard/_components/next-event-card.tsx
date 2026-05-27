@@ -1,6 +1,6 @@
 "use client";
 import {Card, CardContent, CardFooter, CardHeader, CardTitle,} from "@/components/ui/card";
-import {IconCalendar, IconClock, IconLoader2, IconMapPin, IconUser, IconUsers,} from "@tabler/icons-react";
+import {IconCalendar, IconClock, IconLoader2, IconMapPin, IconUser, IconUsers, IconVideo,} from "@tabler/icons-react";
 import React, {useEffect, useMemo, useState} from "react";
 import {useTranslations} from "next-intl";
 import {Button, buttonVariants} from "@/components/ui/button";
@@ -228,7 +228,21 @@ const NextEventCard = ({event, locale}: NextEventCardProps) => {
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex flex-row gap-3 pt-6 border-t border-border/30 bg-background dark:bg-[#1a1a1a]">
+        <CardFooter className="flex flex-col gap-3 pt-6 border-t border-border/30 bg-background dark:bg-[#1a1a1a]">
+          {/* Join video call button — visible within 24 hours of session start */}
+          {event.videoCallUrl && event.type === "personal" && (
+            (new Date(event.date).getTime() - currentTime.getTime()) / (1000 * 60 * 60) <= 24
+          ) && (
+            <a
+              href={event.videoCallUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors h-11"
+            >
+              <IconVideo className="h-4 w-4" />
+              {t("join-video-call")}
+            </a>
+          )}
           {isRegular ? (
             (() => {
               const hoursUntilSession = (new Date(event.date).getTime() - currentTime.getTime()) / (1000 * 60 * 60);
@@ -262,7 +276,7 @@ const NextEventCard = ({event, locale}: NextEventCardProps) => {
               );
             })()
           ) : (
-            <>
+            <div className="flex flex-row gap-3 w-full">
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
@@ -321,7 +335,7 @@ const NextEventCard = ({event, locale}: NextEventCardProps) => {
                   {tC("reschedule")}
                 </Button>
               )}
-            </>
+            </div>
           )}
         </CardFooter>
       </Card>

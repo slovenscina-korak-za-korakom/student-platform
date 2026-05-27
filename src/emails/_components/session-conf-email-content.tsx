@@ -119,7 +119,7 @@ const SessionConfEmailContent = ({
   duration,
   tutorName,
   sessionType,
-  location,
+  videoCallUrl,
 }: {
   name: string;
   locale: string;
@@ -127,7 +127,7 @@ const SessionConfEmailContent = ({
   duration: number;
   tutorName: string;
   sessionType: string;
-  location: string;
+  videoCallUrl?: string | null;
 }) => {
   const year = new Date().getFullYear();
   const t = getEmailTranslations(locale);
@@ -376,68 +376,70 @@ const SessionConfEmailContent = ({
             </Section>
           </Section>
 
-          {/* Video Call Section */}
-          <Section
-            style={{
-              backgroundColor: "#FAFAFA",
-              borderRadius: "16px",
-              padding: "32px",
-              marginBottom: "32px",
-              border: "1px solid #F3F4F6",
-              textAlign: "center",
-            }}
-          >
-            <Text
+          {/* Video Call Section - only shown when a video call URL has been set */}
+          {videoCallUrl && (
+            <Section
               style={{
-                fontSize: "16px",
-                lineHeight: "24px",
-                fontWeight: "600",
-                color: "#111827",
-                margin: "0 0 16px 0",
+                backgroundColor: "#FAFAFA",
+                borderRadius: "16px",
+                padding: "32px",
+                marginBottom: "32px",
+                border: "1px solid #F3F4F6",
+                textAlign: "center",
               }}
             >
-              {t.videoCall}
-            </Text>
-            <Button
-              href={location}
-              style={{
-                background:
-                  "linear-gradient(135deg, #6089CB 0%, #A855F7 100%)",
-                color: "#FFFFFF",
-                padding: "14px 32px",
-                borderRadius: "12px",
-                fontSize: "16px",
-                fontWeight: "600",
-                textDecoration: "none",
-                display: "inline-block",
-                border: "none",
-                cursor: "pointer",
-                fontFamily:
-                  '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                WebkitTextFillColor: "#FFFFFF",
-              }}
-            >
-              {t.joinSession}
-            </Button>
-            <Text
-              style={{
-                fontSize: "13px",
-                lineHeight: "20px",
-                color: "#6B7280",
-                margin: "16px 0 0 0",
-              }}
-            >
-              <Link
-                href={location}
+              <Text
                 style={{
-                  color: "#6B7280",
-                  textDecoration: "underline",
+                  fontSize: "16px",
+                  lineHeight: "24px",
+                  fontWeight: "600",
+                  color: "#111827",
+                  margin: "0 0 16px 0",
                 }}
               >
-                {location}
-              </Link>
-            </Text>
-          </Section>
+                {t.videoCall}
+              </Text>
+              <Button
+                href={videoCallUrl}
+                style={{
+                  background:
+                    "linear-gradient(135deg, #6089CB 0%, #A855F7 100%)",
+                  color: "#FFFFFF",
+                  padding: "14px 32px",
+                  borderRadius: "12px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  textDecoration: "none",
+                  display: "inline-block",
+                  border: "none",
+                  cursor: "pointer",
+                  fontFamily:
+                    '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  WebkitTextFillColor: "#FFFFFF",
+                }}
+              >
+                {t.joinSession}
+              </Button>
+              <Text
+                style={{
+                  fontSize: "13px",
+                  lineHeight: "20px",
+                  color: "#6B7280",
+                  margin: "16px 0 0 0",
+                }}
+              >
+                <Link
+                  href={videoCallUrl}
+                  style={{
+                    color: "#6B7280",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {videoCallUrl}
+                </Link>
+              </Text>
+            </Section>
+          )}
 
           {/* Personal Message */}
           <Section

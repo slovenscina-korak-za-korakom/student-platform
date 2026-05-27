@@ -66,6 +66,7 @@ const DashboardClient = ({
           theme: session.sessionType,
           tutorColor: session.tutorColor,
           sessionType: session.sessionType,
+          videoCallUrl: session.videoCallUrl,
         });
       }
     });
