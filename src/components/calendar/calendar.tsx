@@ -27,7 +27,6 @@ const transformTutors = (tutorsData: TutorData[]) => {
     email: tutor.email,
     phone: tutor.phone,
     bio: tutor.bio,
-    specializations: [], // Add this field if you have it in your database
   }));
 };
 
@@ -274,7 +273,7 @@ export default function Calendar({
   const [currentView, setCurrentView] = useState(initialView);
 
   const [showWeekends, setShowWeekends] = useState(true);
-  // const [selectedTutorId, setSelectedTutorId] = useState<number | null>(preferredTutorDbId ?? null);
+  const [selectedTutorId, setSelectedTutorId] = useState<number | null>(preferredTutorDbId ?? null);
   const [showBookedSessions, setShowBookedSessions] = useState(true);
 
   // Filter events based on the selected tutor or booked events
@@ -314,14 +313,15 @@ export default function Calendar({
       return !isBooked;
     });
 
-    if (preferredTutorDbId === null) {
+    if (selectedTutorId === null) {
       return filteredAvailableSlots;
     } else {
       return filteredAvailableSlots.filter(
-        (event: TutoringSession) => event.tutorId === preferredTutorDbId,
+        (event: TutoringSession) => event.tutorId === selectedTutorId,
       );
     }
   }, [
+    selectedTutorId,
     preferredTutorDbId,
     availableSlots,
     showBookedSessions,
@@ -339,8 +339,8 @@ export default function Calendar({
     }
 
     // Check if a specific tutor is selected and has no available slots
-    if (preferredTutorDbId !== null && events.length === 0) {
-      const tutor = transformedTutors.find((t) => t.id === preferredTutorDbId);
+    if (selectedTutorId !== null && events.length === 0) {
+      const tutor = transformedTutors.find((t) => t.id === selectedTutorId);
       return {
         type: "tutor",
         tutor: tutor?.name
@@ -348,7 +348,7 @@ export default function Calendar({
     }
 
     // Check if no tutors have any available slots
-    if (preferredTutorDbId === null && availableSlots.length === 0) {
+    if (selectedTutorId === null && availableSlots.length === 0) {
       return {
         type: "all",
         tutor: null
@@ -358,7 +358,7 @@ export default function Calendar({
     return null;
   }, [
     showBookedSessions,
-    preferredTutorDbId,
+    selectedTutorId,
     events.length,
     availableSlots.length,
     transformedTutors,
@@ -621,9 +621,11 @@ export default function Calendar({
           changeView={changeView}
           showWeekends={showWeekends}
           tutors={transformedTutors}
-          selectedTutorId={preferredTutorDbId}
+          preferredTutorId={preferredTutorDbId ?? null}
+          selectedTutorId={selectedTutorId}
           showBookedSessions={showBookedSessions}
           setBookedSessions={setShowBookedSessions}
+          onTutorSelect={setSelectedTutorId}
         />
       </div>
 

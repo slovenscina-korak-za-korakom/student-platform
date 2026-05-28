@@ -30,9 +30,11 @@ type CalendarControlsProps = {
   changeView: (view: string) => void,
   showWeekends: boolean,
   tutors: Tutor[],
+  preferredTutorId: number | null,
   selectedTutorId: number | null,
   showBookedSessions?: boolean,
-  setBookedSessions?: (showBookedSessions: boolean) => void
+  setBookedSessions?: (showBookedSessions: boolean) => void,
+  onTutorSelect?: (tutorId: number) => void,
 };
 
 export const CalendarControls = (props: CalendarControlsProps) => {
@@ -160,9 +162,11 @@ export const CalendarControls = (props: CalendarControlsProps) => {
         {/* Tutor Selection */}
         <TutorAvatars
           tutors={props.tutors}
+          preferredTutorId={props.preferredTutorId}
           selectedTutorId={props.selectedTutorId}
           disabled={props.showBookedSessions}
           setBooked={props.setBookedSessions}
+          onTutorSelect={props.onTutorSelect}
         />
       </div>
       </div>

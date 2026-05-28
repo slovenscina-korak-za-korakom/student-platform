@@ -26,6 +26,7 @@ import {
   DialogContent,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {fetchTutors} from "@/app/[locale]/(protected)/settings/_components/preferences-form";
 
 const WelcomePage = () => {
   const {user, isLoaded} = useUser();
@@ -44,7 +45,7 @@ const WelcomePage = () => {
   const [bioDialogTutor, setBioDialogTutor] = useState<Awaited<ReturnType<typeof getTutors>>[0] | null>(null);
 
   useEffect(() => {
-    getTutors().then(setTutors);
+    fetchTutors().then(setTutors);
   }, []);
 
   const totalSteps = 3;

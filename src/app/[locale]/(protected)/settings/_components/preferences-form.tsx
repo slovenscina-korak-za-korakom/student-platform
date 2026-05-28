@@ -34,6 +34,12 @@ import {Dialog, DialogContent, DialogDescription, DialogTitle,} from "@/componen
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {cn} from "@/lib/utils";
 
+export const fetchTutors = async () => { // don't support speaking tutors to be a preferred tutors
+  const tutorsDb = await getTutors();
+  const speakingTutors = process.env.NEXT_PUBLIC_SPEAKING_TUTORS?.split(",").map(Number) ?? []
+  return tutorsDb.filter((tutor) => !speakingTutors.includes(tutor.id));
+}
+
 const SectionLabel = ({children}: { children: React.ReactNode }) => (
   <div className="flex items-center gap-2.5 mb-3">
     <div className="w-[3px] h-3.5 rounded-full gradient-primary shrink-0"/>
@@ -69,7 +75,7 @@ const PreferencesForm = () => {
       }
     };
     fetchPreferences();
-    getTutors().then(setTutors);
+    fetchTutors().then(setTutors);
   }, [isLoaded, user]);
 
   const openDialog = () => {

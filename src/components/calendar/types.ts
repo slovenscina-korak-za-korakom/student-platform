@@ -8,7 +8,6 @@ export interface Tutor {
   email: string;
   phone: string;
   bio: string;
-  specializations: string[];
 }
 
 export interface TutoringSession {
