@@ -248,7 +248,11 @@
       "view-options": "View options",
       "weekend": "Show weekends",
       "my-bookings": "My bookings",
-      "show-all": "Show all"
+      "show-all": "Show all",
+      "speaking-tutor": {
+        "title": "Speaking practice tutor",
+        "desc": "This tutor specialises in speaking practice."
+      }
     },
     "event-type": {
       "individual": "Individual",

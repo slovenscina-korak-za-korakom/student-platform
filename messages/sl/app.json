@@ -248,7 +248,11 @@
       "view-options": "Možnosti",
       "weekend": "Prikaži vikend",
       "my-bookings": "Moji termini",
-      "show-all": "Prikaži vse"
+      "show-all": "Prikaži vse",
+      "speaking-tutor": {
+        "title": "Tutor govora",
+        "desc": "Ta tutor je specializiran za govorno prakso."
+      }
     },
     "event-type": {
       "individual": "Individualna ura",

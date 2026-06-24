@@ -248,7 +248,11 @@
       "view-options": "Opzioni di visualizzazione",
       "weekend": "Mostra weekend",
       "my-bookings": "Le mie prenotazioni",
-      "show-all": "Mostra tutto"
+      "show-all": "Mostra tutto",
+      "speaking-tutor": {
+        "title": "Tutor di conversazione",
+        "desc": "Questo tutor è specializzato nella pratica della conversazione."
+      }
     },
     "event-type": {
       "individual": "Individuale",
