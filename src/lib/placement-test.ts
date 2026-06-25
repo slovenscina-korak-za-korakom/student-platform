@@ -1,8 +1,9 @@
 export type PlacementQuestion = {
   id: number;
   level: "A0-A1" | "A2" | "B1" | "B2" | "C1";
+  type: "multiple_choice" | "gap_fill";
   question: string;
-  options: {
+  options?: {
     id: string;
     text: string;
   }[];
@@ -14,7 +15,8 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 1,
     level: "A0-A1",
-    question: "V trgovini vidiš napis »AKCIJA – 50 %«. Kaj to pomeni?",
+    type: "multiple_choice",
+    question: "V trgovini vidiš napis \"AKCIJA – 50 %\". Kaj to pomeni?",
     options: [
       { id: "a", text: "V trgovini je nova blagajna." },
       { id: "b", text: "Izdelek je cenejši." },
@@ -25,7 +27,8 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 2,
     level: "A0-A1",
-    question: "Pazi! Na tleh je napis: »MOKRA TLA«. Kaj to pomeni?",
+    type: "multiple_choice",
+    question: "Pazi! Na tleh je napis: \"MOKRA TLA\". Kaj to pomeni?",
     options: [
       { id: "a", text: "Moramo počakati v vrsti." },
       { id: "b", text: "Moramo obuti copate." },
@@ -36,21 +39,23 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 3,
     level: "A0-A1",
+    type: "multiple_choice",
     question: "Vprašanje v dialogu: – Od kod si? – Sem iz …",
     options: [
-      { id: "a", text: "jesti" },
-      { id: "b", text: "Ljubljane" },
-      { id: "c", text: "knjigi" },
+      { id: "a", text: "Kranju" },
+      { id: "b", text: "Ljubljani" },
+      { id: "c", text: "Ljubljane" },
     ],
-    correctAnswer: "b",
+    correctAnswer: "c",
   },
   {
     id: 4,
     level: "A0-A1",
+    type: "multiple_choice",
     question:
-      "Na avtobusu slišiš: »Naslednja postaja – Glavna postaja.« Kaj to pomeni?",
+      "Na avtobusu slišiš: \"Naslednja postaja – Glavna postaja.\" Kaj to pomeni?",
     options: [
-      { id: "a", text: "Avtobus se bo ustavil pri trgovini." },
+      { id: "a", text: "Avtobus se bo ustavil čez dve postaji pri glavni postaji." },
       { id: "b", text: "Avtobus se bo ustavil pri glavni postaji." },
       { id: "c", text: "Avtobus ne bo več ustavljal." },
     ],
@@ -59,72 +64,78 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 5,
     level: "A0-A1",
-    question: "Na vratih piše: »ODPRTO.« Kaj to pomeni?",
+    type: "multiple_choice",
+    question: "Na vratih piše: \"ODPRTO.\" Kaj to pomeni?",
     options: [
-      { id: "a", text: "Vrata so zaprta." },
-      { id: "b", text: "Trgovina je odprta." },
-      { id: "c", text: "Trgovina je zaprta." },
+      { id: "a", text: "Trgovina je odklenjena." },
+      { id: "b", text: "Trgovina je zaprta." },
+      { id: "c", text: "Trgovina je odprta." },
     ],
-    correctAnswer: "b",
+    correctAnswer: "c",
   },
 
   // A2 Level (Questions 6-10)
   {
     id: 6,
     level: "A2",
+    type: "multiple_choice",
     question:
-      "Preberi oglas:\n»Oddam sobo v centru mesta. Cena: 250 €. Kontakt: 040 123 456.«\nKaj lahko iz oglasa izvemo?",
+      "Dopolnite: \"Včeraj sem pila kavo. S prijateljico Saro sva šli v kavarno in _______ o izpitu",
     options: [
-      { id: "a", text: "Prodajajo stanovanje." },
-      { id: "b", text: "Iščejo sostanovalca." },
-      { id: "c", text: "Oddajajo sobo." },
+      { id: "a", text: "se progovarjali" },
+      { id: "b", text: "se pogovarjale" },
+      { id: "c", text: "sem se pogovarjale" },
     ],
-    correctAnswer: "c",
+    correctAnswer: "a",
   },
   {
     id: 7,
     level: "A2",
+    type: "multiple_choice",
     question:
-      "Preberi sporočilo:\n»Živjo! Danes ne morem na kavo, ker imam izpit. Se vidiva jutri?«\nKaj bo oseba naredila danes?",
+      "Ura je 22.40\nKako bi povedali koliko je ura?",
     options: [
-      { id: "a", text: "Pila bo kavo." },
-      { id: "b", text: "Pisala bo izpit." },
-      { id: "c", text: "Šla bo v trgovino." },
+      { id: "a", text: "Dvajset do enajstih." },
+      { id: "b", text: "Dvajset minut do triindvajsete ure." },
+      { id: "c", text: "Dvajset minut za triindvajseto." },
     ],
     correctAnswer: "b",
   },
   {
     id: 8,
     level: "A2",
-    question: "Izberi pravilno obliko:\nVčeraj ___ v kino.",
+    type: "multiple_choice",
+    question: "Izberi pravilno obliko:\nVčeraj sem _______ v hribe.",
     options: [
-      { id: "a", text: "grem" },
-      { id: "b", text: "šel" },
-      { id: "c", text: "sem šel" },
+      { id: "a", text: "šel hoditi" },
+      { id: "b", text: "hodil" },
+      { id: "c", text: "šel hodit" },
     ],
     correctAnswer: "c",
   },
   {
     id: 9,
     level: "A2",
+    type: "multiple_choice",
     question:
-      "Preberi SMS:\n»Živjo! Avtobus ima zamudo 10 minut. Se vidiva malo kasneje.«\nKaj se bo zgodilo?",
+      "Dololni:\n\"Živjo! Jutri _______ _______ v trgovino, zato ne grem s tabo na kavo.\"",
     options: [
-      { id: "a", text: "Avtobus bo prišel prej." },
-      { id: "b", text: "Avtobus bo prišel kasneje." },
-      { id: "c", text: "Avtobus ne bo prišel." },
+      { id: "a", text: "morem iti." },
+      { id: "b", text: "moram gresti." },
+      { id: "c", text: "moram iti." },
     ],
-    correctAnswer: "b",
+    correctAnswer: "c",
   },
   {
     id: 10,
     level: "A2",
+    type: "multiple_choice",
     question:
-      "Izberi pravilno možnost:\nVčeraj smo ___ nogomet v parku.",
+      "Izberi pravilno možnost\nOb nedeljah lahko _______ cel dan.",
     options: [
-      { id: "a", text: "igrali" },
-      { id: "b", text: "igramo" },
-      { id: "c", text: "bomo igrali" },
+      { id: "a", text: "počivam" },
+      { id: "b", text: "počivati" },
+      { id: "c", text: "si odpočivam" },
     ],
     correctAnswer: "a",
   },
@@ -133,60 +144,55 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 11,
     level: "B1",
+    type: "gap_fill",
     question:
-      "Preberi novico:\n»Včeraj je v Ljubljani potekal maraton. Udeležilo se ga je več kot 5000 tekačev iz različnih držav.«\nKaj pove besedilo?",
-    options: [
-      { id: "a", text: "Maraton je bil včeraj v Mariboru." },
-      { id: "b", text: "Na maratonu je teklo več tisoč ljudi." },
-      { id: "c", text: "Maraton bo naslednje leto." },
-    ],
-    correctAnswer: "b",
+      "Dololni z zaimki:\nVelja mama, jutri _______ (ti) pokličem. Povedala _______ (ti) bom nekaj zanimivega o _______ (moji) sodelavcih.",
+    correctAnswer: "te,ti,mojih",
   },
   {
     id: 12,
     level: "B1",
+    type: "multiple_choice",
     question:
-      "Preberi stavek:\n»Po raziskavi Slovenci največ časa porabijo za delo, nato za gledanje televizije. Na tretjem mestu je druženje s prijatelji.«\nKaj je na drugem mestu?",
+      "Dopolni:\n\"Na _______ je življenje bolj mirno in počasno. Nikoli, ne bi želel živeti v mestu\"",
     options: [
-      { id: "a", text: "Branje knjig." },
-      { id: "b", text: "Gledanje televizije." },
-      { id: "c", text: "Delo na vrtu." },
+      { id: "a", text: "vasu." },
+      { id: "b", text: "vase." },
+      { id: "c", text: "vasi." },
     ],
-    correctAnswer: "b",
+    correctAnswer: "c",
   },
   {
     id: 13,
     level: "B1",
+    type: "gap_fill",
     question:
-      "Preberi besedilo:\n»V nedeljo bo v mestu prireditev. Organizatorji priporočajo, da ljudje pridejo peš ali z avtobusom, ker bo promet zaprt.«\nKaj svetujejo organizatorji?",
-    options: [
-      { id: "a", text: "Naj ljudje pridejo z avtom." },
-      { id: "b", text: "Naj ljudje pridejo peš ali z avtobusom." },
-      { id: "c", text: "Naj ljudje ostanejo doma." },
-    ],
-    correctAnswer: "b",
+      "Dopolni besedilo s frazami všeč:\n - (onadva): Všeč _______ _______ slovenščina.\n - (onidve): Všeč _______ _______ pogovorni klub.\n - (one) Všeč _______ _______ modalni glagoli.",
+    correctAnswer: "jima je,jima je,so jim",
   },
   {
     id: 14,
     level: "B1",
+    type: "multiple_choice",
     question:
-      "Preberi novico:\n»Ta konec tedna bodo v mestu praznovali občinski praznik. Na trgu bodo koncerti in stojnice.«\nKaj bo v mestu?",
+      "Preberi novico:\n\"Ta konec tedna bodo v mestu praznovali občinski praznik. Na trgu prireditev z narodnozabavno glasbo in srečolov.\"\nKaj bo v mestu?",
     options: [
-      { id: "a", text: "Predavanja na univerzi." },
-      { id: "b", text: "Praznovanje s koncerti in stojnicami." },
-      { id: "c", text: "Nogometna tekma." },
+      { id: "a", text: "Veselica." },
+      { id: "b", text: "Praznovanje ustanovitve nove občine." },
+      { id: "c", text: "Koncert in lov na srečke." },
     ],
-    correctAnswer: "b",
+    correctAnswer: "a",
   },
   {
     id: 15,
     level: "B1",
+    type: "multiple_choice",
     question:
-      "Preberi članek:\n»V zadnjem letu se je število turistov v Sloveniji povečalo za 15 %. Največ jih prihaja iz Nemčije in Italije.«\nKaj pravi besedilo?",
+      "Preberi članek:\n\"V zadnjem letu je število turistov v Sloveniji poskočilo za 15 %. Največ jih prihaja iz Nemčije in Italije.\"\nKaj pravi besedilo?",
     options: [
-      { id: "a", text: "Turistov je manj." },
-      { id: "b", text: "Turistov je več." },
-      { id: "c", text: "Turisti prihajajo samo iz Francije." },
+      { id: "a", text: "Število turistov je zaskočilo." },
+      { id: "b", text: "Število turistov je naraslo." },
+      { id: "c", text: "Turisti prihajajo samo iz Evrope." },
     ],
     correctAnswer: "b",
   },
@@ -195,82 +201,79 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 16,
     level: "B2",
+    type: "gap_fill",
     question:
-      "Preberi odlomek:\n»V zadnjih letih je število kolesarjev v mestih naraslo. To je posledica novih kolesarskih poti in večje skrbi za okolje.«\nZakaj je več kolesarjev v mestih?",
-    options: [
-      { id: "a", text: "Ker je več novih cest za avtomobile." },
-      { id: "b", text: "Ker je več kolesarskih poti in skrbi za okolje." },
-      { id: "c", text: "Ker so kolesa dražja." },
-    ],
-    correctAnswer: "b",
+      "Pretvori poved z odvisnimi stavki v enostavčno poved.\n" +
+      "Ko je končala študi, se je preselila v tujino.\n" +
+      "-> Po _______ študija se je preselila v tujino.\n" +
+      "Ker ni imal dovilj časa, naloge ni dokončal.\n" +
+      "-> Zaradi _______ časa naloge ni dokončal.\n" +
+      "Čeprav je bil utrujen, je nadaljeval z delom.\n" +
+      "-> Kljub _______ je nadaljeval z delom.",
+    correctAnswer: "končanju,premalo,utrujenosti",
   },
   {
     id: 17,
     level: "B2",
+    type: "gap_fill",
     question:
-      "Preberi odlomek:\n»Raziskava je pokazala, da večina mladih uporablja socialna omrežja za zabavo, manj pa za izobraževanje.«\nKaj je glavno sporočilo raziskave?",
-    options: [
-      { id: "a", text: "Mladi uporabljajo omrežja predvsem za učenje." },
-      { id: "b", text: "Mladi uporabljajo omrežja predvsem za zabavo." },
-      { id: "c", text: "Mladi sploh ne uporabljajo omrežij." },
-    ],
-    correctAnswer: "b",
+      "S katerimi vezniki bi združili ti dve povedi?\n" +
+      "- Zamudil je avtobus. Prišel je prepozno.\n" +
+      "- Učila se je celo noč. Ni opravila izpita.\n" +
+      "- Pokliči me. Prideš domov.",
+    correctAnswer: "zato ker|ker,čeprav,ko",
   },
   {
     id: 18,
     level: "B2",
+    type: "gap_fill",
     question:
-      "Preberi odlomek in dopolni:\n»To je moj prijatelj Luka. Poznam ___ že dolgo, vsak teden igrava košarko skupaj.«\nKatero besedo vstaviš?",
-    options: [
-      { id: "a", text: "Ga" },
-      { id: "b", text: "Njega" },
-      { id: "c", text: "On" },
-    ],
-    correctAnswer: "a",
+      "Preberi odlomek in dopolni z zaimki:\n" +
+      "To je moj prijatelj Luka. Poznam _______ že dolgo, vsak teden igrava košarko skupaj. " +
+      "Pogosto _______ zastavljam vprašanja, povezana s športom in zdravo prehrano. Večkrat greva skupaj v fitnes. " +
+      "V _______ telovadiva in dvigujeva uteži. Brez _______ zagotovo ne bi vedel, kako napredovati v športu.",
+    correctAnswer: "ga,mu,njem,njega",
   },
   {
     id: 19,
     level: "B2",
+    type: "multiple_choice",
     question:
-      "Preberi odlomek:\n»V Sloveniji se vse več ljudi odloča za delo od doma. Ta način prinaša večjo fleksibilnost, hkrati pa tudi izzive, kot so pomanjkanje stika s sodelavci in težave pri organizaciji časa.«\nKatera je ena od slabosti dela od doma?",
+      "Preberi odlomek:\n\"V Sloveniji se vse več ljudi odloča za delo od doma. Ta način prinaša večjo fleksibilnost, " +
+      "hkrati pa tudi slabe plati, kot so manj komunikacije s sodelavci in težave pri organizaciji časa.\n" +
+      "Katera je ena od pomankljivosti dela od doma?",
     options: [
-      { id: "a", text: "Večja fleksibilnost." },
+      { id: "a", text: "Fleksibilnost." },
       { id: "b", text: "Manj stika s sodelavci." },
-      { id: "c", text: "Višja plača." },
+      { id: "c", text: "Več prostega časa." },
     ],
     correctAnswer: "b",
   },
   {
     id: 20,
     level: "B2",
+    type: "gap_fill",
     question:
-      "Preberi odlomek:\n»V času epidemije so številna podjetja začela uporabljati spletne sestanke. To je omogočilo nadaljevanje dela, a prineslo tudi večjo utrujenost zaradi dolgotrajnega gledanja v zaslon.«\nKaj je ena od posledic spletnih sestankov?",
-    options: [
-      { id: "a", text: "Večja fizična aktivnost." },
-      { id: "b", text: "Večja utrujenost." },
-      { id: "c", text: "Več druženja v živo." },
-    ],
-    correctAnswer: "b",
+      "Preberi in dopolni z modalnimi (naklonskimi) glagoli.\nJutri žal ne _______ priti na obisk. V službi imam veliko dela, oddati _______ poročilo do petka. _______ se " +
+      "vidiva v soboto. Zelo si te _______ videti. _______ si, da bi bil že vikend",
+    correctAnswer: "morem,moram,lahko,želim,želim",
   },
 
   // C1 Level (Questions 21-25)
   {
     id: 21,
     level: "C1",
+    type: "gap_fill",
     question:
-      "Preberi odlomek:\n»Nekateri menijo, da digitalizacija prinaša predvsem prednosti, kot so hitrejše informacije in boljša povezanost. Drugi pa opozarjajo na nevarnosti, kot so izguba zasebnosti in odvisnost od tehnologije.«\nKakšno je glavno sporočilo?",
-    options: [
-      { id: "a", text: "Digitalizacija ima samo pozitivne učinke." },
-      { id: "b", text: "Digitalizacija ima tako prednosti kot slabosti." },
-      { id: "c", text: "Digitalizacija nima vpliva na ljudi." },
-    ],
-    correctAnswer: "b",
+      "Preoblikujte povedi, a ohranite pomen:\nČeprav ga je opozorila, je vztrajal\n    Navkljub _______ je vztrajal.\nBolje bi bilo, da bi molčal.\n    Moral _______.",
+    correctAnswer: "opozorilu,bi molčati",
   },
   {
     id: 22,
     level: "C1",
+    type: "multiple_choice",
     question:
-      "Preberi odlomek:\n»V filozofski razpravi o svobodi avtor poudarja, da svoboda ni le odsotnost omejitev, ampak tudi možnost aktivnega sodelovanja v družbi. Svoboda torej pomeni odgovornost.«\nKako avtor razume svobodo?",
+      "Preberi odlomek:\n\"V filozofski razpravi o svobodi avtor poudarja, da svoboda ni le odsotnost omejitev, ampak tudi možnost aktivnega sodelovanja v družbi. Svoboda torej pomeni odgovornost.\"\nKako avtor razume svobodo?",
     options: [
       { id: "a", text: "Kot odsotnost odgovornosti." },
       { id: "b", text: "Kot odgovornost in sodelovanje." },
@@ -281,20 +284,17 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 23,
     level: "C1",
+    type: "gap_fill",
     question:
-      "Slovnica – izberi pravilno možnost:\nNa izpit se nisi pripravil. To bi ___ storiti prej!",
-    options: [
-      { id: "a", text: "moral" },
-      { id: "b", text: "mogel" },
-      { id: "c", text: "morem" },
-    ],
-    correctAnswer: "a",
+      "Izberi pravilno možnost:\n - To je edina rešitev, _______ (ki/katera) se zdi smiselna.\n - Ni človeka, _______ (ki ne bi/ki ne) kdaj podvomil.\n - Govoril je, _______ (kot da/kot bi) vse vedel.\n - Ne glede na to, _______ (koliko/kolikor) truda vložiš, ni zagotovila.",
+    correctAnswer: "ki,ki ne bi,kot bi,koliko",
   },
   {
     id: 24,
     level: "C1",
+    type: "multiple_choice",
     question:
-      "Preberi odlomek:\n»Eden od izzivov sodobne družbe je ohranjanje kulturne raznolikosti ob hkratni globalizaciji. Kritiki opozarjajo, da globalizacija vodi v poenotenje kultur, medtem ko zagovorniki trdijo, da omogoča širjenje kulturnih vplivov.«\nKaj je dilema, ki jo besedilo opisuje?",
+      "Preberi odlomek:\n\"Eden od izzivov sodobne družbe je ohranjanje kulturne raznolikosti ob hkratni globalizaciji. Kritiki opozarjajo, da globalizacija vodi v poenotenje kultur, medtem ko zagovorniki trdijo, da omogoča širjenje kulturnih vplivov.\"\nKaj je dilema, ki jo besedilo opisuje?",
     options: [
       { id: "a", text: "Ali globalizacija uničuje ali bogati kulture." },
       { id: "b", text: "Ali globalizacija povečuje cene izdelkov." },
@@ -305,16 +305,34 @@ export const placementQuestions: PlacementQuestion[] = [
   {
     id: 25,
     level: "C1",
+    type: "gap_fill",
     question:
-      "Slovnica – izberi pravilno možnost:\nDopolni poved:\n»To je raziskovalec, ___ knjige o jeziku so prevedene v več kot deset tujih jezikov.«",
-    options: [
-      { id: "a", text: "ki" },
-      { id: "b", text: "kateremu" },
-      { id: "c", text: "katerega" },
-    ],
-    correctAnswer: "c",
+    "Dopolnite povedi:\na.) Ćeprav je _______ (marsikdo/kdorkoli) dvomil v njegov uspeh, je vztrajal, kot da ga _______ (nič/marsikaj) ne more ustaviti.\nb.) Ne gre za to, da _______ (ne bi/ne) razumel problema, temveč da ga je _______ (marsikje/marsikaj) v sistemu zavajalo.",
+    correctAnswer: "marsikdo,nič,ne bi,marsikaj",
   },
 ];
+
+// Points awarded per correct answer at each difficulty level
+export const levelPoints: Record<LanguageLevel, number> = {
+  "A0-A1": 1,
+  A2: 2,
+  B1: 3,
+  B2: 4,
+  C1: 5,
+};
+
+export const maxScore = 75; // 5 questions × (1+2+3+4+5) pts
+
+// Score → assigned level. Thresholds match perfect performance at each tier.
+export const scoreThresholds: { minScore: number; level: string }[] = [
+  { minScore: 30, level: "B1" },
+  { minScore: 15, level: "A2" },
+  { minScore: 5,  level: "A1" },
+  { minScore: 0,  level: "A0" },
+];
+
+export const determineLevelFromScore = (score: number): string =>
+  scoreThresholds.find((t) => score >= t.minScore)?.level ?? "A0";
 
 // Level groups for easier access
 export const levelGroups = {
@@ -334,6 +352,6 @@ export const levelMapping: Record<LanguageLevel, string> = {
   "A0-A1": "A1",
   A2: "A2",
   B1: "B1",
-  B2: "B2",
-  C1: "C1",
+  B2: "B1",
+  C1: "B1",
 };

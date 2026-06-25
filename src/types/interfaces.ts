@@ -132,11 +132,11 @@ export interface UnifiedEvent {
 
 export interface PlacementTestState {
   currentQuestionIndex: number;
+  totalScore: number;
   levelResults: Record<LanguageLevel, { correct: number; total: number }>;
-  currentLevelIndex: number;
   isTestComplete: boolean;
   finalLevel: string;
-  answeredQuestions: number[]; // Track which questions have been answered
+  answeredQuestions: number[];
 }
 
 export interface Event {

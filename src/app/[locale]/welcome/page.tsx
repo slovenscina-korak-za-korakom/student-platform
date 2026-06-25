@@ -18,7 +18,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {getTutors, updateLanguageLevel, updateUserPreferences, UserPreferences} from "@/actions/user-actions";
 import {toast} from "sonner";
 import {learningGoals} from "@/lib/docs";
-import {clearPlacementTestState, PlacementTest} from "@/components/welcome/PlacementTest";
+import {clearPlacementTestState, PlacementTest} from "@/components/welcome/placement-test";
 import {cn} from "@/lib/utils";
 import {
   Dialog,
@@ -115,12 +115,13 @@ const WelcomePage = () => {
 
       // Clear placement test state from localStorage
       clearPlacementTestState();
-
-      redirect({href: "/dashboard", locale: locale});
     } catch (error) {
       toast.error("Error saving preferences: " + error);
+      setIsSubmitting(false);
+      return;
     }
-    setIsSubmitting(false);
+
+    redirect({href: "/dashboard", locale: locale});
   };
 
   const handlePlacementTestComplete = (level: string) => {
