@@ -307,7 +307,7 @@ export const placementQuestions: PlacementQuestion[] = [
     level: "C1",
     type: "gap_fill",
     question:
-    "Dopolnite povedi:\na.) Ćeprav je _______ (marsikdo/kdorkoli) dvomil v njegov uspeh, je vztrajal, kot da ga _______ (nič/marsikaj) ne more ustaviti.\nb.) Ne gre za to, da _______ (ne bi/ne) razumel problema, temveč da ga je _______ (marsikje/marsikaj) v sistemu zavajalo.",
+    "Dopolnite povedi:\na.) Čeprav je _______ (marsikdo/kdorkoli) dvomil v njegov uspeh, je vztrajal, kot da ga _______ (nič/marsikaj) ne more ustaviti.\nb.) Ne gre za to, da _______ (ne bi/ne) razumel problema, temveč da ga je _______ (marsikje/marsikaj) v sistemu zavajalo.",
     correctAnswer: "marsikdo,nič,ne bi,marsikaj",
   },
 ];

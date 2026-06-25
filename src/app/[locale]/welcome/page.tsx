@@ -20,12 +20,7 @@ import {toast} from "sonner";
 import {learningGoals} from "@/lib/docs";
 import {clearPlacementTestState, PlacementTest} from "@/components/welcome/placement-test";
 import {cn} from "@/lib/utils";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import {Dialog, DialogClose, DialogContent, DialogTitle,} from "@/components/ui/dialog";
 import {fetchTutors} from "@/app/[locale]/(protected)/settings/_components/preferences-form";
 
 const WelcomePage = () => {
@@ -104,14 +99,24 @@ const WelcomePage = () => {
       await updateLanguageLevel(preferences.languageLevel);
 
       // Mark onboarding as completed
-      await user.update({
-        unsafeMetadata: {
-          ...user.unsafeMetadata,
-          onboardingCompleted: true,
-          welcome: false,
-          showWelcomeDialog: true,
-        },
-      });
+      const isNewUser = await user.unsafeMetadata.showWelcomeDialog ?? true
+      if (isNewUser) {
+        await user.update({
+          unsafeMetadata: {
+            ...user.unsafeMetadata,
+            onboardingCompleted: true,
+            welcome: false,
+            showWelcomeDialog: true,
+          },
+        });
+      } else {
+        await user.update({
+          unsafeMetadata: {
+            ...user.unsafeMetadata,
+            onboardingCompleted: true,
+          },
+        });
+      }
 
       // Clear placement test state from localStorage
       clearPlacementTestState();
@@ -189,7 +194,8 @@ const WelcomePage = () => {
 
                         {/* Selection Indicator */}
                         {isSelected && (
-                          <div className="absolute top-3 left-3 flex items-center justify-center w-6 h-6 rounded-full bg-primary">
+                          <div
+                            className="absolute top-3 left-3 flex items-center justify-center w-6 h-6 rounded-full bg-primary">
                             <IconCheck className="h-3.5 w-3.5 text-white"/>
                           </div>
                         )}
@@ -387,12 +393,14 @@ const WelcomePage = () => {
 
       {/* Tutor Bio Dialog */}
       <Dialog open={!!bioDialogTutor} onOpenChange={(open) => !open && setBioDialogTutor(null)}>
-        <DialogContent showCloseButton={false} className="max-w-md p-0 rounded-2xl gap-0 overflow-hidden max-h-[90vh] flex flex-col">
+        <DialogContent showCloseButton={false}
+                       className="max-w-md p-0 rounded-2xl gap-0 overflow-hidden max-h-[90vh] flex flex-col">
           {/* Gradient header */}
           <div className="relative h-28 bg-gradient-to-br from-primary/30 via-primary/10 to-transparent shrink-0">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background/60"/>
             <DialogClose asChild>
-              <button className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-colors border border-border/30">
+              <button
+                className="absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-background/60 hover:bg-background/80 backdrop-blur-sm transition-colors border border-border/30">
                 <IconX className="h-3.5 w-3.5 text-foreground/70"/>
               </button>
             </DialogClose>
