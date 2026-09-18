@@ -284,7 +284,7 @@ const PreferencesForm = () => {
           showCloseButton={false}
           className={cn(
             "p-0 gap-0 border-0 shadow-2xl rounded-2xl overflow-hidden flex flex-col sm:flex-row w-[calc(100vw-2rem)] h-[88vh] sm:h-[620px]",
-            bioTutor ? "sm:max-w-[920px]" : "sm:max-w-[700px]"
+            bioTutor ? "sm:max-w-[1120px]" : "sm:max-w-[700px]"
           )}
         >
           <DialogTitle className="sr-only">Edit Preferences</DialogTitle>
@@ -605,7 +605,7 @@ const PreferencesForm = () => {
           {/* ── BIO panel (third column, desktop only) ── */}
           {bioTutor && (
             <div
-              className="hidden sm:flex sm:w-[220px] sm:shrink-0 flex-col border-l border-border/60 bg-background dark:bg-sidebar">
+              className="hidden sm:flex sm:w-[420px] sm:shrink-0 flex-col border-l border-border/60 bg-background dark:bg-sidebar">
               {/* Header */}
               <div className="flex items-center justify-between px-4 pt-4 pb-3 border-b border-border/60 shrink-0">
                 <div>
