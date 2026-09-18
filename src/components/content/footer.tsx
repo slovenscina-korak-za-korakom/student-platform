@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import { usePathname } from "next/navigation";
-import { footerLinks } from "@/lib/docs";
-import { SocialLinks } from "../ui/social-links";
-import { useTranslations } from "next-intl";
-import { IconLogo } from "../icons/icon-logo";
-import { Link } from "@/i18n/routing";
+import {usePathname} from "next/navigation";
+import {footerLinks} from "@/lib/docs";
+import {SocialLinks} from "../ui/social-links";
+import {useTranslations} from "next-intl";
+import {IconLogo} from "../icons/icon-logo";
+import {Link} from "@/i18n/routing";
 
 export default function Footer() {
   const t = useTranslations("footer");
@@ -19,20 +19,20 @@ export default function Footer() {
 
   return (
     <footer className="relative isolate overflow-hidden border-t border-border/50">
-      <div className="absolute inset-0 -z-10 gradient-primary-subtle-reversed opacity-60 dark:opacity-40" />
+      <div className="absolute inset-0 -z-10 gradient-primary-subtle-reversed opacity-60 dark:opacity-40"/>
       <div className="mx-auto max-w-7xl px-6 py-16 lg:px-8 lg:py-20">
         <div className="flex flex-col lg:flex-row justify-between gap-12">
           <div className="flex flex-col gap-6 max-w-md">
             <div className="size-10">
               <span className="sr-only">Slovenščina Korak za Korkom</span>
-              <IconLogo />
+              <IconLogo/>
             </div>
             <p className="text-sl-secondary text-lg leading-relaxed">
               {t("title")}
             </p>
             <div className="flex flex-row items-center gap-x-4">
               <SocialLinks
-                href={"https://t.me/slovenscina_korak_za_korakom"}
+                href="https://t.me/slovenscina_korak_za_korakom"
                 srOnly={"Slovenščina Korak za Korkom | Telegram"}
               >
                 <svg
@@ -51,7 +51,7 @@ export default function Footer() {
                 </svg>
               </SocialLinks>
               <SocialLinks
-                href={"https://www.instagram.com/slovenscina_korakzakorakom/"}
+                href="https://www.instagram.com/slovenscina_korakzakorakom/"
                 srOnly={"Slovenščina Korak za Korkom | Instagram"}
               >
                 <svg
@@ -77,32 +77,32 @@ export default function Footer() {
                   </g>
                   <defs>
                     <clipPath id="clip0_17_63">
-                      <rect width="48" height="48" fill="current" />
+                      <rect width="48" height="48" fill="current"/>
                     </clipPath>
                   </defs>
                 </svg>
               </SocialLinks>
-              {/* <SocialLinks href={"#"} srOnly={"Slovenščina Korak za Korkom | Facebook"}>
-                        <svg
-                            width={socialLinkSize}
-                            height={socialLinkSize}
-                            viewBox="0 0 48 48"
-                            className="fill-sl-secondary hover:fill-sl-accent transition-colors duration-200"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <g clipPath="url(#clip0_17_61)">
-                                <path
-                                    d="M24 0C10.7453 0 0 10.7453 0 24C0 35.255 7.74912 44.6995 18.2026 47.2934V31.3344H13.2538V24H18.2026V20.8397C18.2026 12.671 21.8995 8.8848 29.9194 8.8848C31.44 8.8848 34.0637 9.18336 35.137 9.48096V16.129C34.5706 16.0694 33.5866 16.0397 32.3645 16.0397C28.4294 16.0397 26.9088 17.5306 26.9088 21.4061V24H34.7482L33.4013 31.3344H26.9088V47.8243C38.7926 46.3891 48.001 36.2707 48.001 24C48 10.7453 37.2547 0 24 0Z"
-                                    fill="current"
-                                />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_17_61">
-                                    <rect width="48" height="48" fill="current" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </SocialLinks> */}
+              <SocialLinks href="https://www.facebook.com/people/Sloven%C5%A1%C4%8Dina-korak-za-korakom/61591538650485/" srOnly={"Slovenščina Korak za Korkom | Facebook"}>
+                <svg
+                  width={socialLinkSize}
+                  height={socialLinkSize}
+                  viewBox="0 0 48 48"
+                  className="fill-sl-secondary hover:fill-sl-accent transition-colors duration-200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g clipPath="url(#clip0_17_61)">
+                    <path
+                      d="M24 0C10.7453 0 0 10.7453 0 24C0 35.255 7.74912 44.6995 18.2026 47.2934V31.3344H13.2538V24H18.2026V20.8397C18.2026 12.671 21.8995 8.8848 29.9194 8.8848C31.44 8.8848 34.0637 9.18336 35.137 9.48096V16.129C34.5706 16.0694 33.5866 16.0397 32.3645 16.0397C28.4294 16.0397 26.9088 17.5306 26.9088 21.4061V24H34.7482L33.4013 31.3344H26.9088V47.8243C38.7926 46.3891 48.001 36.2707 48.001 24C48 10.7453 37.2547 0 24 0Z"
+                      fill="current"
+                    />
+                  </g>
+                  <defs>
+                    <clipPath id="clip0_17_61">
+                      <rect width="48" height="48" fill="current"/>
+                    </clipPath>
+                  </defs>
+                </svg>
+              </SocialLinks>
             </div>
           </div>
 
@@ -199,7 +199,7 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-border/50">
           <p className="text-sl-secondary text-sm">
             &copy;
-            {t("copyright", { year: new Date().getFullYear() })}
+            {t("copyright", {year: new Date().getFullYear()})}
           </p>
         </div>
       </div>
