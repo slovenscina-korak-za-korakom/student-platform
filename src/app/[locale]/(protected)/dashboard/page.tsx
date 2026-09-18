@@ -1,18 +1,18 @@
 import Greeting from "@/components/dashboard/content/greeting";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import {auth, clerkClient} from "@clerk/nextjs/server";
 import React from "react";
 import {getRegularInvitations, getRegularSessions, getStudentCancelledSessions} from "@/actions/regulars";
-import { getDashboardLangClubEvents } from "@/actions/stripe-actions";
-import { getDashboardPersonalSessions } from "@/actions/timeblocks";
+import {getDashboardLangClubEvents} from "@/actions/stripe-actions";
+import {getDashboardPersonalSessions} from "@/actions/timeblocks";
 
 import DashboardClient from "./_components/dashboard-client";
 import DashboardStats from "./_components/dashboard-stats";
 import UnifiedCalendar from "./_components/unified-calendar";
 import WelcomeTestSessionDialog from "./_components/welcome-test-session-dialog";
 
-const DashboardPage = async ({ params }) => {
-  const { locale } = await params;
-  const { userId } = await auth();
+const DashboardPage = async ({params}) => {
+  const {locale} = await params;
+  const {userId} = await auth();
 
   const [clerkUser, langClubResult, personalResult, regularSessions, invitations, cancelledSessions] = await Promise.all([
     clerkClient().then((c) => c.users.getUser(userId)),

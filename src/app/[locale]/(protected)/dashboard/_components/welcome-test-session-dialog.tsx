@@ -33,7 +33,7 @@ export default function WelcomeTestSessionDialog({ open }: WelcomeTestSessionDia
     <Dialog open={isOpen} onOpenChange={() => {}}>
       <DialogContent
         showCloseButton={false}
-        className="max-w-md p-0 rounded-2xl gap-0 overflow-hidden"
+        className="sm:max-w-md p-0 rounded-2xl gap-0 overflow-hidden"
         onInteractOutside={(e) => e.preventDefault()}
         onEscapeKeyDown={(e) => e.preventDefault()}
       >
