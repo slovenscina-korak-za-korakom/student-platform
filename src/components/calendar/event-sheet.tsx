@@ -271,7 +271,7 @@ export const EventSheet = (props: EventSheetProps) => {
                     <div className="flex-1 min-w-0">
                       <span className="text-sm font-semibold text-foreground">{session.tutorName}</span>
                       {tutor?.bio && (
-                        <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{tutor.bio}</p>
+                        <p className="text-xs text-muted-foreground line-clamp-2 mt-0.5">{tutor.bio[locale]}</p>
                       )}
                     </div>
                   </div>

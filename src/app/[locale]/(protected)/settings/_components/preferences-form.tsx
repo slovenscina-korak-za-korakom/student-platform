@@ -461,7 +461,7 @@ const PreferencesForm = () => {
                           </p>
                           <p className="text-[11px] text-muted-foreground mt-0.5">{getLevelLabel(tutor.level)}</p>
                         </div>
-                        {tutor.bio && tutor.bio !== "No bio" && (
+                        {tutor.bio[locale] && tutor.bio[locale] !== "No bio" && (
                           <button
                             onClick={(e) => {
                               e.stopPropagation();
@@ -641,7 +641,7 @@ const PreferencesForm = () => {
               {/* Bio text */}
               <div className="flex-1 overflow-y-auto px-4 py-4">
                 <p className="text-xs text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {bioTutor.bio}
+                  {bioTutor.bio[locale]}
                 </p>
               </div>
             </div>

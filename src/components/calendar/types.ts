@@ -7,7 +7,12 @@ export interface Tutor {
   color: string;
   email: string;
   phone: string;
-  bio: string;
+  bio: {
+    en: string;
+    ru: string;
+    sl: string;
+    it: string;
+  };
 }
 
 export interface TutoringSession {

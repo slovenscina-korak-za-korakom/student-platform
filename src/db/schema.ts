@@ -19,6 +19,13 @@ import {
 //   "no-show",
 // ]);
 
+type Localized = {
+  ru: string;
+  en: string;
+  it: string;
+  sl: string;
+};
+
 export const tutorLevelEnum = pgEnum("tutor_level", ["junior", "senior"]);
 export const courseLevelEnum = pgEnum("course_level", ["A1", "A2", "B1", "B2", "C1"]);
 export const courseStatusEnum = pgEnum("course_status", ["upcoming", "active", "deleted"]);
@@ -73,7 +80,7 @@ export const tutorsTable = pgTable("tutors", {
   name: varchar({length: 255}).notNull(),
   email: varchar({length: 255}).notNull().unique(),
   phone: varchar({length: 255}).notNull(),
-  bio: text().notNull(),
+  bio: jsonb().notNull().$type<Localized>(),
   avatar: varchar({length: 255}).notNull(),
   color: varchar({length: 255}).notNull(),
   clerkId: varchar({length: 255}).notNull().unique(),

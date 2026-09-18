@@ -8,7 +8,12 @@ export interface TutorData {
   color: string;
   email: string;
   phone: string;
-  bio: string;
+  bio: {
+    sl: string
+    en: string
+    ru: string
+    it: string
+  };
   clerkId: string;
 }
 

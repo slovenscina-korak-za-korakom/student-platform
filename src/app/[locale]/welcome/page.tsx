@@ -201,7 +201,7 @@ const WelcomePage = () => {
                         )}
 
                         {/* View Bio Icon */}
-                        {tutor.bio && tutor.bio !== "No bio" && (
+                        {tutor.bio[locale] && tutor.bio[locale] !== "No bio" && (
                           <span
                             onClick={(e) => {
                               e.stopPropagation();
@@ -428,7 +428,7 @@ const WelcomePage = () => {
 
             <div className="w-full text-left">
               <p className="text-sm text-muted-foreground whitespace-pre-line leading-relaxed">
-                {bioDialogTutor?.bio}
+                {bioDialogTutor?.bio[locale]}
               </p>
             </div>
           </div>
