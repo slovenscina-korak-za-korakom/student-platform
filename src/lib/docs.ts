@@ -74,6 +74,13 @@ export const people = [
     role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-natasa.jpeg",
+  },
+  {
+    id: 8,
+    name: ["Ema", "Tovornik"],
+    role: "Teacher/Tutor",
+    fluentIn: [],
+    imageUrl: "/staff-images/foto-ema.jpg",
   }
 ];
 
@@ -405,80 +412,6 @@ export const languageLevels = [
   },
 ];
 
-export const tutors = [
-  {
-    id: 1,
-    name: "Ela Remic",
-    avatar: "/staff-images/foto-ela.jpg",
-    bio: "Привет! Меня зовут Эла, я студентка русского и польского языков из окрестностей Любляны. Меня интересуют иностранные языки, культуры, литература и искусство.\n\nЯ хочу приблизить вам словенский язык с помощью вашего родного языка — так, чтобы вам было легче и понятнее. На пути к отличному знанию словенского я познакомлю вас также со словенской культурой, обычаями, искусством, разговорной лексикой и фразами.\n\nТаким образом вы шаг за шагом сможете без труда общаться, лучше ориентироваться в среде, в которой живёте и работаете, и устанавливать контакты со словенцами.\n\n\n Živijo! Ime mi Ela in sem študentka ruščine in poljščine iz okolice Ljubljane. Zanimajo me tuji jeziki, kulture, kniževnost in umetnost.\n Slovenski jezik vam želim približati s pomočjo vašega jezika na način, ki bo za vas lažje razumljiv. Na poti do odličnega znanja slovenščine vas bom seznanila tudi s slovensko kulturo, običaji, umetnostjo, pogovornimi besedami in frazami. Na ta način se boste, korak za korakom, lahko brez težav sporazumevali, bolje znašli v okolju, v katerem živite in delate ter navezovali stike s Slovenci.",
-    description: {
-      ru: "Senior Tutor",
-      en: "Senior Tutor",
-      it: "Senior Tutor",
-      sl: "Senior Tutor",
-    },
-  },
-  {
-    id: 2,
-    name: "Oleksandr Tyutyunnyk",
-    avatar: "/staff-images/foto-oleksandr3.jpg",
-    bio: "No bio",
-    description: {
-      ru: "Senior Tutor",
-      en: "Senior Tutor",
-      it: "Senior Tutor",
-      sl: "Senior Tutor",
-    },
-  },
-  {
-    id: 3,
-    name: "Sofia Tyutyunnyk",
-    avatar: "/staff-images/foto-sofia.jpg",
-    bio: "No bio",
-    description: {
-      ru: "Senior Tutor",
-      en: "Senior Tutor",
-      it: "Senior Tutor",
-      sl: "Senior Tutor",
-    },
-  },
-  {
-    id: 4,
-    name: "Albina Kolesnikova",
-    avatar: "/staff-images/foto-albina.jpeg",
-    bio: "Меня зовут Альбина, я репетитор словенского языка. В Словении я живу уже почти десять лет, поэтому хорошо её знаю. Здесь я окончила основную школу и гимназию, а сейчас изучаю биологию в Университете Марибора. Параллельно я развиваю собственный бренд украшений ручной работы, через который выражаю свою творческую сторону.\n\nЯ считаю себя сильной, харизматичной и целеустремлённой личностью, которая любит поддерживать других на их пути обучения. Я уверена, что лучше всего мы учимся в поддерживающей и приятной атмосфере. В людях я больше всего ценю доброту, открытость и искреннее стремление узнавать новое.\n——\nIme mi je Albina in sem tutorica slovenščine. V Sloveniji živim že skoraj deset let, zato jo res dobro poznam. Tukaj sem zaključila osnovno šolo in gimnazijo, trenutno pa študiram biologijo na Univerzi v Mariboru. Ob tem vodim tudi svojo blagovno znamko ročno izdelanega nakita, ki izraža moj ustvarjalni del.\n\nSebe bi opisala kot močno, karizmatično in vztrajno osebo, ki rada podpira druge na njihovi poti učenja. Verjamem, da se največ naučimo v spodbudnem in prijetnem okolju. Pri ljudeh najbolj cenim prijaznost, odprtost ter iskreno željo po spoznavanju novih stvari.",
-    description: {
-      ru: "Junior Tutor",
-      en: "Junior Tutor",
-      it: "Junior Tutor",
-      sl: "Junior Tutor",
-    },
-  },
-  {
-    id: 5,
-    name: "Ajda Fuchs Plemenitaš",
-    avatar: "/staff-images/foto-ajda.jpeg",
-    bio: "No bio",
-    description: {
-      ru: "Junior Tutor",
-      en: "Junior Tutor",
-      it: "Junior Tutor",
-      sl: "Junior Tutor",
-    },
-  },
-  {
-    id: 6,
-    name: "Nataša Grešak",
-    avatar: "/staff-images/foto-natasa.jpeg",
-    bio: "No bio",
-    description: {
-      ru: "Junior Tutor",
-      en: "Junior Tutor",
-      it: "Junior Tutor",
-      sl: "Junior Tutor",
-    },
-  }
-];
 
 export const learningGoals = [
   {
