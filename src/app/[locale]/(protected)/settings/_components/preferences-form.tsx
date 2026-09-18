@@ -34,10 +34,8 @@ import {Dialog, DialogContent, DialogDescription, DialogTitle,} from "@/componen
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {cn} from "@/lib/utils";
 
-export const fetchTutors = async () => { // don't support speaking tutors to be a preferred tutors
-  const tutorsDb = await getTutors();
-  const speakingTutors = process.env.NEXT_PUBLIC_SPEAKING_TUTORS?.split(",").map(Number) ?? []
-  return tutorsDb.filter((tutor) => !speakingTutors.includes(tutor.id));
+export const fetchTutors = async () => {
+  return await getTutors();
 }
 
 const SectionLabel = ({children}: { children: React.ReactNode }) => (
