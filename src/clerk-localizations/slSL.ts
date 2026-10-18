@@ -1,4 +1,4 @@
-import type { LocalizationResource } from '@clerk/types';
+import type { LocalizationResource } from "@clerk/shared/types";
 
 export const slSL: LocalizationResource = {
   locale: 'sl-SL',
@@ -55,8 +55,8 @@ export const slSL: LocalizationResource = {
   badge__upcomingPlan: 'Prihajajoči način',
   badge__userDevice: 'Uporabniška naprava',
   badge__you: 'Ti',
-  commerce: {
-    addPaymentMethod: 'Dodaj način plačila',
+  billing: {
+    addPaymentMethod__label: 'Dodaj način plačila',
     alwaysFree: 'Vedno brezplačno',
     annually: 'Letno',
     availableFeatures: 'Dostopne funkcije',
@@ -104,8 +104,8 @@ export const slSL: LocalizationResource = {
     monthly: 'Mesečno',
     pastDue: 'Preteče',
     pay: 'Plačaj {{amount}}',
-    paymentMethods: 'Načini plačila',
-    paymentSource: {
+    paymentMethods__label: 'Načini plačila',
+    paymentMethod: {
       applePayDescription: {
         annual: 'Letno plačilo',
         monthly: 'Mesečno plačilo',
@@ -119,7 +119,6 @@ export const slSL: LocalizationResource = {
         testCardInfo: 'Podatki testne kartice',
       },
     },
-    popular: 'Popular',
     pricingTable: {
       billingCycle: 'Obračunski cikel',
       included: 'Vključeno',
@@ -259,7 +258,7 @@ export const slSL: LocalizationResource = {
         tableHeader__date: 'Datum',
         tableHeader__status: 'Status',
       },
-      paymentSourcesSection: {
+      paymentMethodsSection: {
         actionLabel__default: 'Nastavi kot privzeto',
         actionLabel__remove: 'Odstrani',
         add: 'Dodaj novi način plačila',
@@ -268,11 +267,11 @@ export const slSL: LocalizationResource = {
         formButtonPrimary__add: 'Dodaj način plačila',
         formButtonPrimary__pay: 'Plačaj {{amount}}',
         payWithTestCardButton: 'Plačaj z testno kartico',
-        removeResource: {
+        removeMethod: {
           messageLine1: '{{identifier}} bo odstranjen iz tega računa.',
           messageLine2:
 'Tega plačilnega vira ne boste mogli več uporabljati in vse ponavljajoče se naročnine, ki so od njega odvisne, ne bodo več delovale.',
-          successMessage: '{{paymentSource}} je bil odstranjen iz vašega računa.',
+          successMessage: '{{paymentMethod}} je bil odstranjen iz vašega računa.',
           title: 'Odstrani način plačila',
         },
         title: 'Načini plačila',
@@ -915,7 +914,7 @@ export const slSL: LocalizationResource = {
         tableHeader__date: 'Datum',
         tableHeader__status: 'Status',
       },
-      paymentSourcesSection: {
+      paymentMethodsSection: {
         actionLabel__default: 'Nastavi kot privzeto',
         actionLabel__remove: 'Odstrani',
         add: 'Dodaj novo plačilno metodo',
@@ -924,11 +923,11 @@ export const slSL: LocalizationResource = {
         formButtonPrimary__add: 'Dodaj plačilno metodo',
         formButtonPrimary__pay: 'Plačaj {{amount}}',
         payWithTestCardButton: 'Plačaj z testno kartico',
-        removeResource: {
+        removeMethod: {
           messageLine1: '{{identifier}} bo odstranjen iz tega računa.',
           messageLine2:
             'Ne boste več mogli uporabljati te plačilne metode in bodo vsi ponavljajoči se naročini, odvisni od nje, več ne delovali.',
-          successMessage: '{{paymentSource}} je bil odstranjen iz vašega računa.',
+          successMessage: '{{paymentMethod}} je bil odstranjen iz vašega računa.',
           title: 'Odstrani plačilno metodo',
         },
         title: 'Plačilne metode',

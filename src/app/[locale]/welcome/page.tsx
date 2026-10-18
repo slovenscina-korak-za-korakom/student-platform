@@ -99,7 +99,7 @@ const WelcomePage = () => {
       await updateLanguageLevel(preferences.languageLevel);
 
       // Mark onboarding as completed
-      const isNewUser = await user.unsafeMetadata.showWelcomeDialog ?? true
+      const isNewUser = (await user.unsafeMetadata.showWelcomeDialog) ?? true
       if (isNewUser) {
         await user.update({
           unsafeMetadata: {

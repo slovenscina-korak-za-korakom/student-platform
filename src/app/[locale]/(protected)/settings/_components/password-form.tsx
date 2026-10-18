@@ -18,7 +18,7 @@ import { toast } from "sonner";
 import {useReverification, useUser} from "@clerk/nextjs";
 import { LoaderCircle } from "lucide-react";
 import { VerificationComponent } from "./verification-component";
-import { SessionVerificationLevel } from "@clerk/types";
+import { SessionVerificationLevel } from "@clerk/shared/types";
 import {useTranslations} from "next-intl";
 
 const formSchema = z.object({

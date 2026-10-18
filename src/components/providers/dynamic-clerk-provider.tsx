@@ -5,7 +5,7 @@ import { enUS, itIT, ruRU } from "@clerk/localizations";
 import { ReactNode } from "react";
 import { useLocale } from "@/contexts/locale-context";
 import { slSL } from "@/clerk-localizations/slSL";
-import {shadcn} from "@clerk/themes";
+import {shadcn} from "@clerk/ui/themes";
 
 interface DynamicClerkProviderProps {
   children: ReactNode;
