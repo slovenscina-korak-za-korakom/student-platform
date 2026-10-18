@@ -35,7 +35,7 @@ export function AppSidebar({
                   background: "var(--sidebar-icon-gradient)",
                 }}
               >
-                <IconLogo className="size-5" fillColor="fill-white"/>
+                <IconLogo className="size-5 border-none" fillColor="fill-white"/>
               </div>
               <div className="flex flex-col items-start gap-0.5 group-data-[collapsible=icon]:hidden">
                 <span className="text-xs font-semibold leading-none text-sidebar-foreground/90">
