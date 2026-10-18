@@ -1,99 +1,55 @@
 import Skeleton from "react-loading-skeleton"
 
-const VideoRowSkeleton = () => (
-  <div className="flex items-start gap-3 px-4 py-2.5">
-    <Skeleton circle width={20} height={20} containerClassName="shrink-0 mt-0.5" />
-    <div className="flex-1 space-y-1">
-      <Skeleton height={12} />
-      <Skeleton width={40} height={10} />
+const ModuleRowSkeleton = () => (
+  <div className="flex items-start gap-4 rounded-xl border border-border/50 bg-card p-4">
+    <Skeleton circle width={36} height={36} containerClassName="shrink-0 mt-0.5" />
+    <div className="flex-1 space-y-2">
+      <Skeleton height={16} width="40%" />
+      <Skeleton count={2} height={12} />
+      <div className="flex items-center gap-4 pt-1">
+        <Skeleton width={70} height={12} />
+        <Skeleton width={60} height={12} />
+      </div>
     </div>
-  </div>
-)
-
-const SectionSkeleton = () => (
-  <div className="border-b border-border/40">
-    {/* Section header */}
-    <div className="px-4 py-3">
-      <Skeleton height={16} width="60%" />
-    </div>
-    {/* Videos */}
-    {Array.from({ length: 3 }).map((_, i) => (
-      <VideoRowSkeleton key={i} />
-    ))}
   </div>
 )
 
 const CourseDetailLoading = () => {
   return (
-    <div className="flex h-[calc(100vh-var(--header-height))] overflow-hidden">
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-72 xl:w-80 shrink-0 flex-col border-r border-border/60">
-        <div className="p-4 space-y-3 border-b border-border/60">
-          {/* Back button */}
-          <Skeleton width={80} height={28} borderRadius={6} />
-          {/* Course title */}
-          <Skeleton height={18} />
-          <Skeleton width="50%" height={18} />
-          {/* Meta row */}
-          <div className="flex items-center gap-3">
+    <div className="mx-auto w-full max-w-5xl p-4 md:p-8 lg:p-10 space-y-8">
+      {/* Back link */}
+      <Skeleton width={90} height={28} borderRadius={6} />
+
+      {/* Hero */}
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[minmax(0,1fr)_280px] md:gap-8">
+        <div className="order-2 space-y-4 md:order-1">
+          <Skeleton width={70} height={22} borderRadius={9999} />
+          <Skeleton height={32} width="70%" />
+          <Skeleton count={2} height={14} />
+          <div className="flex items-center gap-4">
             <Skeleton width={90} height={14} />
             <Skeleton width={80} height={14} />
           </div>
-          {/* Progress */}
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <Skeleton width={50} height={12} />
-              <Skeleton width={30} height={12} />
-            </div>
-            <Skeleton height={6} borderRadius={9999} />
-          </div>
         </div>
+        <Skeleton
+          containerClassName="order-1 md:order-2 aspect-video md:aspect-[4/3] w-full block"
+          height="100%"
+          borderRadius={16}
+        />
+      </div>
 
-        {/* Sections */}
-        <div className="flex-1 overflow-y-auto">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <SectionSkeleton key={i} />
+      {/* Progress */}
+      <Skeleton height={76} borderRadius={12} />
+
+      {/* Modules */}
+      <div className="space-y-4">
+        <Skeleton width={100} height={22} />
+        <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <ModuleRowSkeleton key={i} />
           ))}
         </div>
-      </aside>
-
-      {/* Main content */}
-      <main className="flex-1 flex flex-col overflow-y-auto">
-        {/* Mobile top bar */}
-        <div className="flex items-center gap-3 px-4 py-3 border-b border-border/60 lg:hidden shrink-0">
-          <Skeleton width={130} height={32} borderRadius={6} />
-          <Skeleton width={140} height={16} />
-        </div>
-
-        <div className="flex-1 p-4 md:p-6 lg:p-8 space-y-6 max-w-4xl mx-auto w-full">
-          {/* Video player */}
-          <Skeleton containerClassName="aspect-video w-full block" height="100%" borderRadius={12} />
-
-          {/* Video info */}
-          <div className="space-y-4">
-            <div className="space-y-2">
-              {/* Badges */}
-              <div className="flex items-center gap-2">
-                <Skeleton width={90} height={22} borderRadius={9999} />
-                <Skeleton width={110} height={22} borderRadius={9999} />
-              </div>
-              {/* Title */}
-              <Skeleton height={28} width="65%" />
-              {/* Description */}
-              <Skeleton count={2} height={14} />
-            </div>
-
-            <Skeleton height={1} />
-
-            {/* Prev / Next nav */}
-            <div className="flex items-center justify-between">
-              <Skeleton width={90} height={32} borderRadius={6} />
-              <Skeleton width={50} height={14} />
-              <Skeleton width={70} height={32} borderRadius={6} />
-            </div>
-          </div>
-        </div>
-      </main>
+      </div>
     </div>
   )
 }

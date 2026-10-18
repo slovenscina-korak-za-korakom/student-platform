@@ -3,7 +3,8 @@ import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {getTranslations} from "next-intl/server";
 import CourseCard from "./_components/course-card";
-import {getCourses} from "@/actions/course-actions";
+// import {getCourses} from "@/actions/course-actions";
+import {mockCourses} from "./[courseId]/_components/mock";
 
 
 const CoursePage = async ({ params }: { params: Promise<{ locale: string }> }) => {
@@ -12,7 +13,9 @@ const CoursePage = async ({ params }: { params: Promise<{ locale: string }> }) =
   const t2 = await getTranslations("common.badges")
   const available = process.env.COURSES_AVAILABLE === "true"
 
-  const {courses, status} = await getCourses()
+  // const {courses, status} = await getCourses()
+  const courses = mockCourses
+  const status = 200
 
   if (!available || status !== 200) {
     return (

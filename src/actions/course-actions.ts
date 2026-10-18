@@ -3,7 +3,7 @@
 import {auth} from "@clerk/nextjs/server";
 import {db} from "@/db";
 import {coursesTable, sectionsTable, videosTable} from "@/db/schema";
-import {eq, sql} from "drizzle-orm";
+import {and, eq, sql} from "drizzle-orm";
 
 export const getCourses = async () => {
   const {userId} = await auth()
@@ -60,6 +60,31 @@ export const getCourseInfo = async (courseId: number) => {
     } : undefined;
 
     return {course, status: 200};
+  } catch (error) {
+    console.error(error)
+    return {error: error instanceof Error ? error.message : "Internal Server Error"}
+  }
+}
+
+export const getSectionInfo = async (courseId: number, sectionId: number) => {
+  const {userId} = await auth()
+  if (!userId) return {error: "Unauthorized", status: 401};
+
+  try {
+    const section = await db.query.sectionsTable.findFirst({
+      where: and(
+        eq(sectionsTable.id, Number(sectionId)),
+        eq(sectionsTable.courseId, Number(courseId)),
+      ),
+      with: {
+        course: true,
+        videos: {
+          orderBy: (videos, {asc}) => [asc(videos.order)],
+        },
+      },
+    });
+
+    return {section, status: 200};
   } catch (error) {
     console.error(error)
     return {error: error instanceof Error ? error.message : "Internal Server Error"}

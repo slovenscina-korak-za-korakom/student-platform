@@ -5,6 +5,7 @@ import {IconBook, IconChevronRight, IconVideo} from "@tabler/icons-react"
 import {type InferSelectModel} from "drizzle-orm";
 import {coursesTable} from "@/db/schema";
 import Image from "next/image";
+import {slugify} from "@/lib/utils";
 
 type Props = {
   course: InferSelectModel<typeof coursesTable> & {sections: number, videos: number};
@@ -51,10 +52,11 @@ const CourseCard = ({course, locale}: Props) => {
         </div>
 
         {/* CTA */}
-        <Link href={`/${locale}/courses/${course.id}`}>
+        <Link href={`/${locale}/courses/${slugify(course.title)}`}>
           <Button
             size="sm"
-            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white border-0"
+            variant="outline"
+            className="w-full"
           >
             Start Course
             <IconChevronRight className="h-4 w-4 ml-1"/>
