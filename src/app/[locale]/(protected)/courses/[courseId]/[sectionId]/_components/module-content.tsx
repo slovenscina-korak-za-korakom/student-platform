@@ -1,15 +1,21 @@
 import Link from "next/link"
+import { getTranslations } from "next-intl/server"
 import { Button } from "@/components/ui/button"
-import { IconChevronLeft, IconPlayerPlayFilled, IconVideo } from "@tabler/icons-react"
+import {
+  IconChevronLeft,
+  IconChevronRight,
+  IconPlayerPlayFilled,
+  IconSparkles,
+  IconVideo,
+} from "@tabler/icons-react"
 import { InferSelectModel } from "drizzle-orm"
 import { coursesTable, sectionsTable, videosTable } from "@/db/schema"
 import { slugify } from "@/lib/utils"
 import { currentUser } from "@clerk/nextjs/server"
 import { Separator } from "@/components/ui/separator"
-import ModuleTest from "./module-test"
 import PdfNotes from "./pdf-notes"
+import { getTestsForSection } from "@/lib/course-exercises"
 import {
-  moduleQuiz,
   mockNotesTitle,
   mockAnswersTitle,
 } from "@/app/[locale]/(protected)/courses/[courseId]/_components/mock"
@@ -34,6 +40,11 @@ const ModuleContent = async ({ section, locale }: Props) => {
     user?.primaryEmailAddress?.emailAddress ?? user?.id ?? "licensed user"
 
   const slug = slugify(section.title)
+  const courseSlug = slugify(section.course.title)
+
+  // Interactive tests for this module (Duolingo-style, on a dedicated page).
+  const tests = getTestsForSection(slug)
+  const t = await getTranslations("courses.test")
 
   return (
     <div className="flex flex-col">
@@ -63,8 +74,40 @@ const ModuleContent = async ({ section, locale }: Props) => {
       </div>
 
       <div className="mx-auto w-full max-w-4xl px-5 pb-8 md:px-8 md:pb-10 space-y-6">
-        {/* ── Module test ── */}
-        <ModuleTest questions={moduleQuiz} />
+        {/* ── Interactive practice: links to the dedicated test page(s) ── */}
+        {tests.length > 0 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2">
+              <IconSparkles className="h-5 w-5 text-sl-accent" />
+              <h2 className="text-lg font-semibold tracking-tight text-foreground">
+                {t("launcher.title")}
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {tests.map((test) => (
+                <Link
+                  key={test.id}
+                  href={`/${locale}/courses/${courseSlug}/${slug}/test/${test.id}`}
+                  className="group flex items-center gap-4 rounded-2xl border-2 border-sl-accent/20 bg-gradient-to-r from-sl-blue/5 via-sl-purple/5 to-sl-pink/5 p-4 shadow-[0_3px_0_0] shadow-sl-accent/20 transition-colors hover:border-sl-accent/40"
+                >
+                  <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sl-blue to-sl-pink text-white">
+                    <IconSparkles className="h-5 w-5" />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="font-medium text-foreground">{t(test.titleKey)}</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {t("launcher.count", { count: test.exercises.length })}
+                    </p>
+                  </div>
+                  <span className="inline-flex items-center gap-1 rounded-xl bg-sl-accent px-4 py-2 text-sm font-semibold text-white transition-transform group-hover:translate-x-0.5">
+                    {t("launcher.start")}
+                    <IconChevronRight className="h-4 w-4" />
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
 
         <Separator />
 

@@ -126,7 +126,7 @@
           "topic": "Topic",
           "date-time": "Date & Time",
           "price": "Price",
-          "spots" : "Spots left",
+          "spots": "Spots left",
           "spots-num": "{num, plural, =1 {1 spot} other {# spots}}"
         },
         "free-card": {
@@ -231,7 +231,62 @@
   },
   "courses": {
     "title": "Molto più di un semplice corso video",
-    "subtitle": "Stiamo creando un nuovo modo per padroneggiare lo sloveno: lezioni cinematografiche abbinate a un ecosistema intelligente e strumenti AI progettati per ottimizzare i tuoi progressi. Segui un percorso personalizzato in base ai tuoi obiettivi supportato da una vasta libreria di risorse e sessioni live di Q&A."
+    "subtitle": "Stiamo creando un nuovo modo per padroneggiare lo sloveno: lezioni cinematografiche abbinate a un ecosistema intelligente e strumenti AI progettati per ottimizzare i tuoi progressi. Segui un percorso personalizzato in base ai tuoi obiettivi supportato da una vasta libreria di risorse e sessioni live di Q&A.",
+    "test": {
+      "launcher": {
+        "title": "Esercizi",
+        "start": "Inizia",
+        "count": "{count} esercizi"
+      },
+      "check": "Verifica",
+      "continue": "Continua",
+      "correct": "Corretto!",
+      "incorrect": "Non proprio",
+      "skip": "Salta",
+      "speak": {
+        "listening": "In ascolto…",
+        "unsupported": "Questo browser non supporta il riconoscimento vocale — puoi saltare questo esercizio.",
+        "denied": "Accesso al microfono bloccato — puoi saltare questo esercizio.",
+        "heard": "Abbiamo sentito: {text}",
+        "tapToStart": "Tocca il microfono e pronuncia la parola"
+      },
+      "sort": {
+        "allPlaced": "Tutte le parole sistemate"
+      },
+      "complete": {
+        "title": "Lezione completata",
+        "score": "{correct} / {total} corrette",
+        "retry": "Riprova",
+        "back": "Torna al modulo"
+      },
+      "lessons": {
+        "alphabet": {
+          "title": "Alfabeto e pronuncia",
+          "selectPronunciation": "Scegli la pronuncia corretta",
+          "eOrSchwa": "La lettera E si pronuncia come una [e] normale o come la semivocale [ə]?",
+          "sayFirmly": "Pronuncia la parola ad alta voce, con decisione",
+          "sortLetters": "Dividi le lettere in due gruppi",
+          "matchGreetings": "Abbina ogni situazione al saluto giusto",
+          "buckets": {
+            "normalE": "[e] normale",
+            "schwa": "Semivocale [ə]",
+            "vowels": "Vocali",
+            "consonants": "Consonanti"
+          },
+          "situations": {
+            "morning": "Incontri il tuo professore all'università la mattina",
+            "friendBye": "Saluti un amico dopo esservi visti",
+            "email": "Stai scrivendo un'email formale",
+            "friendStreet": "Incontri un buon amico per strada",
+            "workBye": "Esci dal lavoro e saluti i colleghi"
+          }
+        }
+      },
+      "match": {
+        "dropHere": "Trascina qui",
+        "allPlaced": "Tutto abbinato"
+      }
+    }
   },
   "daily-practice": {
     "title": "Ваша ежедневная практика словенского",

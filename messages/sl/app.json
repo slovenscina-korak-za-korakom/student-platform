@@ -126,7 +126,7 @@
           "topic": "Tema",
           "date-time": "Datum in čas",
           "price": "Cena",
-          "spots" : "Prosta mesta",
+          "spots": "Prosta mesta",
           "spots-num": "{num, plural, =1 {1 mesto} =2 {2 mesti} few {# mesta} other {# mest}}"
         },
         "free-card": {
@@ -231,7 +231,62 @@
   },
   "courses": {
     "title": "Več kot le video tečaj",
-    "subtitle": "Ustvarjamo nov način za mojstrsko znanje slovenščine: filmske lekcije v kombinaciji z inteligentnim ekosistemom in pametno AI tehnologijo za optimizacijo vašega napredka. Sledite personalizirani poti, prilagojeni vašim ciljem ob podpori obsežne knjižnice virov in ekskluzivnih srečanj v živo."
+    "subtitle": "Ustvarjamo nov način za mojstrsko znanje slovenščine: filmske lekcije v kombinaciji z inteligentnim ekosistemom in pametno AI tehnologijo za optimizacijo vašega napredka. Sledite personalizirani poti, prilagojeni vašim ciljem ob podpori obsežne knjižnice virov in ekskluzivnih srečanj v živo.",
+    "test": {
+      "launcher": {
+        "title": "Vaje",
+        "start": "Začni",
+        "count": "{count} nalog"
+      },
+      "check": "Preveri",
+      "continue": "Naprej",
+      "correct": "Pravilno!",
+      "incorrect": "Ni čisto prav",
+      "skip": "Preskoči",
+      "speak": {
+        "listening": "Poslušam…",
+        "unsupported": "Ta brskalnik ne podpira prepoznavanja govora — to nalogo lahko preskočiš.",
+        "denied": "Dostop do mikrofona je bil zavrnjen — to nalogo lahko preskočiš.",
+        "heard": "Slišali smo: {text}",
+        "tapToStart": "Pritisni mikrofon in izgovori besedo"
+      },
+      "sort": {
+        "allPlaced": "Vse besede razvrščene"
+      },
+      "complete": {
+        "title": "Lekcija končana",
+        "score": "{correct} / {total} pravilnih",
+        "retry": "Poskusi znova",
+        "back": "Nazaj na modul"
+      },
+      "lessons": {
+        "alphabet": {
+          "title": "Abeceda in izgovorjava",
+          "selectPronunciation": "Izberi pravilno izgovorjavo",
+          "eOrSchwa": "Ali se črka E izgovori kot navadni [e] ali kot polglasnik [ə]?",
+          "sayFirmly": "Besedo izgovori na glas in odločno",
+          "sortLetters": "Razvrsti črke v dve skupini",
+          "matchGreetings": "Poveži vsako situacijo s pravim pozdravom",
+          "buckets": {
+            "normalE": "Navadni [e]",
+            "schwa": "Polglasnik [ə]",
+            "vowels": "Samoglasniki",
+            "consonants": "Soglasniki"
+          },
+          "situations": {
+            "morning": "Zjutraj na univerzi srečaš profesorja",
+            "friendBye": "Posloviš se od prijatelja po druženju",
+            "email": "Pišeš uradno e-pošto",
+            "friendStreet": "Na ulici srečaš dobrega prijatelja",
+            "workBye": "Odhajaš iz službe in se posloviš od sodelavcev"
+          }
+        }
+      },
+      "match": {
+        "dropHere": "Spusti sem",
+        "allPlaced": "Vse povezano"
+      }
+    }
   },
   "daily-practice": {
     "title": "Vaša vsakodnevna vaja slovenščine",

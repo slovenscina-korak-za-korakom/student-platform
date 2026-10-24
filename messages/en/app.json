@@ -126,7 +126,7 @@
           "topic": "Topic",
           "date-time": "Date & Time",
           "price": "Price",
-          "spots" : "Spots left",
+          "spots": "Spots left",
           "spots-num": "{num, plural, =1 {1 spot} other {# spots}}"
         },
         "free-card": {
@@ -231,7 +231,62 @@
   },
   "courses": {
     "title": "More Than Just a Video Course",
-    "subtitle": "We’re building a new way to master Slovene: cinematic lessons paired with an intelligent ecosystem and smart AI tools designed to optimize your progress. Navigate a personalized path tailored to your goals supported by an extensive library of resources and exclusive live Q&A sessions."
+    "subtitle": "We’re building a new way to master Slovene: cinematic lessons paired with an intelligent ecosystem and smart AI tools designed to optimize your progress. Navigate a personalized path tailored to your goals supported by an extensive library of resources and exclusive live Q&A sessions.",
+    "test": {
+      "launcher": {
+        "title": "Practice",
+        "start": "Start",
+        "count": "{count} exercises"
+      },
+      "check": "Check",
+      "continue": "Continue",
+      "correct": "Correct!",
+      "incorrect": "Not quite",
+      "skip": "Skip",
+      "speak": {
+        "listening": "Listening…",
+        "unsupported": "Speech recognition isn't supported in this browser — you can skip this one.",
+        "denied": "Microphone access was blocked — you can skip this one.",
+        "heard": "We heard: {text}",
+        "tapToStart": "Tap the mic and say the word"
+      },
+      "sort": {
+        "allPlaced": "All words placed"
+      },
+      "complete": {
+        "title": "Lesson complete",
+        "score": "{correct} / {total} correct",
+        "retry": "Try again",
+        "back": "Back to module"
+      },
+      "lessons": {
+        "alphabet": {
+          "title": "Alphabet & pronunciation",
+          "selectPronunciation": "Select the correct pronunciation",
+          "eOrSchwa": "Does the letter E sound like a normal [e] or the semivowel [ə]?",
+          "sayFirmly": "Say the word out loud, firmly",
+          "sortLetters": "Sort the letters into two groups",
+          "matchGreetings": "Match each situation with the right greeting",
+          "buckets": {
+            "normalE": "Normal [e]",
+            "schwa": "Semivowel [ə]",
+            "vowels": "Vowels",
+            "consonants": "Consonants"
+          },
+          "situations": {
+            "morning": "You meet your teacher at the university in the morning",
+            "friendBye": "You say goodbye to a friend after meeting up",
+            "email": "You're writing a formal email",
+            "friendStreet": "You run into a good friend on the street",
+            "workBye": "You leave work and say goodbye to your colleagues"
+          }
+        }
+      },
+      "match": {
+        "dropHere": "Drop here",
+        "allPlaced": "All matched"
+      }
+    }
   },
   "daily-practice": {
     "title": "Your Daily Slovene Practice",
