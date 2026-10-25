@@ -3,8 +3,7 @@ import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import {getTranslations} from "next-intl/server";
 import CourseCard from "./_components/course-card";
-// import {getCourses} from "@/actions/course-actions";
-import {mockCourses} from "./[courseId]/_components/mock";
+import {getCoursesList} from "@/actions/course-actions";
 
 
 const CoursePage = async ({ params }: { params: Promise<{ locale: string }> }) => {
@@ -13,11 +12,9 @@ const CoursePage = async ({ params }: { params: Promise<{ locale: string }> }) =
   const t2 = await getTranslations("common.badges")
   const available = process.env.COURSES_AVAILABLE === "true"
 
-  // const {courses, status} = await getCourses()
-  const courses = mockCourses
-  const status = 200
+  const courses = available ? await getCoursesList(locale) : []
 
-  if (!available || status !== 200) {
+  if (!available) {
     return (
       <div className="flex flex-col p-6 min-h-[calc(100vh-var(--header-height))]">
         {/* Main Content - Two Column Layout */}

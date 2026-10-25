@@ -285,6 +285,26 @@
       "match": {
         "dropHere": "Drop here",
         "allPlaced": "All matched"
+      },
+      "items": {
+        "completed": "Completed",
+        "markComplete": "Mark complete",
+        "empty": "This module has no content yet.",
+        "video": "Video",
+        "pdf": "Lecture notes",
+        "link": "Resource link",
+        "text": "Reading"
+      }
+    },
+    "content": {
+      "slovenscina-1-spoznaj-slovenijo": {
+        "title": "Slovenščina 1 - Spoznaj Slovenijo",
+        "description": "Izvedeli boste več o tem kako slovenci govorimo v vsakdanjem življenju",
+        "modules": {
+          "getting-started": {
+            "title": "Getting Started"
+          }
+        }
       }
     }
   },

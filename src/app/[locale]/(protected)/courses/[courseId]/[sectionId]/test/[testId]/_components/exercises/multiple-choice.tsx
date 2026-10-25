@@ -6,6 +6,7 @@ import { IconCheck, IconX } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
 import type {
   ExercisePhase,
+  ExerciseReveal,
   MultipleChoiceDraft,
   MultipleChoiceExercise,
 } from "@/lib/course-exercises"
@@ -15,9 +16,10 @@ type Props = {
   value: MultipleChoiceDraft
   onChange: (value: MultipleChoiceDraft) => void
   phase: ExercisePhase
+  reveal: ExerciseReveal | null
 }
 
-const MultipleChoice = ({ exercise, value, onChange, phase }: Props) => {
+const MultipleChoice = ({ exercise, value, onChange, phase, reveal }: Props) => {
   const t = useTranslations("courses.test")
   const locked = phase !== "answering"
 
@@ -35,7 +37,7 @@ const MultipleChoice = ({ exercise, value, onChange, phase }: Props) => {
       <div className="grid gap-3 sm:grid-cols-3">
         {exercise.options.map((option) => {
           const isSelected = value === option.id
-          const isCorrect = option.id === exercise.correctAnswer
+          const isCorrect = option.id === reveal?.correctAnswer
 
           // Duolingo-ish chunky card with a thick bottom "ledge".
           let classes =

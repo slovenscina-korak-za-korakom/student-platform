@@ -4,16 +4,26 @@
  * A module (section) can host one or more *tests*, each addressed in the URL by
  * its `id`:  /courses/[courseId]/[sectionId]/test/[testId]
  *
- * Content split, per product decision:
- *   - INSTRUCTIONS / prompts / labels -> next-intl keys (translate per locale).
- *     Keys are resolved against the `courses.test` namespace, e.g.
- *     t("lessons.alphabet.selectPronunciation").
- *   - Slovene TARGET material (words, phonetic transcriptions, greetings) is
- *     fixed and lives here as plain strings.
+ * This module is the shared *contract* consumed by the exercise renderers and
+ * the engine: the `Exercise`/`CourseTest` types, the draft-answer types, and the
+ * grading helpers (`emptyDraft`, `isAnswerComplete`, `gradeExercise`). The actual
+ * content now lives in the database (`course_tests` + `exercises`) and is mapped
+ * into these types by `getTestBySlug` in `src/actions/course-actions.ts`.
  *
- * This is mock data, mirroring the `getMockSection` pattern. Swap the lookups
- * for real course-actions once the content lives in the database.
+ * Content split, per product decision:
+ *   - INSTRUCTIONS / prompts / labels -> next-intl keys (translate per locale),
+ *     resolved against the `courses.test` namespace.
+ *   - Slovene TARGET material (words, phonetic transcriptions, greetings) is
+ *     stored verbatim in the exercise `data`.
  */
+
+import type {
+  ExerciseData,
+  MultipleChoiceData,
+  SortData,
+  MatchData,
+  SpeakData,
+} from "@/db/schema"
 
 /** Phase a single exercise is in, shared by the engine and renderers. */
 export type ExercisePhase = "answering" | "correct" | "incorrect"
@@ -157,162 +167,75 @@ export function gradeExercise(exercise: Exercise, draft: ExerciseDraft): boolean
   }
 }
 
-/* ───────────────────────── Mock content ───────────────────────── */
+/* ───────────── DB ↔ engine mapping, answer hiding, reveal ───────────── */
+
+/** A row from the `exercises` table (columns the mapper needs). */
+export type ExerciseRow = {
+  slug: string
+  type: Exercise["type"]
+  promptKey: string
+  data: ExerciseData
+}
+
+/** Build the full engine Exercise (with answers) from a DB row. Server-side. */
+export function mapExerciseRow(row: ExerciseRow): Exercise {
+  const base = { id: row.slug, promptKey: row.promptKey }
+  switch (row.type) {
+    case "multiple_choice": {
+      const d = row.data as MultipleChoiceData
+      return { type: "multiple_choice", ...base, word: d.word, options: d.options, correctAnswer: d.correctAnswer }
+    }
+    case "sort": {
+      const d = row.data as SortData
+      return { type: "sort", ...base, buckets: d.buckets, items: d.items }
+    }
+    case "match": {
+      const d = row.data as MatchData
+      return { type: "match", ...base, left: d.left, right: d.right, solution: d.solution }
+    }
+    case "speak": {
+      const d = row.data as SpeakData
+      return { type: "speak", ...base, word: d.word, accept: d.accept }
+    }
+  }
+}
 
 /**
- * Lesson 1 — "Slovenian alphabet & pronunciation" (from NALOGE ZA VIDEO).
- * Belongs to the first module, "Getting Started" (slug: getting-started).
+ * Remove the answer fields before sending an Exercise to the client, so correct
+ * answers are never shipped up front. The client re-learns them only after
+ * checking, via the server's reveal (see ExerciseReveal). Shapes are preserved
+ * (fields blanked) so the renderer types don't change.
  */
-const alphabetTest: CourseTest = {
-  id: "alphabet-and-pronunciation",
-  sectionSlug: "getting-started",
-  titleKey: "lessons.alphabet.title",
-  exercises: [
-    // 1) Correct pronunciation
-    {
-      type: "multiple_choice",
-      id: "borovnica",
-      promptKey: "lessons.alphabet.selectPronunciation",
-      word: "borovnica",
-      options: [
-        { id: "a", text: "[barounica]" },
-        { id: "b", text: "[baravnica]" },
-        { id: "c", text: "[borovnica]" },
-      ],
-      correctAnswer: "c",
-    },
-    {
-      type: "multiple_choice",
-      id: "jabolko",
-      promptKey: "lessons.alphabet.selectPronunciation",
-      word: "jabolko",
-      options: [
-        { id: "a", text: "[jabouko]" },
-        { id: "b", text: "[jabavko]" },
-        { id: "c", text: "[jabalko]" },
-      ],
-      correctAnswer: "a",
-    },
-    {
-      type: "multiple_choice",
-      id: "avtobus",
-      promptKey: "lessons.alphabet.selectPronunciation",
-      word: "avtobus",
-      options: [
-        { id: "a", text: "[avtobus]" },
-        { id: "b", text: "[autabus]" },
-        { id: "c", text: "[autobus]" },
-      ],
-      correctAnswer: "c",
-    },
-    // 2) Normal [e] vs semivowel [ə]
-    // CONTENT NOTE: the bucket assignments below are a best-effort guess and
-    // should be verified by a native/teacher before going live.
-    {
-      type: "sort",
-      id: "e-or-schwa",
-      promptKey: "lessons.alphabet.eOrSchwa",
-      buckets: [
-        { id: "normalE", labelKey: "lessons.alphabet.buckets.normalE" },
-        { id: "schwa", labelKey: "lessons.alphabet.buckets.schwa" },
-      ],
-      items: [
-        { id: "pes", text: "pes", bucket: "schwa" },
-        { id: "sedem", text: "sedem", bucket: "schwa" },
-        { id: "dez", text: "dež", bucket: "normalE" },
-        { id: "biologija", text: "biologija", bucket: "normalE" },
-      ],
-    },
-    // 3) Say the sounds firmly (mic, skippable)
-    {
-      type: "speak",
-      id: "say-cokolada",
-      promptKey: "lessons.alphabet.sayFirmly",
-      word: "čokolada",
-      accept: ["čokolada", "cokolada"],
-    },
-    {
-      type: "speak",
-      id: "say-sport",
-      promptKey: "lessons.alphabet.sayFirmly",
-      word: "šport",
-      accept: ["šport", "sport"],
-    },
-    {
-      type: "speak",
-      id: "say-zena",
-      promptKey: "lessons.alphabet.sayFirmly",
-      word: "žena",
-      accept: ["žena", "zena"],
-    },
-    {
-      type: "speak",
-      id: "say-student",
-      promptKey: "lessons.alphabet.sayFirmly",
-      word: "študent",
-      accept: ["študent", "student"],
-    },
-    {
-      type: "speak",
-      id: "say-zivijo",
-      promptKey: "lessons.alphabet.sayFirmly",
-      word: "živijo",
-      accept: ["živijo", "zivijo", "živjo", "zivjo"],
-    },
-    // 4) Sort the letters: vowels vs consonants
-    {
-      type: "sort",
-      id: "vowels-consonants",
-      promptKey: "lessons.alphabet.sortLetters",
-      buckets: [
-        { id: "vowels", labelKey: "lessons.alphabet.buckets.vowels" },
-        { id: "consonants", labelKey: "lessons.alphabet.buckets.consonants" },
-      ],
-      items: [
-        { id: "A", text: "A", bucket: "vowels" },
-        { id: "C", text: "Č", bucket: "consonants" },
-        { id: "O", text: "O", bucket: "vowels" },
-        { id: "U", text: "U", bucket: "vowels" },
-        { id: "S", text: "Š", bucket: "consonants" },
-        { id: "M", text: "M", bucket: "consonants" },
-        { id: "E", text: "E", bucket: "vowels" },
-        { id: "Z", text: "Ž", bucket: "consonants" },
-        { id: "I", text: "I", bucket: "vowels" },
-        { id: "T", text: "T", bucket: "consonants" },
-      ],
-    },
-    // 5) Match the situation to the right greeting / farewell
-    {
-      type: "match",
-      id: "greetings",
-      promptKey: "lessons.alphabet.matchGreetings",
-      left: [
-        { id: "s1", promptKey: "lessons.alphabet.situations.morning" },
-        { id: "s2", promptKey: "lessons.alphabet.situations.friendBye" },
-        { id: "s3", promptKey: "lessons.alphabet.situations.email" },
-        { id: "s4", promptKey: "lessons.alphabet.situations.friendStreet" },
-        { id: "s5", promptKey: "lessons.alphabet.situations.workBye" },
-      ],
-      right: [
-        { id: "g1", text: "Dobro jutro" },
-        { id: "g2", text: "Čao" },
-        { id: "g3", text: "Lep pozdrav" },
-        { id: "g4", text: "Živijo" },
-        { id: "g5", text: "Nasvidenje" },
-      ],
-      solution: { s1: "g1", s2: "g2", s3: "g3", s4: "g4", s5: "g5" },
-    },
-  ],
+export function stripExercise(exercise: Exercise): Exercise {
+  switch (exercise.type) {
+    case "multiple_choice":
+      return { ...exercise, correctAnswer: "" }
+    case "sort":
+      return { ...exercise, items: exercise.items.map((i) => ({ ...i, bucket: "" })) }
+    case "match":
+      return { ...exercise, solution: {} }
+    case "speak":
+      return { ...exercise, accept: [] }
+  }
 }
 
-const allTests: CourseTest[] = [alphabetTest]
-
-/** Tests belonging to a given module (section) slug. */
-export function getTestsForSection(sectionSlug: string): CourseTest[] {
-  return allTests.filter((t) => t.sectionSlug === sectionSlug)
+/** What the server returns after checking, so the UI can highlight answers. */
+export type ExerciseReveal = {
+  correctAnswer?: string // multiple_choice: correct option id
+  correctBuckets?: Record<string, string> // sort: itemId → correct bucketId
+  solution?: Record<string, string> // match: leftId → correct rightId
 }
 
-/** Look up a single test by section slug + test id (used by the test route). */
-export function getTest(sectionSlug: string, testId: string): CourseTest | undefined {
-  return allTests.find((t) => t.sectionSlug === sectionSlug && t.id === testId)
+export function extractReveal(exercise: Exercise): ExerciseReveal {
+  switch (exercise.type) {
+    case "multiple_choice":
+      return { correctAnswer: exercise.correctAnswer }
+    case "sort":
+      return { correctBuckets: Object.fromEntries(exercise.items.map((i) => [i.id, i.bucket])) }
+    case "match":
+      return { solution: exercise.solution }
+    case "speak":
+      return {}
+  }
 }
+

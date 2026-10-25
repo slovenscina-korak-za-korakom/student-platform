@@ -14,10 +14,16 @@ import {
 } from "@tabler/icons-react"
 import { cn, slugify } from "@/lib/utils"
 import { InferSelectModel } from "drizzle-orm"
-import { coursesTable, sectionsTable, videosTable } from "@/db/schema"
+import { coursesTable, modulesTable, videosTable } from "@/db/schema"
 
 type CourseWithContent = InferSelectModel<typeof coursesTable> & {
-  sections: (InferSelectModel<typeof sectionsTable> & {
+  // Resolved from i18n keys by course-actions (DB no longer stores plain text).
+  title: string
+  description: string | null
+  sections: (InferSelectModel<typeof modulesTable> & {
+    title: string
+    description: string | null
+    isFinished: boolean
     videos: InferSelectModel<typeof videosTable>[]
   })[]
   videoCount: number
@@ -135,7 +141,7 @@ const CourseContent = ({ course, locale }: Props) => {
               return (
                 <Link
                   key={section.id}
-                  href={`/${locale}/courses/${slugify(course.title)}/${slugify(section.title)}`}
+                  href={`/${locale}/courses/${course.slug ?? slugify(course.title)}/${section.slug ?? slugify(section.title)}`}
                   className="group block rounded-xl border border-border/50 bg-card p-4 transition-all duration-150 hover:border-border hover:shadow-sm"
                 >
                   <div className="flex items-start gap-4">

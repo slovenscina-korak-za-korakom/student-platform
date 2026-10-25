@@ -4,13 +4,14 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
-import type { ExercisePhase, SortDraft, SortExercise } from "@/lib/course-exercises"
+import type { ExercisePhase, ExerciseReveal, SortDraft, SortExercise } from "@/lib/course-exercises"
 
 type Props = {
   exercise: SortExercise
   value: SortDraft
   onChange: (value: SortDraft) => void
   phase: ExercisePhase
+  reveal: ExerciseReveal | null
 }
 
 const DRAG_MIME = "application/x-sort-item"
@@ -21,7 +22,7 @@ const DRAG_MIME = "application/x-sort-item"
  *   - Tap a word to select it, then tap a bucket (touch-friendly fallback).
  * Tap a placed word to send it back to the tray.
  */
-const Sort = ({ exercise, value, onChange, phase }: Props) => {
+const Sort = ({ exercise, value, onChange, phase, reveal }: Props) => {
   const t = useTranslations("courses.test")
   const [picked, setPicked] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState<string | null>(null)
@@ -101,7 +102,7 @@ const Sort = ({ exercise, value, onChange, phase }: Props) => {
               </span>
               <div className="flex flex-wrap gap-2">
                 {placed.map((item) => {
-                  const ok = item.bucket === bucket.id
+                  const ok = reveal?.correctBuckets?.[item.id] === bucket.id
                   return (
                     <span
                       key={item.id}

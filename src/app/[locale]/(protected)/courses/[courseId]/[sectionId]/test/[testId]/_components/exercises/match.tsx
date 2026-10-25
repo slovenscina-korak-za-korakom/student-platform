@@ -4,13 +4,14 @@ import { useState } from "react"
 import { useTranslations } from "next-intl"
 import { IconCheck, IconGripVertical, IconX } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
-import type { ExercisePhase, MatchDraft, MatchExercise } from "@/lib/course-exercises"
+import type { ExercisePhase, ExerciseReveal, MatchDraft, MatchExercise } from "@/lib/course-exercises"
 
 type Props = {
   exercise: MatchExercise
   value: MatchDraft
   onChange: (value: MatchDraft) => void
   phase: ExercisePhase
+  reveal: ExerciseReveal | null
 }
 
 const DRAG_MIME = "application/x-greeting-id"
@@ -21,11 +22,12 @@ const DRAG_MIME = "application/x-greeting-id"
  *   - Tap a chip to select it, then tap a situation (touch-friendly fallback).
  * Tap a filled slot to send its chip back to the pool.
  */
-const Match = ({ exercise, value, onChange, phase }: Props) => {
+const Match = ({ exercise, value, onChange, phase, reveal }: Props) => {
   const t = useTranslations("courses.test")
   const [picked, setPicked] = useState<string | null>(null) // a right id, selected via tap
   const [dragOver, setDragOver] = useState<string | null>(null) // a left id being hovered
   const locked = phase !== "answering"
+  const solution = reveal?.solution ?? {}
 
   const rightById = (id: string) => exercise.right.find((r) => r.id === id)
   const usedRightIds = new Set(Object.values(value))
@@ -68,8 +70,8 @@ const Match = ({ exercise, value, onChange, phase }: Props) => {
         {exercise.left.map((item) => {
           const assigned = value[item.id]
           const assignedText = assigned ? rightById(assigned)?.text : null
-          const correct = locked && assigned === exercise.solution[item.id]
-          const incorrect = locked && assigned && assigned !== exercise.solution[item.id]
+          const correct = locked && assigned === solution[item.id]
+          const incorrect = locked && assigned && assigned !== solution[item.id]
           const isDropTarget = dragOver === item.id
 
           return (

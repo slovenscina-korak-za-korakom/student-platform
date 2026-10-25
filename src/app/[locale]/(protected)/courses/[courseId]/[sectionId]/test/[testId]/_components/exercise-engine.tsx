@@ -1,6 +1,6 @@
 "use client"
 
-import { useMemo, useState } from "react"
+import { useMemo, useRef, useState } from "react"
 import Link from "next/link"
 import { useTranslations } from "next-intl"
 import { motion, AnimatePresence } from "framer-motion"
@@ -9,12 +9,13 @@ import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import {
   emptyDraft,
-  gradeExercise,
   isAnswerComplete,
   type CourseTest,
   type ExerciseDraft,
   type ExercisePhase,
+  type ExerciseReveal,
 } from "@/lib/course-exercises"
+import { checkExercise, recordTestAttempt } from "@/actions/progress-actions"
 import ExerciseShell from "./exercise-shell"
 import MultipleChoice from "./exercises/multiple-choice"
 import Sort from "./exercises/sort"
@@ -36,8 +37,13 @@ const ExerciseEngine = ({ test, exitHref }: Props) => {
     test.exercises.map(emptyDraft)
   )
   const [phase, setPhase] = useState<ExercisePhase>("answering")
+  const [reveal, setReveal] = useState<ExerciseReveal | null>(null)
+  const [checking, setChecking] = useState(false)
   const [correctCount, setCorrectCount] = useState(0)
   const [isComplete, setIsComplete] = useState(false)
+  // Answers collected across the test, submitted once at the end for the
+  // authoritative (server-graded) record.
+  const answersRef = useRef<{ exerciseSlug: string; given: ExerciseDraft }[]>([])
 
   const exercise = test.exercises[index]
   const draft = drafts[index]
@@ -47,38 +53,61 @@ const ExerciseEngine = ({ test, exitHref }: Props) => {
     setDrafts((prev) => prev.map((d, i) => (i === index ? value : d)))
 
   const canCheck = useMemo(
-    () => phase === "answering" && isAnswerComplete(exercise, draft),
-    [phase, exercise, draft]
+    () => phase === "answering" && !checking && isAnswerComplete(exercise, draft),
+    [phase, checking, exercise, draft]
   )
 
-  const check = () => {
-    if (!canCheck) return
-    const correct = gradeExercise(exercise, draft)
+  // Record the current answer, set feedback phase + the revealed solution.
+  const settle = (given: ExerciseDraft, correct: boolean, rev: ExerciseReveal | null) => {
+    answersRef.current = [
+      ...answersRef.current.filter((a) => a.exerciseSlug !== exercise.id),
+      { exerciseSlug: exercise.id, given },
+    ]
+    setReveal(rev)
     if (correct) setCorrectCount((c) => c + 1)
     setPhase(correct ? "correct" : "incorrect")
   }
 
+  // Grading is authoritative on the server (answers aren't shipped to the client).
+  const check = async () => {
+    if (!canCheck) return
+    setChecking(true)
+    try {
+      const res = await checkExercise(test.sectionSlug, test.id, exercise.id, draft)
+      settle(draft, res.correct, res.reveal)
+    } catch {
+      settle(draft, false, null)
+    } finally {
+      setChecking(false)
+    }
+  }
+
   const skipSpeak = () => {
-    // Record a skip (graded incorrect) and reveal the checked state.
-    setDraft({ transcript: "", skipped: true })
-    setPhase("incorrect")
+    const given: ExerciseDraft = { transcript: "", skipped: true }
+    setDraft(given)
+    settle(given, false, null)
   }
 
   const next = () => {
     if (index + 1 >= total) {
       setIsComplete(true)
+      // Persist the attempt (re-graded server-side); don't block the UI.
+      void recordTestAttempt(test.sectionSlug, test.id, answersRef.current).catch(() => {})
       return
     }
     setIndex((i) => i + 1)
     setPhase("answering")
+    setReveal(null)
   }
 
   const retake = () => {
     setIndex(0)
     setDrafts(test.exercises.map(emptyDraft))
     setPhase("answering")
+    setReveal(null)
     setCorrectCount(0)
     setIsComplete(false)
+    answersRef.current = []
   }
 
   /* ── Completion screen ── */
@@ -138,13 +167,13 @@ const ExerciseEngine = ({ test, exitHref }: Props) => {
             transition={{ duration: 0.25 }}
           >
             {exercise.type === "multiple_choice" && (
-              <MultipleChoice exercise={exercise} value={draft as string | null} onChange={setDraft} phase={phase} />
+              <MultipleChoice exercise={exercise} value={draft as string | null} onChange={setDraft} phase={phase} reveal={reveal} />
             )}
             {exercise.type === "sort" && (
-              <Sort exercise={exercise} value={draft as Record<string, string>} onChange={setDraft} phase={phase} />
+              <Sort exercise={exercise} value={draft as Record<string, string>} onChange={setDraft} phase={phase} reveal={reveal} />
             )}
             {exercise.type === "match" && (
-              <Match exercise={exercise} value={draft as Record<string, string>} onChange={setDraft} phase={phase} />
+              <Match exercise={exercise} value={draft as Record<string, string>} onChange={setDraft} phase={phase} reveal={reveal} />
             )}
             {exercise.type === "speak" && (
               <Speak

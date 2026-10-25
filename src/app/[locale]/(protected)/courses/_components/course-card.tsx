@@ -8,7 +8,12 @@ import Image from "next/image";
 import {slugify} from "@/lib/utils";
 
 type Props = {
-  course: InferSelectModel<typeof coursesTable> & {sections: number, videos: number};
+  course: InferSelectModel<typeof coursesTable> & {
+    title: string
+    description: string | null
+    sections: number
+    videos: number
+  };
   locale: string
 }
 
@@ -52,7 +57,7 @@ const CourseCard = ({course, locale}: Props) => {
         </div>
 
         {/* CTA */}
-        <Link href={`/${locale}/courses/${slugify(course.title)}`}>
+        <Link href={`/${locale}/courses/${course.slug ?? slugify(course.title)}`}>
           <Button
             size="sm"
             variant="outline"

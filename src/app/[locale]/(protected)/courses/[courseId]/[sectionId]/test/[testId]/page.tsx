@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation"
-import { getTest } from "@/lib/course-exercises"
+import { getTestBySlug } from "@/actions/course-actions"
 import ExerciseEngine from "./_components/exercise-engine"
 
 type Props = {
@@ -14,9 +14,10 @@ type Props = {
 const TestPage = async ({ params }: Props) => {
   const { locale, courseId, sectionId, testId } = await params
   const available = process.env.COURSES_AVAILABLE === "true"
-  const test = getTest(sectionId, testId)
+  if (!available) notFound()
 
-  if (!test || !available) notFound()
+  const test = await getTestBySlug(sectionId, testId)
+  if (!test) notFound()
 
   const exitHref = `/${locale}/courses/${courseId}/${sectionId}`
 

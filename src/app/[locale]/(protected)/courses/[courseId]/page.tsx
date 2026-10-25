@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import CourseContent from "./_components/course-content"
-// import {getCourseInfo} from "@/actions/course-actions";
-import {getMockCourse} from "@/app/[locale]/(protected)/courses/[courseId]/_components/mock";
+import { getCourseBySlug } from "@/actions/course-actions"
 
 type Props = {
   params: Promise<{ locale: string; courseId: string }>
@@ -9,11 +8,11 @@ type Props = {
 
 const CourseDetailPage = async ({ params }: Props) => {
   const { locale, courseId } = await params
-  // const {course} = await getCourseInfo(courseId)
-  const course = getMockCourse(courseId)
   const available = process.env.COURSES_AVAILABLE === "true"
+  if (!available) notFound()
 
-  if (!course || !available) notFound()
+  const course = await getCourseBySlug(courseId, locale)
+  if (!course) notFound()
 
   return <CourseContent course={course} locale={locale} />
 }
