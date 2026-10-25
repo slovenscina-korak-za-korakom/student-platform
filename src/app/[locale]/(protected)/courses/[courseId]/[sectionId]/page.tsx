@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
 import ModuleContent from "./_components/module-content"
 import { getModuleContent } from "@/actions/course-actions"
 
@@ -13,6 +13,7 @@ const ModulePage = async ({ params }: Props) => {
 
   const mod = await getModuleContent(courseId, sectionId, locale)
   if (!mod) notFound()
+  if ("locked" in mod) redirect(`/${locale}/courses/${courseId}`)
 
   return <ModuleContent module={mod} locale={locale} />
 }

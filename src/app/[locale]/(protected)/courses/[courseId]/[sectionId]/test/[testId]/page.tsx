@@ -1,5 +1,5 @@
-import { notFound } from "next/navigation"
-import { getTestBySlug } from "@/actions/course-actions"
+import { notFound, redirect } from "next/navigation"
+import { getTestBySlug, resolveModuleAccess } from "@/actions/course-actions"
 import ExerciseEngine from "./_components/exercise-engine"
 
 type Props = {
@@ -15,6 +15,11 @@ const TestPage = async ({ params }: Props) => {
   const { locale, courseId, sectionId, testId } = await params
   const available = process.env.COURSES_AVAILABLE === "true"
   if (!available) notFound()
+
+  // Paywall: a test inside a locked module is off-limits — send to the course.
+  const access = await resolveModuleAccess(courseId, sectionId)
+  if (access.state === "notfound") notFound()
+  if (access.state === "locked") redirect(`/${locale}/courses/${courseId}`)
 
   const test = await getTestBySlug(sectionId, testId)
   if (!test) notFound()

@@ -306,6 +306,34 @@
           }
         }
       }
+    },
+    "paywall": {
+      "checkoutError": "Pri začetku nakupa je šlo nekaj narobe. Poskusite znova.",
+      "success": "Vpisani ste — uživajte v tečaju!",
+      "processing": "Plačilo se obdeluje. Dostop bo kmalu odklenjen.",
+      "canceled": "Nakup preklican.",
+      "coursesBack": "Tečaji",
+      "comingSoon": "Kmalu na voljo",
+      "enrolled": "Vpisano",
+      "free": "Brezplačno",
+      "moduleCount": "{count, plural, one {# modul} two {# modula} few {# moduli} other {# modulov}}",
+      "lessonCount": "{count, plural, one {# lekcija} two {# lekciji} few {# lekcije} other {# lekcij}}",
+      "lockedTitle": "Odklenite celoten tečaj",
+      "lockedDescription": "Prvi modul je brezplačen. Pridobite doživljenjski dostop do vseh modulov, testov in gradiv.",
+      "enroll": "Pridobi poln dostop",
+      "lifetimeAccess": "Enkratno plačilo · doživljenjski dostop",
+      "yourProgress": "Vaš napredek",
+      "progressSummary": "{done}/{total} · {percent}%",
+      "modules": "Moduli",
+      "noModules": "Temu tečaju še ni dodan noben modul.",
+      "completed": "Zaključeno",
+      "freePreview": "Brezplačen predogled",
+      "modulePlaceholder": "Kratek povzetek vsebine tega modula.",
+      "lockedModuleHint": "Vpišite se za odklep tega modula",
+      "previewCourse": "Predogled",
+      "startCourse": "Začni tečaj",
+      "checkoutSubmitMessage": "Takoj po potrditvi plačila boste pridobili doživljenjski dostop do tečaja.",
+      "invoiceFooter": "Hvala, ker se učite s Slovenščina Korak za Korakom — slovenscinakzk.com"
     }
   },
   "daily-practice": {

@@ -306,6 +306,34 @@
           }
         }
       }
+    },
+    "paywall": {
+      "checkoutError": "Не удалось начать оплату. Пожалуйста, попробуйте снова.",
+      "success": "Вы записаны — приятного обучения!",
+      "processing": "Платёж обрабатывается. Доступ откроется в ближайшее время.",
+      "canceled": "Оплата отменена.",
+      "coursesBack": "Курсы",
+      "comingSoon": "Скоро",
+      "enrolled": "Доступ открыт",
+      "free": "Бесплатно",
+      "moduleCount": "{count, plural, one {# модуль} few {# модуля} many {# модулей} other {# модулей}}",
+      "lessonCount": "{count, plural, one {# урок} few {# урока} many {# уроков} other {# уроков}}",
+      "lockedTitle": "Откройте полный курс",
+      "lockedDescription": "Первый модуль бесплатный. Получите пожизненный доступ ко всем модулям, тестам и материалам.",
+      "enroll": "Получить полный доступ",
+      "lifetimeAccess": "Разовая оплата · пожизненный доступ",
+      "yourProgress": "Ваш прогресс",
+      "progressSummary": "{done}/{total} · {percent}%",
+      "modules": "Модули",
+      "noModules": "В этот курс ещё не добавлено ни одного модуля.",
+      "completed": "Завершено",
+      "freePreview": "Бесплатный просмотр",
+      "modulePlaceholder": "Краткое описание того, что вы изучите в этом модуле.",
+      "lockedModuleHint": "Запишитесь, чтобы открыть этот модуль",
+      "previewCourse": "Просмотр",
+      "startCourse": "Начать курс",
+      "checkoutSubmitMessage": "Сразу после подтверждения оплаты вы получите пожизненный доступ к курсу.",
+      "invoiceFooter": "Спасибо, что учитесь с Slovenščina Korak za Korakom — slovenscinakzk.com"
     }
   },
   "daily-practice": {

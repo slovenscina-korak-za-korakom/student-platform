@@ -16,6 +16,11 @@ import {
   type TestItemData,
 } from "@/db/schema"
 import { mapExerciseRow, stripExercise, type CourseTest } from "@/lib/course-exercises"
+import {
+  courseDisplayPrice,
+  getAccessibleCourseIds,
+  hasCourseAccess,
+} from "@/lib/course-access"
 
 /**
  * DB read layer for courses. Display text is stored as i18n keys
@@ -40,6 +45,7 @@ async function makeResolver(locale: string): Promise<Resolver> {
 
 export const getCoursesList = async (locale: string) => {
   const resolve = await makeResolver(locale)
+  const { userId } = await auth()
   const rows = await db.query.coursesTable.findMany({
     orderBy: (c, { asc }) => [asc(c.order)],
     with: {
@@ -50,13 +56,23 @@ export const getCoursesList = async (locale: string) => {
     },
   })
 
-  return rows.map((c) => ({
-    ...c,
-    title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
-    description: resolve(c.descriptionKey, null),
-    sections: c.modules.length,
-    lessons: c.modules.reduce((sum, m) => sum + m.items.length, 0),
-  }))
+  const accessible = await getAccessibleCourseIds(userId)
+
+  return rows.map((c) => {
+    const isFree = !c.stripePriceId
+    const enrolled = isFree || accessible.has(c.id)
+    return {
+      ...c,
+      title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
+      description: resolve(c.descriptionKey, null),
+      sections: c.modules.length,
+      lessons: c.modules.reduce((sum, m) => sum + m.items.length, 0),
+      isFree,
+      enrolled,
+      locked: !enrolled,
+      price: courseDisplayPrice(c.priceByCurrency, locale),
+    }
+  })
 }
 
 /* ───────────────────────── Single course ───────────────────────── */
@@ -95,19 +111,33 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
     completed = new Set(done.map((d) => d.id))
   }
 
+  // Paywall state. `c.modules` is ordered by `order` asc, so the first entry is
+  // the free-preview module. A module is locked only when the course is paid,
+  // the user isn't enrolled, and it isn't the preview module.
+  const isFree = !c.stripePriceId
+  const enrolled = isFree || (await hasCourseAccess(userId, c.id))
+  const previewModuleId = c.modules[0]?.id ?? null
+
   return {
     ...c,
     title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
     description: resolve(c.descriptionKey, null),
+    isFree,
+    enrolled,
+    locked: !enrolled,
+    price: courseDisplayPrice(c.priceByCurrency, locale),
     // Components consume `sections` (module rows with resolved text + computed completion).
     sections: c.modules.map((m) => {
       const itemIds = m.items.map((i) => i.id)
+      const isPreview = m.id === previewModuleId
       return {
         ...m,
         title: resolve(m.titleKey, m.titleKey) ?? m.titleKey,
         description: resolve(m.descriptionKey, null),
         itemCount: itemIds.length,
         isFinished: itemIds.length > 0 && itemIds.every((id) => completed.has(id)),
+        isPreview,
+        locked: !enrolled && !isPreview,
       }
     }),
     lessonCount: c.modules.reduce((sum, m) => sum + m.items.length, 0),
@@ -139,13 +169,64 @@ export type ModuleContentVM = {
   items: ModuleItemVM[]
 }
 
+/** Locked sentinel returned when the user may not open a paid module. */
+export type ModuleLocked = { locked: true; courseSlug: string }
+
+export type ModuleAccess =
+  | { state: "notfound" }
+  | { state: "locked"; courseSlug: string }
+  | { state: "ok"; courseId: number; moduleId: number }
+
+/**
+ * Resolve whether the current user may open (courseSlug, moduleSlug): free
+ * course or active enrollment → open; otherwise only the first (lowest-order)
+ * module is a free preview. Shared by the module page and the test page.
+ */
+export const resolveModuleAccess = async (
+  courseSlug: string,
+  moduleSlug: string
+): Promise<ModuleAccess> => {
+  const { userId } = await auth()
+
+  const course = await db.query.coursesTable.findFirst({
+    where: eq(coursesTable.slug, courseSlug),
+    columns: { id: true, stripePriceId: true },
+  })
+  if (!course) return { state: "notfound" }
+
+  const m = await db.query.modulesTable.findFirst({
+    where: and(eq(modulesTable.courseId, course.id), eq(modulesTable.slug, moduleSlug)),
+    columns: { id: true },
+  })
+  if (!m) return { state: "notfound" }
+
+  const isFree = !course.stripePriceId
+  if (isFree || (await hasCourseAccess(userId, course.id))) {
+    return { state: "ok", courseId: course.id, moduleId: m.id }
+  }
+
+  // Not enrolled: allow only the free-preview (lowest-order) module.
+  const preview = await db.query.modulesTable.findFirst({
+    where: eq(modulesTable.courseId, course.id),
+    orderBy: (mm, { asc }) => [asc(mm.order)],
+    columns: { id: true },
+  })
+  if (preview?.id === m.id) return { state: "ok", courseId: course.id, moduleId: m.id }
+
+  return { state: "locked", courseSlug }
+}
+
 export const getModuleContent = async (
   courseSlug: string,
   moduleSlug: string,
   locale: string
-): Promise<ModuleContentVM | null> => {
+): Promise<ModuleContentVM | ModuleLocked | null> => {
   const resolve = await makeResolver(locale)
   const { userId } = await auth()
+
+  const access = await resolveModuleAccess(courseSlug, moduleSlug)
+  if (access.state === "notfound") return null
+  if (access.state === "locked") return { locked: true, courseSlug: access.courseSlug }
 
   const course = await db.query.coursesTable.findFirst({
     where: eq(coursesTable.slug, courseSlug),

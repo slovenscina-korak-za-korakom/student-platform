@@ -306,6 +306,34 @@
           }
         }
       }
+    },
+    "paywall": {
+      "checkoutError": "Something went wrong starting checkout. Please try again.",
+      "success": "You're enrolled — enjoy the course!",
+      "processing": "Your payment is processing. Access will unlock shortly.",
+      "canceled": "Checkout canceled.",
+      "coursesBack": "Courses",
+      "comingSoon": "Coming soon",
+      "enrolled": "Enrolled",
+      "free": "Free",
+      "moduleCount": "{count, plural, one {# module} other {# modules}}",
+      "lessonCount": "{count, plural, one {# lesson} other {# lessons}}",
+      "lockedTitle": "Unlock the full course",
+      "lockedDescription": "The first module is free. Get lifetime access to every module, test and resource.",
+      "enroll": "Get full access",
+      "lifetimeAccess": "One-time payment · lifetime access",
+      "yourProgress": "Your progress",
+      "progressSummary": "{done}/{total} · {percent}%",
+      "modules": "Modules",
+      "noModules": "No modules have been added to this course yet.",
+      "completed": "Completed",
+      "freePreview": "Free preview",
+      "modulePlaceholder": "A short summary of what learners will cover in this module.",
+      "lockedModuleHint": "Enroll to unlock this module",
+      "previewCourse": "Preview",
+      "startCourse": "Start course",
+      "checkoutSubmitMessage": "You'll get instant, lifetime access to the course the moment your payment is confirmed.",
+      "invoiceFooter": "Thank you for learning with Slovenščina Korak za Korakom — slovenscinakzk.com"
     }
   },
   "daily-practice": {

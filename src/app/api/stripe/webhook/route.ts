@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { db } from "@/db";
-import { langClubBookingsTable } from "@/db/schema";
+import { langClubBookingsTable, courseEnrollmentsTable } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -27,16 +27,41 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
-        
-        // Create booking record after successful payment
-        await db.insert(langClubBookingsTable).values({
-          eventId: parseInt(session.metadata?.eventId || "0"),
-          userId: session.metadata?.userId || "",
-          stripeSessionId: session.id,
-          stripePaymentIntentId: session.payment_intent as string,
-          amount: session.amount_total ? (session.amount_total / 100).toString() : "0",
-          status: "paid",
-        });
+
+        if (session.metadata?.type === "course") {
+          // Course purchase → grant lifetime access (idempotent upsert; may race
+          // with confirmCourseCheckout on the success redirect).
+          await db
+            .insert(courseEnrollmentsTable)
+            .values({
+              courseId: parseInt(session.metadata?.courseId || "0"),
+              userId: session.metadata?.userId || "",
+              status: "active",
+              source: "stripe",
+              stripeSessionId: session.id,
+              stripePaymentIntentId: session.payment_intent as string,
+              expiresAt: null,
+            })
+            .onConflictDoUpdate({
+              target: [courseEnrollmentsTable.userId, courseEnrollmentsTable.courseId],
+              set: {
+                status: "active",
+                source: "stripe",
+                stripeSessionId: session.id,
+                stripePaymentIntentId: session.payment_intent as string,
+              },
+            });
+        } else {
+          // Language-club booking (existing flow).
+          await db.insert(langClubBookingsTable).values({
+            eventId: parseInt(session.metadata?.eventId || "0"),
+            userId: session.metadata?.userId || "",
+            stripeSessionId: session.id,
+            stripePaymentIntentId: session.payment_intent as string,
+            amount: session.amount_total ? (session.amount_total / 100).toString() : "0",
+            status: "paid",
+          });
+        }
         break;
 
       case "payment_intent.payment_failed":
@@ -54,8 +79,9 @@ export async function POST(request: NextRequest) {
 
       case "charge.refunded":
         const charge = event.data.object as Stripe.Charge;
-        
-        // Update booking status to refunded
+
+        // Update booking status to refunded (lang_club). Harmless no-op if the
+        // payment intent belongs to a course instead.
         await db
           .update(langClubBookingsTable)
           .set({
@@ -63,6 +89,12 @@ export async function POST(request: NextRequest) {
             updatedAt: new Date(),
           })
           .where(eq(langClubBookingsTable.stripePaymentIntentId, charge.payment_intent as string));
+
+        // Revoke course access on refund.
+        await db
+          .update(courseEnrollmentsTable)
+          .set({ status: "refunded" })
+          .where(eq(courseEnrollmentsTable.stripePaymentIntentId, charge.payment_intent as string));
         break;
 
       case "charge.refund.updated":
@@ -83,6 +115,19 @@ export async function POST(request: NextRequest) {
             updatedAt: new Date(),
           })
           .where(eq(langClubBookingsTable.stripePaymentIntentId, refund.payment_intent as string));
+
+        // Course access: restore on a failed refund, revoke on success.
+        if (refund.status === "failed") {
+          await db
+            .update(courseEnrollmentsTable)
+            .set({ status: "active" })
+            .where(eq(courseEnrollmentsTable.stripePaymentIntentId, refund.payment_intent as string));
+        } else if (refund.status === "succeeded") {
+          await db
+            .update(courseEnrollmentsTable)
+            .set({ status: "refunded" })
+            .where(eq(courseEnrollmentsTable.stripePaymentIntentId, refund.payment_intent as string));
+        }
         break;
 
       default:

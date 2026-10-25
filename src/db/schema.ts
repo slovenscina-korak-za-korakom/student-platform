@@ -9,6 +9,7 @@ import {
   decimal,
   // pgEnum,
   jsonb, pgEnum,
+  unique,
 } from "drizzle-orm/pg-core";
 
 // export const sessionStatus = pgEnum("session_status", [
@@ -224,6 +225,14 @@ export const availableSlotsTable = pgTable("available_slots", {
   videoCallUrl: varchar({length: 255}),
 });
 
+/**
+ * Per-currency display price cache (minor units, e.g. 4900 = €49.00). Stripe's
+ * multi-currency Price is the source of truth at checkout; this cache lets course
+ * cards render a price without a Stripe round-trip. Populated by
+ * `scripts/setup-course-stripe.ts`. RUB may be absent if the account rejects it.
+ */
+export type PriceByCurrency = Partial<Record<"eur" | "usd" | "rub", number>>;
+
 export const coursesTable = pgTable("courses", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   slug: varchar({length: 128}).notNull().unique(),       // URL segment
@@ -233,6 +242,10 @@ export const coursesTable = pgTable("courses", {
   level: courseLevelEnum().notNull().default("A1"),
   order: integer().notNull().default(0),
   status: courseStatusEnum().notNull().default("upcoming"),
+  // Paywall (one-time per-course purchase). Null stripePriceId ⇒ free course.
+  stripeProductId: varchar({length: 255}),
+  stripePriceId: varchar({length: 255}),
+  priceByCurrency: jsonb().$type<PriceByCurrency>(),     // display cache (minor units)
 });
 
 export const modulesTable = pgTable("modules", {
@@ -321,7 +334,11 @@ export const courseEnrollmentsTable = pgTable("course_enrollments", {
   stripePaymentIntentId: varchar({length: 255}),
   createdAt: timestamp({withTimezone: true}).notNull().defaultNow(),
   expiresAt: timestamp({withTimezone: true}),
-})
+}, (t) => [
+  // One enrollment per (user, course) — upsert target for the webhook /
+  // confirm-checkout paths so repeated Stripe events stay idempotent.
+  unique("course_enrollments_user_course_unique").on(t.userId, t.courseId),
+])
 
 export const coursesRelations = relations(coursesTable, ({ many }) => ({
   modules: many(modulesTable),
