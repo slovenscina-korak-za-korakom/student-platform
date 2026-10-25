@@ -10,6 +10,7 @@ import {
   IconSparkles,
 } from "@tabler/icons-react"
 import CompleteToggle from "./complete-toggle"
+import VideoFrame from "./video-frame"
 import type { ModuleContentVM, ModuleItemVM } from "@/actions/course-actions"
 
 type Props = {
@@ -21,34 +22,56 @@ const ModuleContent = async ({ module: mod, locale }: Props) => {
   const t = await getTranslations("courses.test")
   const base = `/${locale}/courses/${mod.course.slug}/${mod.slug}`
 
-  return (
-    <div className="mx-auto w-full max-w-3xl px-5 py-6 md:py-8 space-y-6">
-      {/* Back to course */}
-      <Button asChild variant="ghost" size="sm" className="-ml-2 text-muted-foreground">
-        <Link href={`/${locale}/courses/${mod.course.slug}`}>
-          <IconChevronLeft className="h-4 w-4" />
-          {mod.course.title}
-        </Link>
-      </Button>
+  // Only when the module LEADS with a video: hoist it into a full-width hero
+  // player (see skeleton in loading.tsx). Otherwise every item — videos
+  // included — renders in the centered max-w-4xl column so they share one width.
+  const first = mod.items[0]
+  const heroVideo = first?.type === "video" && first.video ? first : undefined
+  const restItems = heroVideo ? mod.items.slice(1) : mod.items
 
-      {/* Header */}
-      <div className="space-y-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-foreground">{mod.title}</h1>
-        {mod.description && (
-          <p className="text-sm text-muted-foreground leading-relaxed">{mod.description}</p>
-        )}
+  return (
+    <div className="flex flex-col pb-8 md:pb-10">
+      {/* Back to course */}
+      <div className="px-5 pt-5">
+        <Button asChild variant="ghost" size="sm" className="-ml-2 text-muted-foreground">
+          <Link href={`/${locale}/courses/${mod.course.slug}`}>
+            <IconChevronLeft className="h-4 w-4" />
+            {mod.course.title}
+          </Link>
+        </Button>
       </div>
 
-      {/* Ordered content items */}
-      {mod.items.length === 0 ? (
-        <p className="text-sm text-muted-foreground">{t("items.empty")}</p>
-      ) : (
-        <div className="space-y-4">
-          {mod.items.map((item) => (
-            <ItemRow key={item.id} item={item} base={base} t={t} />
-          ))}
+      {/* Full-width hero video */}
+      {heroVideo?.video && (
+        <div className="p-5 pt-3">
+          <VideoFrame url={heroVideo.video.url} className="mx-auto w-full aspect-video max-h-[80vh]" />
+          <div className="mx-auto w-full max-w-4xl flex justify-end pt-3">
+            <CompleteToggle itemId={heroVideo.id} completed={heroVideo.completed} />
+          </div>
         </div>
       )}
+
+      {/* Everything else, single consistent width */}
+      <div className="mx-auto w-full max-w-4xl px-5 md:px-8 space-y-6">
+        {/* Header */}
+        <div className="space-y-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{mod.title}</h1>
+          {mod.description && (
+            <p className="text-sm text-muted-foreground leading-relaxed">{mod.description}</p>
+          )}
+        </div>
+
+        {/* Ordered content items */}
+        {mod.items.length === 0 ? (
+          <p className="text-sm text-muted-foreground">{t("items.empty")}</p>
+        ) : restItems.length > 0 ? (
+          <div className="space-y-4">
+            {restItems.map((item) => (
+              <ItemRow key={item.id} item={item} base={base} t={t} />
+            ))}
+          </div>
+        ) : null}
+      </div>
     </div>
   )
 }
@@ -109,13 +132,8 @@ function ItemRow({
             {item.title ?? t(`items.${item.type}`)}
           </h3>
 
-          {item.type === "video" && (
-            <div className="relative mt-3 flex aspect-video w-full items-center justify-center overflow-hidden rounded-xl bg-black">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/10 backdrop-blur-sm">
-                <IconPlayerPlayFilled className="ml-0.5 h-6 w-6 text-white" />
-              </div>
-              {/* TODO: real player; call saveVideoPosition on progress, mark complete at ~95%. */}
-            </div>
+          {item.type === "video" && item.video && (
+            <VideoFrame url={item.video.url} className="mt-3 aspect-video w-full" />
           )}
 
           {item.type === "text" && item.text && (
