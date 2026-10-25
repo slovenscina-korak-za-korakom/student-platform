@@ -244,17 +244,6 @@ export const modulesTable = pgTable("modules", {
   order: integer().notNull().default(0),
 })
 
-export const videosTable = pgTable("videos", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  title: varchar({length: 128}).notNull(),
-  description: text(),
-  duration: integer().notNull().default(0),
-  videoLink: varchar({length: 128}).notNull().default(""),
-  order: integer().notNull().default(0),
-  moduleId: integer().notNull().references(() => modulesTable.id),
-  isFinished: boolean().default(false),
-})
-
 /**
  * An interactive test (Duolingo-style) belonging to a module. A module may have
  * several; `slug` is the URL id used at
@@ -262,8 +251,9 @@ export const videosTable = pgTable("videos", {
  */
 export const courseTestsTable = pgTable("course_tests", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  // DEPRECATED (Phase 0c): a test is located via its module_items row; kept for
-  // now so the current data/seed keep working until the read path moves over.
+  // The module this test belongs to. ACTIVE: test lookup (getTestBySlug,
+  // resolveTestId) and seeding resolve a test by (moduleId, slug). A `test`
+  // module_items row additionally points here via data.testId for the launcher.
   moduleId: integer().notNull().references(() => modulesTable.id),
   slug: varchar({length: 128}).notNull(),
   titleKey: varchar({length: 255}).notNull(), // i18n key under courses.test
@@ -340,13 +330,8 @@ export const coursesRelations = relations(coursesTable, ({ many }) => ({
 
 export const modulesRelations = relations(modulesTable, ({ one, many }) => ({
   course: one(coursesTable, { fields: [modulesTable.courseId], references: [coursesTable.id] }),
-  videos: many(videosTable),
   tests: many(courseTestsTable),
   items: many(moduleItemsTable),
-}));
-
-export const videosRelations = relations(videosTable, ({ one }) => ({
-  module: one(modulesTable, { fields: [videosTable.moduleId], references: [modulesTable.id] }),
 }));
 
 export const courseTestsRelations = relations(courseTestsTable, ({ one, many }) => ({

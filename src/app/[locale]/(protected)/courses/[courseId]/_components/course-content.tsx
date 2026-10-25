@@ -8,13 +8,12 @@ import {
   IconChevronLeft,
   IconChevronRight,
   IconCircleCheckFilled,
-  IconClock,
   IconPlayerPlay,
   IconVideo,
 } from "@tabler/icons-react"
 import { cn, slugify } from "@/lib/utils"
 import { InferSelectModel } from "drizzle-orm"
-import { coursesTable, modulesTable, videosTable } from "@/db/schema"
+import { coursesTable, modulesTable } from "@/db/schema"
 
 type CourseWithContent = InferSelectModel<typeof coursesTable> & {
   // Resolved from i18n keys by course-actions (DB no longer stores plain text).
@@ -24,23 +23,14 @@ type CourseWithContent = InferSelectModel<typeof coursesTable> & {
     title: string
     description: string | null
     isFinished: boolean
-    videos: InferSelectModel<typeof videosTable>[]
+    itemCount: number
   })[]
-  videoCount: number
+  lessonCount: number
 }
 
 type Props = {
   course: CourseWithContent
   locale: string
-}
-
-// Durations are stored as seconds on each video.
-function formatDuration(totalSeconds: number) {
-  if (!totalSeconds) return "—"
-  const h = Math.floor(totalSeconds / 3600)
-  const m = Math.round((totalSeconds % 3600) / 60)
-  if (h > 0) return `${h}h ${m}m`
-  return `${m} min`
 }
 
 const CourseContent = ({ course, locale }: Props) => {
@@ -93,7 +83,7 @@ const CourseContent = ({ course, locale }: Props) => {
             </span>
             <span className="flex items-center gap-1.5">
               <IconVideo className="h-4 w-4" />
-              {course.videoCount} videos
+              {course.lessonCount} lessons
             </span>
           </div>
         </div>
@@ -133,11 +123,6 @@ const CourseContent = ({ course, locale }: Props) => {
         ) : (
           <div className="space-y-3">
             {course.sections.map((section, index) => {
-              const totalDuration = section.videos.reduce(
-                (sum, v) => sum + (v.duration ?? 0),
-                0
-              )
-
               return (
                 <Link
                   key={section.id}
@@ -182,11 +167,7 @@ const CourseContent = ({ course, locale }: Props) => {
                       <div className="flex items-center gap-4 pt-1 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <IconVideo className="h-3.5 w-3.5" />
-                          {section.videos.length} videos
-                        </span>
-                        <span className="flex items-center gap-1 tabular-nums">
-                          <IconClock className="h-3.5 w-3.5" />
-                          {formatDuration(totalDuration)}
+                          {section.itemCount} lessons
                         </span>
                       </div>
                     </div>

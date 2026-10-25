@@ -45,7 +45,7 @@ export const getCoursesList = async (locale: string) => {
     with: {
       modules: {
         columns: { id: true },
-        with: { videos: { columns: { id: true } } },
+        with: { items: { columns: { id: true } } },
       },
     },
   })
@@ -55,7 +55,7 @@ export const getCoursesList = async (locale: string) => {
     title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
     description: resolve(c.descriptionKey, null),
     sections: c.modules.length,
-    videos: c.modules.reduce((sum, m) => sum + m.videos.length, 0),
+    lessons: c.modules.reduce((sum, m) => sum + m.items.length, 0),
   }))
 }
 
@@ -70,7 +70,6 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
       modules: {
         orderBy: (m, { asc }) => [asc(m.order)],
         with: {
-          videos: { orderBy: (v, { asc }) => [asc(v.order)] },
           items: { columns: { id: true } },
         },
       },
@@ -107,10 +106,11 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
         ...m,
         title: resolve(m.titleKey, m.titleKey) ?? m.titleKey,
         description: resolve(m.descriptionKey, null),
+        itemCount: itemIds.length,
         isFinished: itemIds.length > 0 && itemIds.every((id) => completed.has(id)),
       }
     }),
-    videoCount: c.modules.reduce((sum, m) => sum + m.videos.length, 0),
+    lessonCount: c.modules.reduce((sum, m) => sum + m.items.length, 0),
   }
 }
 

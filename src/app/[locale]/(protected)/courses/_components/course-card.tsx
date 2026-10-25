@@ -12,7 +12,7 @@ type Props = {
     title: string
     description: string | null
     sections: number
-    videos: number
+    lessons: number
   };
   locale: string
 }
@@ -48,7 +48,7 @@ const CourseCard = ({course, locale}: Props) => {
           </span>
           <span className="flex items-center gap-1">
             <IconVideo className="h-3.5 w-3.5"/>
-            {course.videos} videos
+            {course.lessons} lessons
           </span>
           {/* Level badge */}
           <span className="flex items-center gap-1">
