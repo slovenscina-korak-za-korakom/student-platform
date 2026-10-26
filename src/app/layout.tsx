@@ -11,6 +11,7 @@ import { DynamicClerkProvider } from "@/components/providers/dynamic-clerk-provi
 import { ThemeProvider } from "@/components/ui/theme-provider";
 import { Toaster } from "sonner";
 import { Analytics } from "@vercel/analytics/next";
+import { siteNumbers } from "@/lib/docs";
 
 const manropeFont = Manrope({
   weight: ["200", "300", "400", "500", "600", "700", "800"],
@@ -28,8 +29,7 @@ export const metadata: Metadata = {
     default: "Slovenscina Korak za Korakom | Become fluent in Slovene",
     template: "%s | Slovenscina Korak za Korakom",
   },
-  description:
-    "Slovenscina Korak za Korakom personalized Slovene lessons tailored to your goals. Learn online at your convenience with experienced teachers and join a supportive community of over 1,700 members. Start today and achieve your language goals with Slovenscina Korak za Korakom!",
+  description: `Slovenscina Korak za Korakom personalized Slovene lessons tailored to your goals. Learn online at your convenience with experienced teachers and join a supportive community of over ${siteNumbers.members} members. Start today and achieve your language goals with Slovenscina Korak za Korakom!`,
   metadataBase: new URL("https://slovenscinakzk.com"),
   alternates: {
     canonical: "/",
@@ -75,8 +75,7 @@ const jsonLd = {
   "@type": "WebSite",
   name: "Slovenscina Korak za Korakom",
   url: "https://slovenscinakzk.com",
-  description:
-    "Personalized Slovene lessons tailored to your goals. Learn online with experienced teachers and join a community of over 1,700 members.",
+  description: `Personalized Slovene lessons tailored to your goals. Learn online with experienced teachers and join a community of over ${siteNumbers.members} members.`,
   publisher: {
     "@type": "Organization",
     name: "Slovenscina Korak za Korakom",

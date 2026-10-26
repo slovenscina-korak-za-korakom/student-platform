@@ -3,7 +3,7 @@ import Carousel from "@/components/content/testimonials";
 import Hero from "@/components/content/hero-section";
 import Stats from "@/components/content/stats";
 import { getTranslations } from "next-intl/server";
-import { reviews } from "@/lib/docs";
+import { reviews, siteNumbers } from "@/lib/docs";
 import SectionTitle from "@/components/content/titles/section-title";
 import BentoGridWrapper from "@/components/content/bento-grid-wrapper";
 import {Metadata} from "next";
@@ -14,7 +14,7 @@ export async function generateMetadata({ params }): Promise<Metadata> {
   const t = await getTranslations({ locale, namespace: "metadata.home" });
   return {
     title: t("title"),
-    description: t("description"),
+    description: t("description", { members: siteNumbers.members }),
     alternates: getAlternates("/", locale),
   };
 }

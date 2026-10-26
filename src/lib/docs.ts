@@ -19,10 +19,21 @@ export const webNavigation = [
   {name: "about", href: "/about-us"},
 ];
 
+/**
+ * Single source of truth for all public-facing numbers.
+ * Change a value here and it propagates to every language and component.
+ */
+export const siteNumbers = {
+  members: 2100, // Telegram community members
+  happyStudents: 350,
+  lessonsConducted: 5000, // in hours
+  studentSatisfaction: 92, // in percent
+};
+
 export const stats = [
-  {id: 1, title: "happy-students", value: "250", symbol: "+"},
-  {id: 2, title: "lessons-conducted", value: "3000", symbol: "h"}, // in hours
-  {id: 3, title: "student-satisfaction", value: "92", symbol: "%"}, // in percent
+  {id: 1, title: "happy-students", value: String(siteNumbers.happyStudents), symbol: "+"},
+  {id: 2, title: "lessons-conducted", value: String(siteNumbers.lessonsConducted), symbol: "h"}, // in hours
+  {id: 3, title: "student-satisfaction", value: String(siteNumbers.studentSatisfaction), symbol: "%"}, // in percent
 ];
 
 export const people = [
@@ -81,6 +92,20 @@ export const people = [
     role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-ema.jpg",
+  },
+  {
+    id: 9,
+    name: ["Timeja", "Vodenik"],
+    role: "Teacher/Tutor",
+    fluentIn: [],
+    imageUrl: "/staff-images/foto-timeja.jpg",
+  },
+  {
+    id: 10,
+    name: ["Alja", ""],
+    role: "Teacher/Tutor",
+    fluentIn: [],
+    imageUrl: "/staff-images/foto-alja.jpg",
   }
 ];
 

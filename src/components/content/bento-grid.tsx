@@ -11,6 +11,7 @@ import gsap, {ScrollTrigger} from "gsap/all";
 import Image from "next/image";
 import {IconLogo} from "../icons/icon-logo";
 import {useTheme} from "next-themes";
+import {siteNumbers} from "@/lib/docs";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -248,7 +249,7 @@ export default function BentoGrid() {
                 {t("community.title")}
               </h2>
               <p className="mt-2 max-w-lg text-sm/6 text-sl-secondary dark:text-white/90 max-lg:text-center">
-                {t("community.description", {members: 1800})}
+                {t("community.description", {members: siteNumbers.members})}
               </p>
               <div
                 className="relative min-h-[20rem] w-full grow mt-6 [container-type:inline-size] max-lg:mx-auto max-lg:max-w-sm">
