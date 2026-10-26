@@ -102,7 +102,7 @@ export const people = [
   },
   {
     id: 10,
-    name: ["Alja", ""],
+    name: ["Alja", "tiganj"],
     role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-alja.jpg",
