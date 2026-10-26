@@ -1,171 +1,80 @@
-# Slovenščina Korak za Korkom
+# Slovenščina Korak za Korakom
 
-A modern, multilingual online language learning platform designed to help users master Slovenian through personalized lessons, interactive features, and community support. Built with Next.js 15, TypeScript, and modern web technologies.
+**The production platform of a Slovenian language school, designed, built, and run by one engineer.**
 
-## Live Demo
+Live at **[slovenscinakzk.com](https://slovenscinakzk.com)** · Admin panel: [slovenscina-admin](<!-- TODO: link to admin repo -->)
 
-**Production URL:** https://slovenscinakzk.com/
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Getting Started](#getting-started)
-- [Development](#development)
-- [Database](#database)
-- [Internationalization](#internationalization)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-
-## 🎯 Overview
-
-Slovenščina Korak za Korkom is a comprehensive online language learning platform that offers:
-
-- **Personalized Slovenian Lessons**: Tailored to individual goals and learning styles
-- **Multi-language Support**: Available in English, Slovenian, Russian, and Italian
-- **Flexible Learning Options**: Individual, pair, and group lessons via Microsoft Teams and Zoom
-- **Community Features**: Language club events and Telegram community (1,200+ members)
-- **Progress Tracking**: Dashboard with learning analytics and achievements
-- **Payment Integration**: Stripe-powered booking and payment system
-- **Admin Panel**: Complete management system for courses and users
-
-## Features
-
-### Core Learning Features
-
-- **Free Trial Lesson**: 45-minute introductory session with no commitment
-- **Flexible Online Lessons**: Conducted via Teams or Zoom, accessible from anywhere
-- **Tailored Learning Plans**: Customized content for travel, work, or relocation goals
-- **Progress Tracking**: Comprehensive dashboard with learning statistics
-- **Language Club**: Group events and community activities
-
-### Platform Features
-
-- **Multi-language Interface**: Support for EN, SL, RU, IT
-- **Responsive Design**: Mobile-first approach with modern UI/UX
-- **User Authentication**: Secure login with Clerk
-- **Payment Processing**: Stripe integration for lesson bookings
-- **Email Notifications**: Automated booking confirmations and updates
-- **Admin Dashboard**: Complete management interface
-
-### Community Features
-
-- **Telegram Integration**: 1,200+ member community for practice and support
-- **Language Club Events**: Regular group sessions and cultural activities
-- **Tutor Profiles**: Detailed information about available instructors
-- **Booking System**: Easy scheduling with calendar integration
-
-## Tech Stack
-
-### Frontend
-
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe development
-- **Tailwind CSS** - Utility-first CSS framework
-- **Radix UI** - Accessible component primitives
-- **Framer Motion** - Animation library
-- **GSAP** - Advanced animations
-- **Lottie React** - Vector animations
-
-### Backend & Database
-
-- **PostgreSQL** - Primary database
-- **Drizzle ORM** - Type-safe database queries
-- **Next.js API Routes** - Serverless API endpoints
-- **Clerk** - Authentication and user management
-
-### Payment & Communication
-
-- **Stripe** - Payment processing and webhooks
-- **Resend** - Email delivery service
-- **React Email** - Email template system
-
-### Development Tools
-
-- **ESLint** - Code linting
-- **Bun** - Fast package manager and runtime
-- **Drizzle Kit** - Database migrations and introspection
-
-## Project Structure
-
-```
-src/
-├── app/                    # Next.js App Router
-│   ├── [locale]/          # Internationalized routes
-│   │   ├── (protected)/   # Authenticated user pages
-│   │   │   ├── (main)/    # Main user dashboard
-│   │   │   └── admin/     # Admin panel
-│   │   └── (unprotected)/ # Public pages
-│   └── api/               # API routes
-├── components/            # Reusable UI components
-│   ├── ui/               # Base UI components
-│   ├── dashboard/        # Dashboard-specific components
-│   └── content/          # Content and layout components
-├── db/                   # Database schema and connection
-├── actions/              # Server actions
-├── emails/               # Email templates
-├── hooks/                # Custom React hooks
-├── lib/                  # Utility functions
-├── schemas/              # Zod validation schemas
-└── types/                # TypeScript type definitions
-```
-
-# Development
-
-### Available Scripts
-
-```bash
-# Development
-bun run dev          # Start development server
-bun run build        # Build for production
-bun run start        # Start production server
-bun run lint         # Run ESLint
-
-# Database
-bun run db:generate  # Generate database migrations
-bun run db:push      # Push schema changes to database
-bun run db:seed      # Seed database with sample data
-
-# Email development
-bun run email        # Start email preview server
-
-# Testing
-bun run test:webhook # Test Clerk webhook
-```
-
-## Database
-
-The application uses PostgreSQL with Drizzle ORM. Key tables include:
-
-- **lang_club**: Language club events and sessions
-- **lang_club_bookings**: User bookings and payment tracking
-- **users**: User profiles and preferences (managed by Clerk)
-
-## Internationalization
-
-The platform supports multiple languages with next-intl:
-
-- **English** (en) - Default
-- **Slovenian** (sl)
-- **Russian** (ru)
-- **Italian** (it)
-
-Language files are located in `/messages/` directory. Routes are automatically localized based on the user's locale preference.
-
-## License
-
-This project is private and proprietary. All rights reserved.
-
-## Support
-
-For support and questions:
-
-- **Website**: https://slovenscinakzk.com/
-- **Email**: Contact through the website
-- **Telegram**: Join our community group
+<!-- TODO: add a screenshot or short GIF of the student dashboard and booking flow here -->
 
 ---
 
-Built with ❤️ for Slovenian language learners worldwide.
+## The problem
+
+Slovenščina Korak za Korakom teaches Slovenian online and in person. Most learners live in Slovenia, with others in Serbia, Russia, and Ukraine. Until 2026 the school ran on Excel, Google Calendar, and Telegram: tutors' hours were tallied by hand and scheduling happened across three tools.
+
+I replaced that with this platform, the student-facing app, and a separate [admin panel](<!-- TODO: link to admin repo -->) for staff.
+
+## Where it stands
+
+- **350+ registered learners** and **10 staff** on the platform, operational since January 2026
+- **80–100 lesson-hours per week** booked and scheduled through it
+- Student app available in **4 languages**: Slovenian, English, Italian, and Russian
+- Supports a learner community of **2,100+ members** on Telegram
+- Hosting cost close to zero (Vercel and pay-per-use AWS)
+
+---
+
+## Engineering highlights
+
+### 1. Encrypted, enrollment-gated course streaming
+
+The school's first video course (10 modules, about 3.5 hours of video, plus exercises, grammar PDFs, flashcards, and exams) is paid content, so the videos must not be downloadable by anyone who hasn't paid.
+
+- Videos are packaged as **HLS with AES-128-encrypted segments**.
+- The **manifest and decryption key** live in a **private S3 bucket** and are only served through enrollment-gated API routes. Every request is checked against the learner's access before anything is returned.
+- The encrypted `.ts` segments are fetched through **short-lived presigned S3 URLs**, so a copied link expires quickly and is useless without the key.
+- **No plain source URL ever reaches the browser.**
+- **Ingest is automated:** the admin panel uploads a video through an authenticated ingest API, and an **S3-triggered AWS Lambda running ffmpeg** packages it into encrypted HLS. Nobody runs ffmpeg by hand.
+
+**Trade-off:** encryption plus gating stops downloading and link sharing. It can't stop someone screen-recording a video they have legitimately paid for, and no web platform can. Full DRM (Widevine or FairPlay) would need a paid licensing service, which isn't proportional for a single course.
+
+### 2. Scheduling across time zones
+
+Learners book from several countries, and tutors set availability in their own local time. Sessions are stored with their **IANA time zone** (for example `Europe/Ljubljana`), not a fixed UTC offset. Learners can pick their zone, and the app detects when their device's time zone changes.
+
+This design came out of a real production bug, described in the [admin panel README](<!-- TODO: link to admin repo -->).
+
+### 3. Four languages from one codebase
+
+All student-facing content is localized with `next-intl` and locale-prefixed routes, so a learner can use the whole app (booking, payments, emails, course UI) in their own language while learning Slovenian.
+
+### 4. Payments and onboarding
+
+- **Stripe** handles lesson and course payments, with webhooks keeping bookings and enrollment in sync.
+- New learners go through a **placement test and tutor matching** before their first lesson.
+- **Transactional emails** (booking confirmations and updates) are sent with Resend and React Email.
+
+---
+
+## How it was built
+
+I'm the only engineer on the platform. I worked with an **AI-assisted workflow (Claude Code)** for implementation, refactoring, and tests, and reviewed every change myself. On the admin panel, end-to-end tests run in GitHub Actions and must pass before Vercel deploys.
+
+**Stack:** Next.js · TypeScript · PostgreSQL (Drizzle ORM) · Clerk · Stripe · AWS S3 and Lambda · Vercel
+
+## What I'd improve next
+
+- **Error monitoring.** A self-hosted Prometheus/Grafana setup doesn't fit serverless hosting, so the next step is a hosted error tracker. Right now, users report problems before I see them.
+- **Automated tests for the student app,** starting with the enrollment gate. It decides who gets paid content, so it's the most important route to cover.
+
+<details>
+<summary>Running locally</summary>
+
+```bash
+bun install
+cp .env.example .env   # fill in Clerk, Stripe, database, and AWS values
+bun run db:push
+bun run dev
+```
+
+</details>
