@@ -95,7 +95,17 @@ export type ExerciseData = MultipleChoiceData | SortData | MatchData | SpeakData
  * text uses i18n keys (`module_items.titleKey`, `TextItemData.bodyKey`); URLs
  * and asset ids are stored verbatim.
  */
-export type VideoItemData = { url: string; provider?: string; durationSec?: number };
+/**
+ * Video payload. Two coexisting shapes, discriminated by `provider`:
+ * - public/YouTube (or any plain URL): source lives at `url`.
+ * - `s3hls`: a Rung-3 encrypted-HLS asset on S3.
+ *   Only the opaque `assetKey` (S3 prefix) is stored — never a playable URL and
+ *   never the decryption key (that lives privately in S3 `keys/`). The player
+ *   streams via `/api/video/[itemId]/master.m3u8`, gated by enrollment.
+ */
+export type VideoItemData =
+  | { provider?: "youtube"; url: string; durationSec?: number }
+  | { provider: "s3hls"; assetKey: string; status?: "processing" | "ready"; durationSec?: number };
 export type PdfItemData = { assetId: string }; // resolved + watermarked via the secure API route
 export type TestItemData = { testId: number }; // → course_tests.id
 export type TextItemData = { bodyKey: string }; // i18n key (markdown allowed)

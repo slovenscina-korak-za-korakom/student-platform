@@ -2,14 +2,13 @@ import { cn } from "@/lib/utils"
 
 /**
  * Simple player in a letterboxed, rounded frame. Server-safe.
- * YouTube links play via the privacy-friendly embed; anything else falls back
- * to a native <video>.
+ * Used for YouTube / public `url` videos only (privacy-friendly embed; the
+ * native <video> is a last-resort fallback for a non-YouTube plain URL).
  *
- * TODO: this is the interim player. Replace with a DRM-protected adaptive
- * stream (signed manifests, no downloadable source) — see
- * docs/video-drm-streaming.md for the plan, decisions, and provider options.
- * That work also enables resume-from-lastPositionSec and auto-complete at 85%
- * (deferred to the DRM player; see the D7 note in that doc for why).
+ * Protected course videos (`provider: "s3hls"`) do NOT use this — they render
+ * via `SecureVideoPlayer` (Rung-3 encrypted HLS), which also owns
+ * resume-from-lastPositionSec and auto-complete at 85%. See
+ * docs/video-drm-streaming.md and `module-content.tsx`'s `ModuleVideo`.
  */
 function VideoFrame({ url, className }: { url: string; className?: string }) {
   const embed = youtubeEmbed(url)

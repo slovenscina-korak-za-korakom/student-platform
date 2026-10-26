@@ -8,8 +8,10 @@ import {
   coursesTable,
   modulesTable,
   courseTestsTable,
+  moduleItemsTable,
   moduleItemProgressTable,
   type VideoItemData,
+  type ModuleItemData,
   type PdfItemData,
   type TextItemData,
   type LinkItemData,
@@ -26,7 +28,7 @@ import {
  * DB read layer for courses. Display text is stored as i18n keys
  * (`titleKey`/`descriptionKey`, resolved under the `courses.content` tree);
  * we resolve them here, falling back to the deprecated `title`/`description`
- * columns while those still exist (dropped in Phase 0c). URLs use the stored
+ * columns while those still exist. URLs use the stored
  * `slug`. Exercises are stripped of their answers before leaving the server
  * (grading happens in `progress-actions`).
  */
@@ -153,7 +155,13 @@ export type ModuleItemVM = {
   order: number
   title: string | null
   completed: boolean
-  video?: { url: string; durationSec: number | null; lastPositionSec: number | null }
+  video?: {
+    provider: "youtube" | "s3hls"
+    url?: string // youtube only — never present for s3hls (no plain source URL)
+    status?: "processing" | "ready" // s3hls only
+    durationSec: number | null
+    lastPositionSec: number | null
+  }
   pdf?: { assetId: string }
   text?: { body: string }
   link?: { url: string }
@@ -214,6 +222,56 @@ export const resolveModuleAccess = async (
   if (preview?.id === m.id) return { state: "ok", courseId: course.id, moduleId: m.id }
 
   return { state: "locked", courseSlug }
+}
+
+export type ItemAccess =
+  | { state: "notfound" }
+  | { state: "locked" }
+  | { state: "ok"; courseId: number; type: ModuleItemVM["type"]; data: ModuleItemData }
+
+/**
+ * Enrollment gate for a single module item, by id — the predicate behind the
+ * video serving routes (manifest + key). Same rule as `resolveModuleAccess`:
+ * free course OR active enrollment OR the item sits in the first (lowest-order)
+ * module, which is a free preview. Resolves item → module → course in-line
+ * because callers only hold a moduleItemId. On `ok` it returns the item's
+ * `data` so the route can read the s3hls `assetKey` without a second query.
+ */
+export const resolveItemAccess = async (moduleItemId: number): Promise<ItemAccess> => {
+  const { userId } = await auth()
+
+  const item = await db.query.moduleItemsTable.findFirst({
+    where: eq(moduleItemsTable.id, moduleItemId),
+    columns: { id: true, type: true, data: true, moduleId: true },
+  })
+  if (!item) return { state: "notfound" }
+
+  const mod = await db.query.modulesTable.findFirst({
+    where: eq(modulesTable.id, item.moduleId),
+    columns: { id: true, courseId: true },
+  })
+  if (!mod) return { state: "notfound" }
+
+  const course = await db.query.coursesTable.findFirst({
+    where: eq(coursesTable.id, mod.courseId),
+    columns: { id: true, stripePriceId: true },
+  })
+  if (!course) return { state: "notfound" }
+
+  const ok = { state: "ok" as const, courseId: course.id, type: item.type, data: item.data }
+
+  const isFree = !course.stripePriceId
+  if (isFree || (await hasCourseAccess(userId, course.id))) return ok
+
+  // Not enrolled: allow only if this item lives in the free-preview module.
+  const preview = await db.query.modulesTable.findFirst({
+    where: eq(modulesTable.courseId, course.id),
+    orderBy: (mm, { asc }) => [asc(mm.order)],
+    columns: { id: true },
+  })
+  if (preview?.id === mod.id) return ok
+
+  return { state: "locked" }
 }
 
 export const getModuleContent = async (
@@ -285,7 +343,14 @@ export const getModuleContent = async (
     switch (it.type) {
       case "video": {
         const d = it.data as VideoItemData
-        return { ...common, video: { url: d.url, durationSec: d.durationSec ?? null, lastPositionSec: prog?.lastPositionSec ?? null } }
+        const base = { durationSec: d.durationSec ?? null, lastPositionSec: prog?.lastPositionSec ?? null }
+        return {
+          ...common,
+          video:
+            d.provider === "s3hls"
+              ? { provider: "s3hls" as const, status: d.status ?? "processing", ...base }
+              : { provider: "youtube" as const, url: d.url, ...base },
+        }
       }
       case "pdf":
         return { ...common, pdf: { assetId: (it.data as PdfItemData).assetId } }

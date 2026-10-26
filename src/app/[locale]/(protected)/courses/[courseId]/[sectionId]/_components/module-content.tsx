@@ -11,6 +11,8 @@ import {
 } from "@tabler/icons-react"
 import CompleteToggle from "./complete-toggle"
 import VideoFrame from "./video-frame"
+import SecureVideoPlayer from "./secure-video-player"
+import { cn } from "@/lib/utils"
 import type { ModuleContentVM, ModuleItemVM } from "@/actions/course-actions"
 
 type Props = {
@@ -44,7 +46,11 @@ const ModuleContent = async ({ module: mod, locale }: Props) => {
       {/* Full-width hero video */}
       {heroVideo?.video && (
         <div className="p-5 pt-3">
-          <VideoFrame url={heroVideo.video.url} className="mx-auto w-full aspect-video max-h-[80vh]" />
+          <ModuleVideo
+            itemId={heroVideo.id}
+            video={heroVideo.video}
+            className="mx-auto w-full aspect-video max-h-[80vh]"
+          />
           <div className="mx-auto w-full max-w-4xl flex justify-end pt-3">
             <CompleteToggle itemId={heroVideo.id} completed={heroVideo.completed} />
           </div>
@@ -133,7 +139,7 @@ function ItemRow({
           </h3>
 
           {item.type === "video" && item.video && (
-            <VideoFrame url={item.video.url} className="mt-3 aspect-video w-full" />
+            <ModuleVideo itemId={item.id} video={item.video} className="mt-3 aspect-video w-full" />
           )}
 
           {item.type === "text" && item.text && (
@@ -167,6 +173,32 @@ function ItemRow({
       </div>
     </div>
   )
+}
+
+/**
+ * Picks the right player for a video item. `s3hls` (Rung-3 encrypted stream)
+ * uses the gated SecureVideoPlayer; a `processing` asset shows a placeholder
+ * until packaging finishes. Everything else (YouTube/public) keeps the
+ * lightweight iframe VideoFrame.
+ */
+function ModuleVideo({
+  itemId,
+  video,
+  className,
+}: {
+  itemId: number
+  video: NonNullable<ModuleItemVM["video"]>
+  className?: string
+}) {
+  if (video.provider === "s3hls") {
+    if (video.status !== "ready") {
+      return <div className={cn("animate-pulse rounded-xl bg-muted", className)} />
+    }
+    return (
+      <SecureVideoPlayer itemId={itemId} lastPositionSec={video.lastPositionSec} className={className} />
+    )
+  }
+  return <VideoFrame url={video.url ?? ""} className={className} />
 }
 
 export default ModuleContent
