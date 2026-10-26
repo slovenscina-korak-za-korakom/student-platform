@@ -61,7 +61,7 @@ export const people = [
   {
     id: 4,
     name: ["Ela", "Remic"],
-    role: "Teacher/Tutor",
+    role: "Co-main Teacher",
     fluentIn: ["Slovene", "Russian", "English"],
     imageUrl: "/staff-images/foto-ela.jpg",
   },
@@ -106,6 +106,13 @@ export const people = [
     role: "Teacher/Tutor",
     fluentIn: [],
     imageUrl: "/staff-images/foto-alja.jpg",
+  },
+  {
+    id: 11,
+    name: ["Anna", "Pomianska"],
+    role: "Manager",
+    fluentIn: [],
+    imageUrl: "/staff-images/foto-anna.jpg",
   }
 ];
 
