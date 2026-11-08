@@ -108,7 +108,10 @@ export type VideoItemData =
   | { provider: "s3hls"; assetKey: string; status?: "processing" | "ready"; durationSec?: number };
 export type PdfItemData = { assetId: string }; // resolved + watermarked via the secure API route
 export type TestItemData = { testId: number }; // → course_tests.id
-export type TextItemData = { bodyKey: string }; // i18n key (markdown allowed)
+// Body can be an i18n key (seeded content) OR inline localized text authored in
+// the admin panel. The resolver prefers `bodyKey` when it exists in the message
+// files, otherwise falls back to `body`.
+export type TextItemData = { bodyKey?: string; body?: Localized }; // markdown allowed
 export type LinkItemData = { url: string };
 export type ModuleItemData =
   | VideoItemData
@@ -248,6 +251,12 @@ export const coursesTable = pgTable("courses", {
   slug: varchar({length: 128}).notNull().unique(),       // URL segment
   titleKey: varchar({length: 255}).notNull(),            // i18n key (courses.content.*)
   descriptionKey: varchar({length: 255}),                // i18n key
+  // Localized display text authored in the admin panel. The resolver prefers the
+  // *Key (message files) when present, otherwise falls back to these. Named
+  // *Text to avoid colliding with the resolved string `title`/`description` that
+  // the read layer / UI types layer on top of the row.
+  titleText: jsonb().$type<Localized>(),                 // {sl,ru,en,it}
+  descriptionText: jsonb().$type<Localized>(),
   thumbnail: varchar({length: 255}).notNull().default("https://www.slovenscinakzk.com/meta-image-link.jpg"),
   level: courseLevelEnum().notNull().default("A1"),
   order: integer().notNull().default(0),
@@ -263,6 +272,9 @@ export const modulesTable = pgTable("modules", {
   slug: varchar({length: 128}).notNull(),                // URL segment (unique within course)
   titleKey: varchar({length: 255}).notNull(),            // i18n key
   descriptionKey: varchar({length: 255}),                // i18n key
+  // Localized display text (admin-authored); resolver fallback for the *Key above.
+  titleText: jsonb().$type<Localized>(),                 // {sl,ru,en,it}
+  descriptionText: jsonb().$type<Localized>(),
   courseId: integer().notNull().references(() => coursesTable.id),
   order: integer().notNull().default(0),
 })
@@ -303,6 +315,7 @@ export const moduleItemsTable = pgTable("module_items", {
   moduleId: integer().notNull().references(() => modulesTable.id),
   type: moduleItemTypeEnum().notNull(),
   titleKey: varchar({length: 255}),           // optional per-item heading (i18n key)
+  titleText: jsonb().$type<Localized>(),      // admin-authored heading; resolver fallback
   data: jsonb().notNull().$type<ModuleItemData>(),
   order: integer().notNull().default(0),
 })

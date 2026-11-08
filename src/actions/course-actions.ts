@@ -26,11 +26,11 @@ import {
 
 /**
  * DB read layer for courses. Display text is stored as i18n keys
- * (`titleKey`/`descriptionKey`, resolved under the `courses.content` tree);
- * we resolve them here, falling back to the deprecated `title`/`description`
- * columns while those still exist. URLs use the stored
- * `slug`. Exercises are stripped of their answers before leaving the server
- * (grading happens in `progress-actions`).
+ * (`titleKey`/`descriptionKey`, resolved under the `courses.content` tree); we
+ * resolve them here, falling back to the admin-authored localized JSONB columns
+ * (`titleText`/`descriptionText`) via `pick()` when a key isn't in the message
+ * files. URLs use the stored `slug`. Exercises are stripped of their answers
+ * before leaving the server (grading happens in `progress-actions`).
  */
 
 type Resolver = (key: string | null | undefined, fallback: string | null) => string | null
@@ -41,6 +41,18 @@ async function makeResolver(locale: string): Promise<Resolver> {
     if (key && t.has(key)) return t(key)
     return fallback
   }
+}
+
+/**
+ * Pick a locale string out of an admin-authored localized JSONB value
+ * (`{sl,ru,en,it}`), falling back to English. Used as the resolver fallback so
+ * admin content (which stores text in the DB, not the message files) renders.
+ */
+type LocalizedText = { en?: string; sl?: string; ru?: string; it?: string }
+const pick = (loc: LocalizedText | null | undefined, locale: string): string | null => {
+  if (!loc) return null
+  const val = loc[locale as keyof LocalizedText] || loc.en
+  return val && val.trim().length > 0 ? val : null
 }
 
 /* ───────────────────────── Courses list ───────────────────────── */
@@ -65,8 +77,8 @@ export const getCoursesList = async (locale: string) => {
     const enrolled = isFree || accessible.has(c.id)
     return {
       ...c,
-      title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
-      description: resolve(c.descriptionKey, null),
+      title: resolve(c.titleKey, pick(c.titleText, locale)) ?? c.titleKey,
+      description: resolve(c.descriptionKey, pick(c.descriptionText, locale)),
       sections: c.modules.length,
       lessons: c.modules.reduce((sum, m) => sum + m.items.length, 0),
       isFree,
@@ -122,8 +134,8 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
 
   return {
     ...c,
-    title: resolve(c.titleKey, c.titleKey) ?? c.titleKey,
-    description: resolve(c.descriptionKey, null),
+    title: resolve(c.titleKey, pick(c.titleText, locale)) ?? c.titleKey,
+    description: resolve(c.descriptionKey, pick(c.descriptionText, locale)),
     isFree,
     enrolled,
     locked: !enrolled,
@@ -134,8 +146,8 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
       const isPreview = m.id === previewModuleId
       return {
         ...m,
-        title: resolve(m.titleKey, m.titleKey) ?? m.titleKey,
-        description: resolve(m.descriptionKey, null),
+        title: resolve(m.titleKey, pick(m.titleText, locale)) ?? m.titleKey,
+        description: resolve(m.descriptionKey, pick(m.descriptionText, locale)),
         itemCount: itemIds.length,
         isFinished: itemIds.length > 0 && itemIds.every((id) => completed.has(id)),
         isPreview,
@@ -288,7 +300,7 @@ export const getModuleContent = async (
 
   const course = await db.query.coursesTable.findFirst({
     where: eq(coursesTable.slug, courseSlug),
-    columns: { id: true, slug: true, titleKey: true },
+    columns: { id: true, slug: true, titleKey: true, titleText: true },
   })
   if (!course) return null
 
@@ -337,7 +349,7 @@ export const getModuleContent = async (
       id: it.id,
       type: it.type,
       order: it.order,
-      title: resolve(it.titleKey, null),
+      title: resolve(it.titleKey, pick(it.titleText, locale)),
       completed: prog?.completed ?? false,
     }
     switch (it.type) {
@@ -354,8 +366,10 @@ export const getModuleContent = async (
       }
       case "pdf":
         return { ...common, pdf: { assetId: (it.data as PdfItemData).assetId } }
-      case "text":
-        return { ...common, text: { body: resolve((it.data as TextItemData).bodyKey, "") ?? "" } }
+      case "text": {
+        const d = it.data as TextItemData
+        return { ...common, text: { body: resolve(d.bodyKey, pick(d.body, locale) ?? "") ?? "" } }
+      }
       case "link":
         return { ...common, link: { url: (it.data as LinkItemData).url } }
       case "test": {
@@ -372,7 +386,7 @@ export const getModuleContent = async (
     description: resolve(m.descriptionKey, null),
     course: {
       slug: course.slug,
-      title: resolve(course.titleKey, course.titleKey) ?? course.titleKey,
+      title: resolve(course.titleKey, pick(course.titleText, locale)) ?? course.titleKey,
     },
     items,
   }

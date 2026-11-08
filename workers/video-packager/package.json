@@ -1,0 +1,11 @@
+{
+  "name": "video-packager",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "S3-triggered Lambda that encrypts uploaded masters into AES-128 HLS (Rung 3).",
+  "main": "index.mjs",
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3"
+  }
+}

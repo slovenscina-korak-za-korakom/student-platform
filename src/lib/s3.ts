@@ -25,7 +25,18 @@ const bucket = process.env.S3_VIDEO_BUCKET
 let _client: S3Client | null = null
 function client(): S3Client {
   if (!region) throw new Error("AWS_REGION is not set")
-  if (!_client) _client = new S3Client({ region })
+  if (!_client) {
+    _client = new S3Client({
+      region,
+      // AWS SDK v3 (≥ ~3.729) defaults to adding a CRC32 checksum to requests.
+      // For a *presigned* PUT that bakes an empty-payload checksum
+      // (x-amz-checksum-crc32=AAAAAA==) into the URL, so a direct browser upload
+      // of the real file fails the integrity check. WHEN_REQUIRED keeps the
+      // checksum off PutObject presigns, restoring plain browser PUTs.
+      requestChecksumCalculation: "WHEN_REQUIRED",
+      responseChecksumValidation: "WHEN_REQUIRED",
+    })
+  }
   return _client
 }
 

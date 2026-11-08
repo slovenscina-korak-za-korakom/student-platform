@@ -15,6 +15,7 @@ import { deleteObject } from "@/lib/s3"
 
 export async function POST(req: Request) {
   if (!verifyIngestSecret(req)) {
+    console.warn("[video-complete] 401 — missing/invalid VIDEO_INGEST_SECRET (Lambda secret ≠ app secret?)")
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
@@ -22,6 +23,7 @@ export async function POST(req: Request) {
   try {
     body = await req.json()
   } catch {
+    console.warn("[video-complete] 400 — invalid JSON body")
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 })
   }
 
@@ -31,7 +33,9 @@ export async function POST(req: Request) {
 
   // assetKey is `courses/<courseId>/items/<itemId>/<uuid>`.
   const itemId = Number(assetKey.match(/\/items\/(\d+)\//)?.[1])
+  console.log("[video-complete] callback received", { assetKey, itemId, durationSec, rawKey })
   if (!assetKey || !Number.isInteger(itemId)) {
+    console.warn("[video-complete] 400 — bad assetKey", { assetKey })
     return NextResponse.json({ error: "Valid assetKey is required" }, { status: 400 })
   }
 
@@ -41,6 +45,15 @@ export async function POST(req: Request) {
   })
   const current = item?.data as VideoItemData | undefined
   if (!item || !current || current.provider !== "s3hls" || current.assetKey !== assetKey) {
+    // Most common cause: this app is on a DIFFERENT database than the one that
+    // minted the assetKey (e.g. the Lambda's APP_BASE_URL points at production,
+    // but the admin uploaded against the dev DB — or vice versa).
+    console.warn("[video-complete] 404 — no matching processing asset in THIS database", {
+      itemId,
+      found: !!item,
+      storedAssetKey: current && "assetKey" in current ? current.assetKey : null,
+      expectedAssetKey: assetKey,
+    })
     return NextResponse.json({ error: "No matching processing asset" }, { status: 404 })
   }
 
@@ -54,5 +67,6 @@ export async function POST(req: Request) {
 
   if (rawKey) await deleteObject(rawKey).catch(() => {})
 
+  console.log("[video-complete] 200 — item flipped to ready", { itemId, durationSec })
   return NextResponse.json({ ok: true, itemId })
 }
