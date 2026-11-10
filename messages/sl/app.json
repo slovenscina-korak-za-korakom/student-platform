@@ -292,6 +292,7 @@
         "empty": "Ta modul še nima vsebine.",
         "video": "Video",
         "pdf": "Zapiski",
+        "pdfProcessing": "Ta PDF se še obdeluje.",
         "link": "Povezava",
         "text": "Branje"
       }

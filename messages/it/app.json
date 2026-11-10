@@ -292,6 +292,7 @@
         "empty": "Questo modulo non ha ancora contenuti.",
         "video": "Video",
         "pdf": "Appunti",
+        "pdfProcessing": "Questo PDF è ancora in elaborazione.",
         "link": "Collegamento",
         "text": "Lettura"
       }

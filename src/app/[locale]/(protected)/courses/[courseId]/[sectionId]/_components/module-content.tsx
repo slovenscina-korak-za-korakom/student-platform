@@ -160,11 +160,21 @@ function ItemRow({
             </a>
           )}
 
-          {item.type === "pdf" && (
-            // TODO: stream via the generalized secure/watermarked asset route
-            // (see docs/future-asset-security.md); placeholder until then.
-            <p className="mt-2 text-sm text-muted-foreground">{t("items.pdf")}</p>
-          )}
+          {item.type === "pdf" &&
+            (item.pdf?.provider === "s3" ? (
+              item.pdf.status === "ready" ? (
+                <iframe
+                  src={`/api/pdf/${item.id}`}
+                  title={item.title ?? item.pdf.fileName ?? "PDF"}
+                  className="mt-3 h-[70vh] w-full rounded-lg border border-border/60 bg-muted"
+                />
+              ) : (
+                <p className="mt-2 text-sm text-muted-foreground">{t("items.pdfProcessing")}</p>
+              )
+            ) : (
+              // Legacy `assetId`-only rows have no uploaded file yet.
+              <p className="mt-2 text-sm text-muted-foreground">{t("items.pdf")}</p>
+            ))}
         </div>
       </div>
 

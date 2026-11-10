@@ -174,7 +174,12 @@ export type ModuleItemVM = {
     durationSec: number | null
     lastPositionSec: number | null
   }
-  pdf?: { assetId: string }
+  pdf?: {
+    provider?: "s3" // present only for uploaded PDFs
+    status?: "processing" | "ready" // s3 only
+    fileName?: string // s3 only
+    assetId?: string // legacy only
+  }
   text?: { body: string }
   link?: { url: string }
   test?: { slug: string; title: string | null; exerciseCount: number } | null
@@ -364,8 +369,16 @@ export const getModuleContent = async (
               : { provider: "youtube" as const, url: d.url, ...base },
         }
       }
-      case "pdf":
-        return { ...common, pdf: { assetId: (it.data as PdfItemData).assetId } }
+      case "pdf": {
+        const d = it.data as PdfItemData
+        return {
+          ...common,
+          pdf:
+            "provider" in d && d.provider === "s3"
+              ? { provider: "s3" as const, status: d.status ?? "processing", fileName: d.fileName }
+              : { assetId: "assetId" in d ? d.assetId : undefined },
+        }
+      }
       case "text": {
         const d = it.data as TextItemData
         return { ...common, text: { body: resolve(d.bodyKey, pick(d.body, locale) ?? "") ?? "" } }
@@ -374,7 +387,9 @@ export const getModuleContent = async (
         return { ...common, link: { url: (it.data as LinkItemData).url } }
       case "test": {
         const t = tests.get((it.data as TestItemData).testId)
-        return { ...common, test: t ? { slug: t.slug, title: resolve(t.titleKey, null), exerciseCount: t.count } : null }
+        // `titleKey` is a message key for seeded tests, or verbatim admin text;
+        // fall back to the literal string so authored titles still show.
+        return { ...common, test: t ? { slug: t.slug, title: resolve(t.titleKey, t.titleKey), exerciseCount: t.count } : null }
       }
     }
   })

@@ -106,7 +106,24 @@ export type ExerciseData = MultipleChoiceData | SortData | MatchData | SpeakData
 export type VideoItemData =
   | { provider?: "youtube"; url: string; durationSec?: number }
   | { provider: "s3hls"; assetKey: string; status?: "processing" | "ready"; durationSec?: number };
-export type PdfItemData = { assetId: string }; // resolved + watermarked via the secure API route
+/**
+ * PDF payload. Two coexisting shapes, discriminated by `provider`:
+ * - legacy (no provider): an opaque `assetId` referencing an externally-managed
+ *   asset (served via the mock notes route).
+ * - `s3`: a file uploaded to the private `S3_VIDEO_BUCKET` under
+ *   `pdf/<assetKey>.pdf`. Only the opaque `assetKey` is stored — never a
+ *   playable URL; enrolled students stream it via `/api/pdf/[itemId]`.
+ * Kept in sync with the admin panel's schema (slo-admin/src/db/schema.ts).
+ */
+export type PdfItemData =
+  | { assetId: string }
+  | {
+      provider: "s3";
+      assetKey: string;
+      status?: "processing" | "ready";
+      fileName?: string;
+      sizeBytes?: number;
+    };
 export type TestItemData = { testId: number }; // → course_tests.id
 // Body can be an i18n key (seeded content) OR inline localized text authored in
 // the admin panel. The resolver prefers `bodyKey` when it exists in the message
