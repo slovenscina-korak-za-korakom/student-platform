@@ -43,6 +43,9 @@ type MicState = "idle" | "listening" | "denied" | "unsupported"
 
 const Speak = ({ exercise, value, onChange, phase }: Props) => {
   const t = useTranslations("courses.test")
+  // Admin-authored exercises store prompt text verbatim (not a message key);
+  // fall back to the literal string when it isn't a known key.
+  const tx = (k: string) => (t.has(k) ? t(k) : k)
   const [micState, setMicState] = useState<MicState>("idle")
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null)
   const locked = phase !== "answering"
@@ -91,7 +94,7 @@ const Speak = ({ exercise, value, onChange, phase }: Props) => {
   return (
     <div className="flex flex-col items-center space-y-8 text-center">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">{t(exercise.promptKey)}</p>
+        <p className="text-sm font-medium text-muted-foreground">{tx(exercise.promptKey)}</p>
         <p className="font-tanker text-5xl tracking-wide text-foreground md:text-6xl">
           {exercise.word}
         </p>
