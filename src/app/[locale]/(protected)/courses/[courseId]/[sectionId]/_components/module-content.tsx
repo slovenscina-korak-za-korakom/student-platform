@@ -6,7 +6,6 @@ import {
   IconChevronRight,
   IconExternalLink,
   IconFileText,
-  IconPlayerPlayFilled,
   IconSparkles,
 } from "@tabler/icons-react"
 import CompleteToggle from "./complete-toggle"
@@ -49,6 +48,7 @@ const ModuleContent = async ({ module: mod, locale }: Props) => {
           <ModuleVideo
             itemId={heroVideo.id}
             video={heroVideo.video}
+            title={heroVideo.title ?? mod.title}
             className="mx-auto w-full aspect-video max-h-[80vh]"
           />
           <div className="mx-auto w-full max-w-4xl flex justify-end pt-3">
@@ -123,12 +123,28 @@ function ItemRow({
     )
   }
 
-  // Non-test items: a card with type-specific body + a complete toggle.
+  // Video: bare player + a small complete button — no card, icon, or title.
+  if (item.type === "video" && item.video) {
+    return (
+      <div className="space-y-3">
+        <ModuleVideo
+          itemId={item.id}
+          video={item.video}
+          title={item.title}
+          className="aspect-video w-full"
+        />
+        <div className="flex justify-end">
+          <CompleteToggle itemId={item.id} completed={item.completed} />
+        </div>
+      </div>
+    )
+  }
+
+  // Other non-test items: a card with type-specific body + a complete toggle.
   return (
     <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-3">
       <div className="flex items-start gap-3">
         <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
-          {item.type === "video" && <IconPlayerPlayFilled className="h-4 w-4" />}
           {item.type === "pdf" && <IconFileText className="h-4 w-4" />}
           {item.type === "link" && <IconExternalLink className="h-4 w-4" />}
           {item.type === "text" && <IconFileText className="h-4 w-4" />}
@@ -137,10 +153,6 @@ function ItemRow({
           <h3 className="font-medium text-foreground">
             {item.title ?? t(`items.${item.type}`)}
           </h3>
-
-          {item.type === "video" && item.video && (
-            <ModuleVideo itemId={item.id} video={item.video} className="mt-3 aspect-video w-full" />
-          )}
 
           {item.type === "text" && item.text && (
             <p className="mt-2 whitespace-pre-line text-sm leading-relaxed text-muted-foreground">
@@ -194,10 +206,12 @@ function ItemRow({
 function ModuleVideo({
   itemId,
   video,
+  title,
   className,
 }: {
   itemId: number
   video: NonNullable<ModuleItemVM["video"]>
+  title?: string | null
   className?: string
 }) {
   if (video.provider === "s3hls") {
@@ -205,7 +219,12 @@ function ModuleVideo({
       return <div className={cn("animate-pulse rounded-xl bg-muted", className)} />
     }
     return (
-      <SecureVideoPlayer itemId={itemId} lastPositionSec={video.lastPositionSec} className={className} />
+      <SecureVideoPlayer
+        itemId={itemId}
+        lastPositionSec={video.lastPositionSec}
+        title={title}
+        className={className}
+      />
     )
   }
   return <VideoFrame url={video.url ?? ""} className={className} />

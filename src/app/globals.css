@@ -280,3 +280,15 @@
     oklch(20% 0.03 240) 100%
   );
 }
+
+/* Video player: center play/pause/seek flash badge */
+@keyframes fadeScale {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.7);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.25);
+  }
+}
