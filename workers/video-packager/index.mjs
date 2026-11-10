@@ -1,15 +1,23 @@
 import { execFileSync } from "node:child_process"
 import { randomBytes } from "node:crypto"
-import { mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from "node:fs"
+import { createWriteStream, mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
+import { pipeline } from "node:stream/promises"
+import { pathToFileURL } from "node:url"
 import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
 /**
  * Packaging worker for Rung-3 encrypted-HLS video (see
  * docs/video-drm-streaming.md in the app repo).
  *
- * Trigger: S3 ObjectCreated on `raw/<assetKey>/master.<ext>`.
+ * Runs as a one-shot ECS/Fargate task (Fargate Spot), one task per uploaded
+ * master. A tiny dispatcher Lambda (`dispatch.mjs`) is still triggered by S3
+ * ObjectCreated on `raw/<assetKey>/master.<ext>` and calls RunTask with the
+ * target passed as BUCKET + RAW_KEY container-override env vars. Fargate is used
+ * instead of Lambda because masters can be up to ~4 GB / 30 min and exceed
+ * Lambda's 15-min / ephemeral-disk ceilings.
+ *
  * Does: download master → generate a 16-byte AES-128 key + IV → ffmpeg into an
  * encrypted HLS ladder (1080/720/480 H.264) → upload `hls/<assetKey>/...` and
  * the key to `keys/<assetKey>.key` → POST the app's /api/video/ingest/complete.
@@ -18,9 +26,9 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
  * app's serving route resolves to /api/video/[itemId]/key (enrollment-gated).
  * The key is NEVER uploaded under `hls/` and is never presigned.
  *
- * Env: AWS_REGION, APP_BASE_URL, VIDEO_INGEST_SECRET,
+ * Env: AWS_REGION, APP_BASE_URL, VIDEO_INGEST_SECRET, BUCKET, RAW_KEY,
  *      FFMPEG_PATH (default "ffmpeg"), FFPROBE_PATH (default "ffprobe").
- * ffmpeg/ffprobe come from a Lambda layer (or the PATH when run locally).
+ * The Docker image sets FFMPEG_PATH/FFPROBE_PATH to the bundled static binaries.
  */
 
 const FFMPEG = process.env.FFMPEG_PATH || "ffmpeg"
@@ -33,13 +41,25 @@ const RENDITIONS = [
   { w: 854, h: 480, vb: "1400k", ab: "96k" },
 ]
 
-export async function handler(event) {
-  for (const record of event.Records ?? []) {
-    const bucket = record.s3.bucket.name
-    const rawKey = decodeURIComponent(record.s3.object.key.replace(/\+/g, " "))
-    await packageOne(bucket, rawKey)
+// Container entrypoint (ECS/Fargate). The dispatcher Lambda runs one task per
+// uploaded master, passing the target as BUCKET + RAW_KEY container overrides.
+// Package one object, then exit — non-zero on failure so the task is marked
+// FAILED and surfaces in the console / CloudWatch instead of looking "done".
+async function main() {
+  const bucket = process.env.BUCKET
+  const rawKey = process.env.RAW_KEY
+  if (!bucket || !rawKey) {
+    console.error("BUCKET and RAW_KEY env vars are required")
+    process.exit(1)
   }
-  return { ok: true }
+  await packageOne(bucket, rawKey)
+}
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((err) => {
+    console.error(err)
+    process.exit(1)
+  })
 }
 
 async function packageOne(bucket, rawKey) {
@@ -57,7 +77,7 @@ async function packageOne(bucket, rawKey) {
   const keyInfoPath = join(dir, "key_info")
 
   try {
-    writeFileSync(masterPath, await getObject(bucket, rawKey))
+    await downloadToFile(bucket, rawKey, masterPath)
     execFileSync("mkdir", ["-p", hlsDir])
 
     // 16-byte key + IV. key_info: line1 = URI written into playlists, line2 =
@@ -120,9 +140,11 @@ function contentType(file) {
   return "application/octet-stream"
 }
 
-async function getObject(bucket, key) {
+// Stream the master straight to disk — a ~4 GB master must never be buffered in
+// memory (that OOMs the task). SDK v3's Body is a Node Readable in this runtime.
+async function downloadToFile(bucket, key, destPath) {
   const res = await s3.send(new GetObjectCommand({ Bucket: bucket, Key: key }))
-  return Buffer.from(await res.Body.transformToByteArray())
+  await pipeline(res.Body, createWriteStream(destPath))
 }
 
 async function putObject(bucket, key, body, ct) {
