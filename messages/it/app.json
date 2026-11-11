@@ -295,6 +295,14 @@
         "pdfProcessing": "Questo PDF è ancora in elaborazione.",
         "link": "Collegamento",
         "text": "Lettura"
+      },
+      "pdf": {
+        "prevPage": "Pagina precedente",
+        "nextPage": "Pagina successiva",
+        "zoomIn": "Ingrandisci",
+        "zoomOut": "Riduci",
+        "fullscreen": "Schermo intero",
+        "error": "Impossibile caricare il PDF."
       }
     },
     "content": {

@@ -11,6 +11,7 @@ import {
 import CompleteToggle from "./complete-toggle"
 import VideoFrame from "./video-frame"
 import SecureVideoPlayer from "./secure-video-player"
+import PdfViewer from "./pdf-viewer"
 import { cn } from "@/lib/utils"
 import type { ModuleContentVM, ModuleItemVM } from "@/actions/course-actions"
 
@@ -140,6 +141,20 @@ function ItemRow({
     )
   }
 
+  // A ready, uploaded PDF renders bare (no card) — the custom reader brings its
+  // own chrome, scrolls in place, and owns completion (auto-completes on reaching
+  // the last page).
+  if (item.type === "pdf" && item.pdf?.provider === "s3" && item.pdf.status === "ready") {
+    return (
+      <PdfViewer
+        itemId={item.id}
+        title={item.title}
+        fileName={item.pdf.fileName}
+        completed={item.completed}
+      />
+    )
+  }
+
   // Other non-test items: a card with type-specific body + a complete toggle.
   return (
     <div className="rounded-2xl border border-border/60 bg-card p-4 space-y-3">
@@ -174,15 +189,8 @@ function ItemRow({
 
           {item.type === "pdf" &&
             (item.pdf?.provider === "s3" ? (
-              item.pdf.status === "ready" ? (
-                <iframe
-                  src={`/api/pdf/${item.id}`}
-                  title={item.title ?? item.pdf.fileName ?? "PDF"}
-                  className="mt-3 h-[70vh] w-full rounded-lg border border-border/60 bg-muted"
-                />
-              ) : (
-                <p className="mt-2 text-sm text-muted-foreground">{t("items.pdfProcessing")}</p>
-              )
+              // Ready PDFs render bare above; here the file is still processing.
+              <p className="mt-2 text-sm text-muted-foreground">{t("items.pdfProcessing")}</p>
             ) : (
               // Legacy `assetId`-only rows have no uploaded file yet.
               <p className="mt-2 text-sm text-muted-foreground">{t("items.pdf")}</p>

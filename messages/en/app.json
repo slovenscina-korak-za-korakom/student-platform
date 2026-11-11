@@ -295,6 +295,14 @@
         "pdfProcessing": "This PDF is still being processed.",
         "link": "Resource link",
         "text": "Reading"
+      },
+      "pdf": {
+        "prevPage": "Previous page",
+        "nextPage": "Next page",
+        "zoomIn": "Zoom in",
+        "zoomOut": "Zoom out",
+        "fullscreen": "Fullscreen",
+        "error": "This PDF couldn’t be loaded."
       }
     },
     "content": {

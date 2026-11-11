@@ -295,6 +295,14 @@
         "pdfProcessing": "Ta PDF se še obdeluje.",
         "link": "Povezava",
         "text": "Branje"
+      },
+      "pdf": {
+        "prevPage": "Prejšnja stran",
+        "nextPage": "Naslednja stran",
+        "zoomIn": "Povečaj",
+        "zoomOut": "Pomanjšaj",
+        "fullscreen": "Celoten zaslon",
+        "error": "Tega dokumenta PDF ni bilo mogoče naložiti."
       }
     },
     "content": {
