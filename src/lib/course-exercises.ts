@@ -11,8 +11,8 @@
  * into these types by `getTestBySlug` in `src/actions/course-actions.ts`.
  *
  * Content split, per product decision:
- *   - INSTRUCTIONS / prompts / labels -> next-intl keys (translate per locale),
- *     resolved against the `courses.test` namespace.
+ *   - INSTRUCTIONS / prompts / labels -> admin-authored single-language text,
+ *     stored directly on the row / in `data`.
  *   - Slovene TARGET material (words, phonetic transcriptions, greetings) is
  *     stored verbatim in the exercise `data`.
  */
@@ -32,8 +32,8 @@ export type ExercisePhase = "answering" | "correct" | "incorrect"
 export type MultipleChoiceExercise = {
   type: "multiple_choice"
   id: string
-  /** i18n key for the instruction. */
-  promptKey: string
+  /** Instruction / prompt text. */
+  prompt: string
   /** Optional big fixed Slovene word shown above the options. */
   word?: string
   /** Fixed option text (phonetic transcriptions, Slovene words…). */
@@ -46,9 +46,9 @@ export type MultipleChoiceExercise = {
 export type SortExercise = {
   type: "sort"
   id: string
-  promptKey: string
-  /** Exactly two buckets; `labelKey` is an i18n key. */
-  buckets: [{ id: string; labelKey: string }, { id: string; labelKey: string }]
+  prompt: string
+  /** Exactly two buckets; `label` is the bucket's display text. */
+  buckets: [{ id: string; label: string }, { id: string; label: string }]
   /** Each item's `bucket` is the id of the bucket it belongs in. */
   items: { id: string; text: string; bucket: string }[]
 }
@@ -57,9 +57,9 @@ export type SortExercise = {
 export type MatchExercise = {
   type: "match"
   id: string
-  promptKey: string
-  /** Left column: situations etc. — `promptKey` is an i18n key. */
-  left: { id: string; promptKey: string }[]
+  prompt: string
+  /** Left column: situations etc. — `prompt` is the display text. */
+  left: { id: string; prompt: string }[]
   /** Right column: fixed Slovene greetings/answers. */
   right: { id: string; text: string }[]
   /** Correct pairing: left id → right id. */
@@ -70,7 +70,7 @@ export type MatchExercise = {
 export type SpeakExercise = {
   type: "speak"
   id: string
-  promptKey: string
+  prompt: string
   /** The fixed Slovene word/phrase to pronounce. */
   word: string
   /** Accepted transcriptions (lowercased). Diacritics are folded on compare. */
@@ -88,8 +88,8 @@ export type CourseTest = {
   id: string
   /** Slug of the section (module) this test belongs to. */
   sectionSlug: string
-  /** i18n key for the test's display title. */
-  titleKey: string
+  /** Test's display title. */
+  title: string
   exercises: Exercise[]
 }
 
@@ -173,13 +173,13 @@ export function gradeExercise(exercise: Exercise, draft: ExerciseDraft): boolean
 export type ExerciseRow = {
   slug: string
   type: Exercise["type"]
-  promptKey: string
+  prompt: string
   data: ExerciseData
 }
 
 /** Build the full engine Exercise (with answers) from a DB row. Server-side. */
 export function mapExerciseRow(row: ExerciseRow): Exercise {
-  const base = { id: row.slug, promptKey: row.promptKey }
+  const base = { id: row.slug, prompt: row.prompt }
   switch (row.type) {
     case "multiple_choice": {
       const d = row.data as MultipleChoiceData

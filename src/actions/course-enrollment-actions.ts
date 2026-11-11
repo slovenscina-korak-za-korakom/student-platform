@@ -63,7 +63,7 @@ export const createCourseCheckoutSession = async (courseSlug: string, locale: Lo
     columns: {
       id: true,
       slug: true,
-      titleKey: true,
+      title: true,
       stripePriceId: true,
       priceByCurrency: true,
     },
@@ -84,9 +84,9 @@ export const createCourseCheckoutSession = async (courseSlug: string, locale: Lo
     user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress ??
     user.emailAddresses[0]?.emailAddress
 
-  // Localized course title + checkout copy (brand touches on the Stripe page).
+  // Course title + localized checkout copy (brand touches on the Stripe page).
   const t = await getTranslations({ locale, namespace: "courses" })
-  const courseTitle = t.has(course.titleKey) ? t(course.titleKey) : course.slug
+  const courseTitle = course.title || course.slug
 
   // Present the locale's currency only if the Price actually carries it; else
   // let Stripe choose (EUR default) so we never pass an unsupported currency.

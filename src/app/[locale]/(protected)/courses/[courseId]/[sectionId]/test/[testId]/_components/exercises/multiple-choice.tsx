@@ -1,6 +1,5 @@
 "use client"
 
-import { useTranslations } from "next-intl"
 import { motion } from "framer-motion"
 import { IconCheck, IconX } from "@tabler/icons-react"
 import { cn } from "@/lib/utils"
@@ -20,16 +19,12 @@ type Props = {
 }
 
 const MultipleChoice = ({ exercise, value, onChange, phase, reveal }: Props) => {
-  const t = useTranslations("courses.test")
-  // Admin-authored exercises store prompt text verbatim (not a message key);
-  // fall back to the literal string when it isn't a known key.
-  const tx = (k: string) => (t.has(k) ? t(k) : k)
   const locked = phase !== "answering"
 
   return (
     <div className="space-y-8">
       <div className="space-y-4">
-        <p className="text-sm font-medium text-muted-foreground">{tx(exercise.promptKey)}</p>
+        <p className="text-sm font-medium text-muted-foreground">{exercise.prompt}</p>
         {exercise.word && (
           <p className="font-tanker text-4xl tracking-wide text-foreground md:text-5xl">
             {exercise.word}

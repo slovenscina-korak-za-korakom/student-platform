@@ -20,7 +20,7 @@ import {
 //   "no-show",
 // ]);
 
-type Localized = {
+export type Localized = {
   ru: string;
   en: string;
   it: string;
@@ -69,13 +69,13 @@ export type MultipleChoiceData = {
   correctAnswer: string;
 };
 export type SortData = {
-  buckets: [{ id: string; labelKey: string }, { id: string; labelKey: string }];
+  buckets: [{ id: string; label: string }, { id: string; label: string }];
   /** Each item's `bucket` is the id of the bucket it belongs in. */
   items: { id: string; text: string; bucket: string }[];
 };
 export type MatchData = {
-  /** Left column prompts (situations); `promptKey` is an i18n key. */
-  left: { id: string; promptKey: string }[];
+  /** Left column prompts (situations); `prompt` is admin-authored display text. */
+  left: { id: string; prompt: string }[];
   /** Right column fixed Slovene options. */
   right: { id: string; text: string }[];
   /** Correct pairing: left id → right id. */
@@ -92,8 +92,8 @@ export type ExerciseData = MultipleChoiceData | SortData | MatchData | SpeakData
 /**
  * Type-specific payload for a module content item, stored in
  * `module_items.data` (JSONB). The `type` column selects the variant. Display
- * text uses i18n keys (`module_items.titleKey`, `TextItemData.bodyKey`); URLs
- * and asset ids are stored verbatim.
+ * text is admin-authored plain text (`module_items.title`, `TextItemData.body`);
+ * URLs and asset ids are stored verbatim.
  */
 /**
  * Video payload. Two coexisting shapes, discriminated by `provider`:
@@ -125,10 +125,8 @@ export type PdfItemData =
       sizeBytes?: number;
     };
 export type TestItemData = { testId: number }; // → course_tests.id
-// Body can be an i18n key (seeded content) OR inline localized text authored in
-// the admin panel. The resolver prefers `bodyKey` when it exists in the message
-// files, otherwise falls back to `body`.
-export type TextItemData = { bodyKey?: string; body?: Localized }; // markdown allowed
+// Inline text authored in the admin panel (markdown allowed).
+export type TextItemData = { body?: string };
 export type LinkItemData = { url: string };
 export type ModuleItemData =
   | VideoItemData
@@ -266,14 +264,8 @@ export type PriceByCurrency = Partial<Record<"eur" | "usd" | "rub", number>>;
 export const coursesTable = pgTable("courses", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   slug: varchar({length: 128}).notNull().unique(),       // URL segment
-  titleKey: varchar({length: 255}).notNull(),            // i18n key (courses.content.*)
-  descriptionKey: varchar({length: 255}),                // i18n key
-  // Localized display text authored in the admin panel. The resolver prefers the
-  // *Key (message files) when present, otherwise falls back to these. Named
-  // *Text to avoid colliding with the resolved string `title`/`description` that
-  // the read layer / UI types layer on top of the row.
-  titleText: jsonb().$type<Localized>(),                 // {sl,ru,en,it}
-  descriptionText: jsonb().$type<Localized>(),
+  title: varchar({length: 255}).notNull(),               // single-language display title
+  description: text(),                                    // single-language display description
   thumbnail: varchar({length: 255}).notNull().default("https://www.slovenscinakzk.com/meta-image-link.jpg"),
   level: courseLevelEnum().notNull().default("A1"),
   order: integer().notNull().default(0),
@@ -287,11 +279,8 @@ export const coursesTable = pgTable("courses", {
 export const modulesTable = pgTable("modules", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   slug: varchar({length: 128}).notNull(),                // URL segment (unique within course)
-  titleKey: varchar({length: 255}).notNull(),            // i18n key
-  descriptionKey: varchar({length: 255}),                // i18n key
-  // Localized display text (admin-authored); resolver fallback for the *Key above.
-  titleText: jsonb().$type<Localized>(),                 // {sl,ru,en,it}
-  descriptionText: jsonb().$type<Localized>(),
+  title: varchar({length: 255}).notNull(),               // single-language display title
+  description: text(),                                    // single-language display description
   courseId: integer().notNull().references(() => coursesTable.id),
   order: integer().notNull().default(0),
 })
@@ -308,7 +297,7 @@ export const courseTestsTable = pgTable("course_tests", {
   // module_items row additionally points here via data.testId for the launcher.
   moduleId: integer().notNull().references(() => modulesTable.id),
   slug: varchar({length: 128}).notNull(),
-  titleKey: varchar({length: 255}).notNull(), // i18n key under courses.test
+  title: varchar({length: 255}).notNull(),    // single-language display title
   passThreshold: integer(),                   // % correct to "pass" (null = no gate)
   order: integer().notNull().default(0),
 })
@@ -318,7 +307,7 @@ export const exercisesTable = pgTable("exercises", {
   testId: integer().notNull().references(() => courseTestsTable.id),
   slug: varchar({length: 128}).notNull(), // stable string id within a test
   type: exerciseTypeEnum().notNull(),
-  promptKey: varchar({length: 255}).notNull(), // i18n key under courses.test
+  prompt: text().notNull(),               // single-language instruction/prompt
   data: jsonb().notNull().$type<ExerciseData>(),
   order: integer().notNull().default(0),
 })
@@ -331,8 +320,7 @@ export const moduleItemsTable = pgTable("module_items", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   moduleId: integer().notNull().references(() => modulesTable.id),
   type: moduleItemTypeEnum().notNull(),
-  titleKey: varchar({length: 255}),           // optional per-item heading (i18n key)
-  titleText: jsonb().$type<Localized>(),      // admin-authored heading; resolver fallback
+  title: varchar({length: 255}),              // optional single-language per-item heading
   data: jsonb().notNull().$type<ModuleItemData>(),
   order: integer().notNull().default(0),
 })

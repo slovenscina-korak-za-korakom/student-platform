@@ -11,7 +11,7 @@ const ModulePage = async ({ params }: Props) => {
   const available = process.env.COURSES_AVAILABLE === "true"
   if (!available) notFound()
 
-  const mod = await getModuleContent(courseId, sectionId, locale)
+  const mod = await getModuleContent(courseId, sectionId)
   if (!mod) notFound()
   if ("locked" in mod) redirect(`/${locale}/courses/${courseId}`)
 

@@ -2,7 +2,6 @@
 
 import { auth } from "@clerk/nextjs/server"
 import { db } from "@/db"
-import { getTranslations } from "next-intl/server"
 import { and, eq, inArray } from "drizzle-orm"
 import {
   coursesTable,
@@ -25,40 +24,15 @@ import {
 } from "@/lib/course-access"
 
 /**
- * DB read layer for courses. Display text is stored as i18n keys
- * (`titleKey`/`descriptionKey`, resolved under the `courses.content` tree); we
- * resolve them here, falling back to the admin-authored localized JSONB columns
- * (`titleText`/`descriptionText`) via `pick()` when a key isn't in the message
- * files. URLs use the stored `slug`. Exercises are stripped of their answers
- * before leaving the server (grading happens in `progress-actions`).
+ * DB read layer for courses. Display text is admin-authored single-language
+ * text stored directly on the rows (`title`/`description`). URLs use the stored
+ * `slug`. Exercises are stripped of their answers before leaving the server
+ * (grading happens in `progress-actions`).
  */
-
-type Resolver = (key: string | null | undefined, fallback: string | null) => string | null
-
-async function makeResolver(locale: string): Promise<Resolver> {
-  const t = await getTranslations({ locale })
-  return (key, fallback) => {
-    if (key && t.has(key)) return t(key)
-    return fallback
-  }
-}
-
-/**
- * Pick a locale string out of an admin-authored localized JSONB value
- * (`{sl,ru,en,it}`), falling back to English. Used as the resolver fallback so
- * admin content (which stores text in the DB, not the message files) renders.
- */
-type LocalizedText = { en?: string; sl?: string; ru?: string; it?: string }
-const pick = (loc: LocalizedText | null | undefined, locale: string): string | null => {
-  if (!loc) return null
-  const val = loc[locale as keyof LocalizedText] || loc.en
-  return val && val.trim().length > 0 ? val : null
-}
 
 /* ───────────────────────── Courses list ───────────────────────── */
 
 export const getCoursesList = async (locale: string) => {
-  const resolve = await makeResolver(locale)
   const { userId } = await auth()
   const rows = await db.query.coursesTable.findMany({
     orderBy: (c, { asc }) => [asc(c.order)],
@@ -77,8 +51,6 @@ export const getCoursesList = async (locale: string) => {
     const enrolled = isFree || accessible.has(c.id)
     return {
       ...c,
-      title: resolve(c.titleKey, pick(c.titleText, locale)) ?? c.titleKey,
-      description: resolve(c.descriptionKey, pick(c.descriptionText, locale)),
       sections: c.modules.length,
       lessons: c.modules.reduce((sum, m) => sum + m.items.length, 0),
       isFree,
@@ -92,7 +64,6 @@ export const getCoursesList = async (locale: string) => {
 /* ───────────────────────── Single course ───────────────────────── */
 
 export const getCourseBySlug = async (slug: string, locale: string) => {
-  const resolve = await makeResolver(locale)
   const { userId } = await auth()
   const c = await db.query.coursesTable.findFirst({
     where: eq(coursesTable.slug, slug),
@@ -134,20 +105,16 @@ export const getCourseBySlug = async (slug: string, locale: string) => {
 
   return {
     ...c,
-    title: resolve(c.titleKey, pick(c.titleText, locale)) ?? c.titleKey,
-    description: resolve(c.descriptionKey, pick(c.descriptionText, locale)),
     isFree,
     enrolled,
     locked: !enrolled,
     price: courseDisplayPrice(c.priceByCurrency, locale),
-    // Components consume `sections` (module rows with resolved text + computed completion).
+    // Components consume `sections` (module rows with display text + computed completion).
     sections: c.modules.map((m) => {
       const itemIds = m.items.map((i) => i.id)
       const isPreview = m.id === previewModuleId
       return {
         ...m,
-        title: resolve(m.titleKey, pick(m.titleText, locale)) ?? m.titleKey,
-        description: resolve(m.descriptionKey, pick(m.descriptionText, locale)),
         itemCount: itemIds.length,
         isFinished: itemIds.length > 0 && itemIds.every((id) => completed.has(id)),
         isPreview,
@@ -293,10 +260,8 @@ export const resolveItemAccess = async (moduleItemId: number): Promise<ItemAcces
 
 export const getModuleContent = async (
   courseSlug: string,
-  moduleSlug: string,
-  locale: string
+  moduleSlug: string
 ): Promise<ModuleContentVM | ModuleLocked | null> => {
-  const resolve = await makeResolver(locale)
   const { userId } = await auth()
 
   const access = await resolveModuleAccess(courseSlug, moduleSlug)
@@ -305,7 +270,7 @@ export const getModuleContent = async (
 
   const course = await db.query.coursesTable.findFirst({
     where: eq(coursesTable.slug, courseSlug),
-    columns: { id: true, slug: true, titleKey: true, titleText: true },
+    columns: { id: true, slug: true, title: true },
   })
   if (!course) return null
 
@@ -339,13 +304,13 @@ export const getModuleContent = async (
   const testIds = m.items
     .filter((i) => i.type === "test")
     .map((i) => (i.data as TestItemData).testId)
-  const tests = new Map<number, { slug: string; titleKey: string; count: number }>()
+  const tests = new Map<number, { slug: string; title: string | null; count: number }>()
   if (testIds.length > 0) {
     const rows = await db.query.courseTestsTable.findMany({
       where: inArray(courseTestsTable.id, testIds),
       with: { exercises: { columns: { id: true } } },
     })
-    for (const t of rows) tests.set(t.id, { slug: t.slug, titleKey: t.titleKey, count: t.exercises.length })
+    for (const t of rows) tests.set(t.id, { slug: t.slug, title: t.title, count: t.exercises.length })
   }
 
   const items: ModuleItemVM[] = m.items.map((it) => {
@@ -354,7 +319,7 @@ export const getModuleContent = async (
       id: it.id,
       type: it.type,
       order: it.order,
-      title: resolve(it.titleKey, pick(it.titleText, locale)),
+      title: it.title,
       completed: prog?.completed ?? false,
     }
     switch (it.type) {
@@ -381,15 +346,13 @@ export const getModuleContent = async (
       }
       case "text": {
         const d = it.data as TextItemData
-        return { ...common, text: { body: resolve(d.bodyKey, pick(d.body, locale) ?? "") ?? "" } }
+        return { ...common, text: { body: d.body ?? "" } }
       }
       case "link":
         return { ...common, link: { url: (it.data as LinkItemData).url } }
       case "test": {
         const t = tests.get((it.data as TestItemData).testId)
-        // `titleKey` is a message key for seeded tests, or verbatim admin text;
-        // fall back to the literal string so authored titles still show.
-        return { ...common, test: t ? { slug: t.slug, title: resolve(t.titleKey, t.titleKey), exerciseCount: t.count } : null }
+        return { ...common, test: t ? { slug: t.slug, title: t.title, exerciseCount: t.count } : null }
       }
     }
   })
@@ -397,11 +360,11 @@ export const getModuleContent = async (
   return {
     id: m.id,
     slug: m.slug,
-    title: resolve(m.titleKey, m.titleKey) ?? m.titleKey,
-    description: resolve(m.descriptionKey, null),
+    title: m.title,
+    description: m.description,
     course: {
       slug: course.slug,
-      title: resolve(course.titleKey, pick(course.titleText, locale)) ?? course.titleKey,
+      title: course.title,
     },
     items,
   }
@@ -427,7 +390,7 @@ export const getTestBySlug = async (
   return {
     id: tst.slug,
     sectionSlug: moduleSlug,
-    titleKey: tst.titleKey,
+    title: tst.title,
     exercises: tst.exercises.map((e) => stripExercise(mapExerciseRow(e))),
   }
 }

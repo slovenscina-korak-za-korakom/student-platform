@@ -24,9 +24,6 @@ const DRAG_MIME = "application/x-greeting-id"
  */
 const Match = ({ exercise, value, onChange, phase, reveal }: Props) => {
   const t = useTranslations("courses.test")
-  // Admin-authored exercises store prompt text verbatim (not a message key);
-  // fall back to the literal string when it isn't a known key.
-  const tx = (k: string) => (t.has(k) ? t(k) : k)
   const [picked, setPicked] = useState<string | null>(null) // a right id, selected via tap
   const [dragOver, setDragOver] = useState<string | null>(null) // a left id being hovered
   const locked = phase !== "answering"
@@ -66,7 +63,7 @@ const Match = ({ exercise, value, onChange, phase, reveal }: Props) => {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm font-medium text-muted-foreground">{tx(exercise.promptKey)}</p>
+      <p className="text-sm font-medium text-muted-foreground">{exercise.prompt}</p>
 
       {/* Situations with drop slots */}
       <div className="space-y-3">
@@ -102,7 +99,7 @@ const Match = ({ exercise, value, onChange, phase, reveal }: Props) => {
               )}
             >
               <span className="flex-1 text-sm font-medium text-foreground">
-                {tx(item.promptKey)}
+                {item.prompt}
               </span>
 
               {/* Drop slot */}

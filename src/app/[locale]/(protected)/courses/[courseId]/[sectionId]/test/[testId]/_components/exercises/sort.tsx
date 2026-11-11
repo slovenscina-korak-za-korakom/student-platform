@@ -24,9 +24,6 @@ const DRAG_MIME = "application/x-sort-item"
  */
 const Sort = ({ exercise, value, onChange, phase, reveal }: Props) => {
   const t = useTranslations("courses.test")
-  // Admin-authored exercises store prompt/label text verbatim (not a message
-  // key); fall back to the literal string when it isn't a known key.
-  const tx = (k: string) => (t.has(k) ? t(k) : k)
   const [picked, setPicked] = useState<string | null>(null)
   const [dragOver, setDragOver] = useState<string | null>(null)
   const locked = phase !== "answering"
@@ -67,7 +64,7 @@ const Sort = ({ exercise, value, onChange, phase, reveal }: Props) => {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm font-medium text-muted-foreground">{tx(exercise.promptKey)}</p>
+      <p className="text-sm font-medium text-muted-foreground">{exercise.prompt}</p>
 
       {/* Buckets (drop targets) */}
       <div className="grid gap-4 sm:grid-cols-2">
@@ -101,7 +98,7 @@ const Sort = ({ exercise, value, onChange, phase, reveal }: Props) => {
               )}
             >
               <span className="font-tanker text-lg tracking-wide text-foreground">
-                {tx(bucket.labelKey)}
+                {bucket.label}
               </span>
               <div className="flex flex-wrap gap-2">
                 {placed.map((item) => {
