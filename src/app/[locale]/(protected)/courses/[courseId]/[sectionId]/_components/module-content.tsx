@@ -62,7 +62,7 @@ const ModuleContent = async ({ module: mod, locale }: Props) => {
       <div className="mx-auto w-full max-w-4xl px-5 md:px-8 space-y-6">
         {/* Header */}
         <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-foreground">{mod.title}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-foreground capitalize">{mod.title}</h1>
           {mod.description && (
             <p className="text-sm text-muted-foreground leading-relaxed">{mod.description}</p>
           )}

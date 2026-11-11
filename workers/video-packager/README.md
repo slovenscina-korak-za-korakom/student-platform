@@ -151,7 +151,13 @@ docker run --rm \
 
 - Assumes the master has one audio stream (`a:0` is mapped into each rendition);
   detect audio-less inputs before mapping if that can occur.
-- Upscales sources smaller than a rendition; drop renditions above the source
-  height to avoid that.
 - The AES key lives under the `keys/` prefix; moving it to SSM/Secrets Manager
   would add defense-in-depth.
+
+## Rendition ladder
+
+The full ladder is **2160p / 1080p / 720p / 480p** H.264. For each master the
+ladder is capped to the source's native height (`ladderFor()` + `probeHeight()`),
+so a 1080p upload only produces 1080p-and-below rungs — we never upscale. 4K
+rungs are only emitted for genuine 4K masters, and hls.js serves them in `Auto`
+mode only when the viewer's measured bandwidth sustains ~16 Mbps.

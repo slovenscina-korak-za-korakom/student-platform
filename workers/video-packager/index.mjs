@@ -19,8 +19,9 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
  * Lambda's 15-min / ephemeral-disk ceilings.
  *
  * Does: download master → generate a 16-byte AES-128 key + IV → ffmpeg into an
- * encrypted HLS ladder (1080/720/480 H.264) → upload `hls/<assetKey>/...` and
- * the key to `keys/<assetKey>.key` → POST the app's /api/video/ingest/complete.
+ * encrypted HLS ladder (2160/1080/720/480 H.264, capped to the source height so
+ * we never upscale) → upload `hls/<assetKey>/...` and the key to
+ * `keys/<assetKey>.key` → POST the app's /api/video/ingest/complete.
  *
  * The key URI baked into each media playlist is the literal `key`, which the
  * app's serving route resolves to /api/video/[itemId]/key (enrollment-gated).
@@ -35,11 +36,25 @@ const FFMPEG = process.env.FFMPEG_PATH || "ffmpeg"
 const FFPROBE = process.env.FFPROBE_PATH || "ffprobe"
 const s3 = new S3Client({ region: process.env.AWS_REGION })
 
+// Full ladder, highest first. The actual ladder for a given master is capped to
+// its native height by `ladderFor()` so a 1080p source never gets a fake 4K rung.
+// 4K H.264 at ~16 Mbps is a sane VOD target; hls.js only climbs to it in Auto
+// mode when the viewer's measured bandwidth sustains it.
 const RENDITIONS = [
+  { w: 3840, h: 2160, vb: "16000k", ab: "192k" },
   { w: 1920, h: 1080, vb: "5000k", ab: "128k" },
   { w: 1280, h: 720, vb: "2800k", ab: "128k" },
   { w: 854, h: 480, vb: "1400k", ab: "96k" },
 ]
+
+// Keep only rungs at or below the source height (+ a little slack for sources
+// that are a hair under a tier, e.g. 2156p). Never upscale. If the height can't
+// be probed, fall back to the ≤1080p ladder so we don't manufacture a 4K rung.
+function ladderFor(srcHeight) {
+  if (!srcHeight) return RENDITIONS.filter((r) => r.h <= 1080)
+  const kept = RENDITIONS.filter((r) => r.h <= srcHeight * 1.05)
+  return kept.length ? kept : [RENDITIONS[RENDITIONS.length - 1]]
+}
 
 // Container entrypoint (ECS/Fargate). The dispatcher Lambda runs one task per
 // uploaded master, passing the target as BUCKET + RAW_KEY container overrides.
@@ -87,7 +102,9 @@ async function packageOne(bucket, rawKey) {
     writeFileSync(keyPath, key)
     writeFileSync(keyInfoPath, `key\n${keyPath}\n${iv}\n`)
 
-    runFfmpeg(masterPath, hlsDir, keyInfoPath)
+    const renditions = ladderFor(probeHeight(masterPath))
+    console.log(`Ladder: ${renditions.map((r) => `${r.h}p`).join(", ")}`)
+    runFfmpeg(masterPath, hlsDir, keyInfoPath, renditions)
 
     // Upload every HLS artifact (playlists + .ts); the key goes elsewhere.
     for (const file of readdirSync(hlsDir)) {
@@ -103,16 +120,16 @@ async function packageOne(bucket, rawKey) {
   }
 }
 
-function runFfmpeg(input, hlsDir, keyInfoPath) {
-  const splits = RENDITIONS.map((_, i) => `[v${i}]`).join("")
+function runFfmpeg(input, hlsDir, keyInfoPath, renditions) {
+  const splits = renditions.map((_, i) => `[v${i}]`).join("")
   // force_divisible_by=2 keeps both dims even — H.264 rejects odd sizes.
-  const scales = RENDITIONS.map((r, i) => `[v${i}]scale=w=${r.w}:h=${r.h}:force_original_aspect_ratio=decrease:force_divisible_by=2[v${i}out]`).join(";")
-  const filter = `[0:v]split=${RENDITIONS.length}${splits};${scales}`
+  const scales = renditions.map((r, i) => `[v${i}]scale=w=${r.w}:h=${r.h}:force_original_aspect_ratio=decrease:force_divisible_by=2[v${i}out]`).join(";")
+  const filter = `[0:v]split=${renditions.length}${splits};${scales}`
 
   const args = ["-y", "-i", input, "-filter_complex", filter]
-  RENDITIONS.forEach((_, i) => args.push("-map", `[v${i}out]`, "-map", "a:0"))
+  renditions.forEach((_, i) => args.push("-map", `[v${i}out]`, "-map", "a:0"))
   args.push("-c:v", "libx264", "-preset", "veryfast", "-c:a", "aac")
-  RENDITIONS.forEach((r, i) => args.push(`-b:v:${i}`, r.vb, `-b:a:${i}`, r.ab))
+  renditions.forEach((r, i) => args.push(`-b:v:${i}`, r.vb, `-b:a:${i}`, r.ab))
   args.push(
     "-hls_time", "6",
     "-hls_playlist_type", "vod",
@@ -121,7 +138,7 @@ function runFfmpeg(input, hlsDir, keyInfoPath) {
     "-hls_flags", "independent_segments",
     "-hls_segment_filename", join(hlsDir, "stream_%v_%03d.ts"),
     "-master_pl_name", "master.m3u8",
-    "-var_stream_map", RENDITIONS.map((_, i) => `v:${i},a:${i}`).join(" "),
+    "-var_stream_map", renditions.map((_, i) => `v:${i},a:${i}`).join(" "),
     join(hlsDir, "stream_%v.m3u8")
   )
   execFileSync(FFMPEG, args, { stdio: "inherit" })
@@ -132,6 +149,20 @@ function probeDuration(input) {
     "-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", input,
   ]).toString().trim()
   return Math.round(parseFloat(out)) || undefined
+}
+
+// Native height of the first video stream, used to cap the ladder. Returns
+// undefined on any probe hiccup so `ladderFor()` can fall back safely.
+function probeHeight(input) {
+  try {
+    const out = execFileSync(FFPROBE, [
+      "-v", "error", "-select_streams", "v:0",
+      "-show_entries", "stream=height", "-of", "default=nw=1:nk=1", input,
+    ]).toString().trim()
+    return parseInt(out, 10) || undefined
+  } catch {
+    return undefined
+  }
 }
 
 function contentType(file) {

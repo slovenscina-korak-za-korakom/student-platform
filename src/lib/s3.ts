@@ -3,6 +3,11 @@ import {
   GetObjectCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  CreateMultipartUploadCommand,
+  UploadPartCommand,
+  CompleteMultipartUploadCommand,
+  AbortMultipartUploadCommand,
+  ListPartsCommand,
 } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
@@ -77,4 +82,96 @@ export async function getText(key: string): Promise<string> {
 /** Best-effort delete (used to drop the raw master after packaging). */
 export async function deleteObject(key: string): Promise<void> {
   await client().send(new DeleteObjectCommand({ Bucket: videoBucket(), Key: key }))
+}
+
+// ── Multipart upload ─────────────────────────────────────────────────────────
+// Large raw masters (> ~100 MB) are uploaded from the admin browser in parts so
+// the UI can pause/resume/cancel and survive flaky networks. The browser has no
+// AWS creds, so each part is a *presigned* UploadPart PUT — same pattern as the
+// single-PUT path. CompleteMultipartUpload assembles the parts into one object,
+// which fires the same `s3:ObjectCreated:*` event that triggers packaging, so
+// everything downstream of `raw/<assetKey>/master.<ext>` is unchanged.
+
+/** One finished part, as S3 needs it to assemble the object. */
+export type CompletedPart = { PartNumber: number; ETag: string }
+
+/** Open a multipart upload for `key`; returns the S3 UploadId. */
+export async function createMultipartUpload(
+  key: string,
+  contentType: string
+): Promise<string> {
+  const res = await client().send(
+    new CreateMultipartUploadCommand({ Bucket: videoBucket(), Key: key, ContentType: contentType })
+  )
+  if (!res.UploadId) throw new Error("S3 did not return an UploadId")
+  return res.UploadId
+}
+
+/**
+ * Presigned PUT URL for a single part. The checksum-off client() (see above)
+ * matters here too: a baked-in part checksum would break the plain browser PUT,
+ * exactly like it did for PutObject.
+ */
+export async function presignUploadPart(
+  key: string,
+  uploadId: string,
+  partNumber: number,
+  ttlSeconds = 3600
+): Promise<string> {
+  const cmd = new UploadPartCommand({
+    Bucket: videoBucket(),
+    Key: key,
+    UploadId: uploadId,
+    PartNumber: partNumber,
+  })
+  return getSignedUrl(client(), cmd, { expiresIn: ttlSeconds })
+}
+
+/** Assemble the uploaded parts into the final object (order-independent input). */
+export async function completeMultipartUpload(
+  key: string,
+  uploadId: string,
+  parts: CompletedPart[]
+): Promise<void> {
+  const Parts = [...parts].sort((a, b) => a.PartNumber - b.PartNumber)
+  await client().send(
+    new CompleteMultipartUploadCommand({
+      Bucket: videoBucket(),
+      Key: key,
+      UploadId: uploadId,
+      MultipartUpload: { Parts },
+    })
+  )
+}
+
+/** Cancel a multipart upload; S3 discards any parts already uploaded. */
+export async function abortMultipartUpload(key: string, uploadId: string): Promise<void> {
+  await client().send(
+    new AbortMultipartUploadCommand({ Bucket: videoBucket(), Key: key, UploadId: uploadId })
+  )
+}
+
+/**
+ * The parts S3 has already stored for an in-progress upload. Used to reconcile
+ * after a page reload: the browser re-selects the file but asks S3 which parts
+ * are already done so it only re-uploads the rest.
+ */
+export async function listParts(key: string, uploadId: string): Promise<CompletedPart[]> {
+  const out: CompletedPart[] = []
+  let marker: string | undefined
+  do {
+    const res = await client().send(
+      new ListPartsCommand({
+        Bucket: videoBucket(),
+        Key: key,
+        UploadId: uploadId,
+        PartNumberMarker: marker,
+      })
+    )
+    for (const p of res.Parts ?? []) {
+      if (p.PartNumber != null && p.ETag) out.push({ PartNumber: p.PartNumber, ETag: p.ETag })
+    }
+    marker = res.IsTruncated ? res.NextPartNumberMarker : undefined
+  } while (marker)
+  return out
 }
