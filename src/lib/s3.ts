@@ -3,6 +3,8 @@ import {
   GetObjectCommand,
   PutObjectCommand,
   DeleteObjectCommand,
+  DeleteObjectsCommand,
+  ListObjectsV2Command,
   CreateMultipartUploadCommand,
   UploadPartCommand,
   CompleteMultipartUploadCommand,
@@ -82,6 +84,48 @@ export async function getText(key: string): Promise<string> {
 /** Best-effort delete (used to drop the raw master after packaging). */
 export async function deleteObject(key: string): Promise<void> {
   await client().send(new DeleteObjectCommand({ Bucket: videoBucket(), Key: key }))
+}
+
+/** Every object key under a prefix (paginated). */
+export async function listKeys(prefix: string): Promise<string[]> {
+  const keys: string[] = []
+  let token: string | undefined
+  do {
+    const listed = await client().send(
+      new ListObjectsV2Command({
+        Bucket: videoBucket(),
+        Prefix: prefix,
+        ContinuationToken: token,
+        MaxKeys: 1000,
+      })
+    )
+    for (const o of listed.Contents ?? []) if (o.Key) keys.push(o.Key)
+    token = listed.IsTruncated ? listed.NextContinuationToken : undefined
+  } while (token)
+  return keys
+}
+
+/** Batch-delete explicit object keys (chunks of 1000). Returns count deleted. */
+export async function deleteObjects(keys: string[]): Promise<number> {
+  let deleted = 0
+  for (let i = 0; i < keys.length; i += 1000) {
+    const chunk = keys.slice(i, i + 1000).map((Key) => ({ Key }))
+    if (chunk.length === 0) continue
+    await client().send(
+      new DeleteObjectsCommand({ Bucket: videoBucket(), Delete: { Objects: chunk, Quiet: true } })
+    )
+    deleted += chunk.length
+  }
+  return deleted
+}
+
+/**
+ * Delete every object under a prefix (paginated list + batched delete). Used to
+ * reap an asset's objects when its module item is deleted — e.g. the whole
+ * `hls/<assetKey>/` ladder. Returns the number of objects deleted.
+ */
+export async function deletePrefix(prefix: string): Promise<number> {
+  return deleteObjects(await listKeys(prefix))
 }
 
 // ── Multipart upload ─────────────────────────────────────────────────────────
