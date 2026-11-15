@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation"
 import ModuleContent from "./_components/module-content"
 import { getModuleContent } from "@/actions/course-actions"
+import { coursesAvailableForCurrentUser } from "@/lib/course-access"
 
 type Props = {
   params: Promise<{ locale: string; courseId: string; sectionId: string }>
@@ -8,7 +9,7 @@ type Props = {
 
 const ModulePage = async ({ params }: Props) => {
   const { locale, courseId, sectionId } = await params
-  const available = process.env.COURSES_AVAILABLE === "true"
+  const available = await coursesAvailableForCurrentUser()
   if (!available) notFound()
 
   const mod = await getModuleContent(courseId, sectionId)

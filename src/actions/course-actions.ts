@@ -21,6 +21,7 @@ import {
   courseDisplayPrice,
   getAccessibleCourseIds,
   hasCourseAccess,
+  isCoursesBetaTester,
 } from "@/lib/course-access"
 
 /**
@@ -45,10 +46,11 @@ export const getCoursesList = async (locale: string) => {
   })
 
   const accessible = await getAccessibleCourseIds(userId)
+  const beta = await isCoursesBetaTester()
 
   return rows.map((c) => {
     const isFree = !c.stripePriceId
-    const enrolled = isFree || accessible.has(c.id)
+    const enrolled = isFree || beta || accessible.has(c.id)
     return {
       ...c,
       sections: c.modules.length,

@@ -4,13 +4,14 @@ import {Button} from "@/components/ui/button";
 import {getTranslations} from "next-intl/server";
 import CourseCard from "./_components/course-card";
 import {getCoursesList} from "@/actions/course-actions";
+import {coursesAvailableForCurrentUser} from "@/lib/course-access";
 
 
 const CoursePage = async ({ params }: { params: Promise<{ locale: string }> }) => {
   const { locale } = await params
   const t = await getTranslations("courses")
   const t2 = await getTranslations("common.badges")
-  const available = process.env.COURSES_AVAILABLE === "true"
+  const available = await coursesAvailableForCurrentUser()
 
   const courses = available ? await getCoursesList(locale) : []
 

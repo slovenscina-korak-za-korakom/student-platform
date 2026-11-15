@@ -1,6 +1,7 @@
 import { db } from "@/db"
 import { courseEnrollmentsTable, type PriceByCurrency } from "@/db/schema"
 import { and, eq } from "drizzle-orm"
+import { currentUser } from "@clerk/nextjs/server"
 
 /**
  * Course paywall access helpers. The access predicate (see
@@ -11,6 +12,47 @@ import { and, eq } from "drizzle-orm"
  */
 
 export type Currency = "eur" | "usd" | "rub"
+
+/* ───────────────────────── Early-access beta gate ─────────────────────────
+ * Before the public launch, courses are hidden behind the COURSES_AVAILABLE
+ * flag. A short allowlist of test users (COURSES_BETA_EMAILS, comma-separated)
+ * gets in early: they bypass BOTH the availability gate (the "coming soon"
+ * pages) AND the paywall, so they can exercise every course/module in full.
+ * Once COURSES_AVAILABLE=true for everyone, the allowlist is harmless; emptying
+ * the env var removes all overhead (no Clerk lookup). */
+
+/** Lowercased set of emails granted early course access. Empty when unset. */
+function betaEmailSet(): Set<string> {
+  return new Set(
+    (process.env.COURSES_BETA_EMAILS ?? "")
+      .split(",")
+      .map((e) => e.trim().toLowerCase())
+      .filter(Boolean)
+  )
+}
+
+/** True when courses are publicly launched for everyone. */
+export function coursesPubliclyAvailable(): boolean {
+  return process.env.COURSES_AVAILABLE === "true"
+}
+
+/**
+ * True if the signed-in user is on the course beta allowlist. Matches the
+ * Clerk user's primary email first, then any of their verified emails. Returns
+ * false immediately (no Clerk call) when the allowlist is empty.
+ */
+export async function isCoursesBetaTester(): Promise<boolean> {
+  const emails = betaEmailSet()
+  if (emails.size === 0) return false
+  const user = await currentUser()
+  if (!user) return false
+  return user.emailAddresses.some((e) => emails.has(e.emailAddress.toLowerCase()))
+}
+
+/** Courses open to the current request: public launch OR an allowlisted tester. */
+export async function coursesAvailableForCurrentUser(): Promise<boolean> {
+  return coursesPubliclyAvailable() || (await isCoursesBetaTester())
+}
 
 /** Preferred presentment currency for a locale (EUR is the base/fallback). */
 export function currencyForLocale(locale: string): Currency {
@@ -30,6 +72,8 @@ export async function hasCourseAccess(
   courseId: number
 ): Promise<boolean> {
   if (!userId) return false
+  // Beta testers get full access regardless of enrollment/paywall.
+  if (await isCoursesBetaTester()) return true
   const row = await db.query.courseEnrollmentsTable.findFirst({
     where: and(
       eq(courseEnrollmentsTable.userId, userId),

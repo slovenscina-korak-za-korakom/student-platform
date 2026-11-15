@@ -1,6 +1,7 @@
 import { notFound, redirect } from "next/navigation"
 import { getTestBySlug, resolveModuleAccess } from "@/actions/course-actions"
 import ExerciseEngine from "./_components/exercise-engine"
+import { coursesAvailableForCurrentUser } from "@/lib/course-access"
 
 type Props = {
   params: Promise<{
@@ -13,7 +14,7 @@ type Props = {
 
 const TestPage = async ({ params }: Props) => {
   const { locale, courseId, sectionId, testId } = await params
-  const available = process.env.COURSES_AVAILABLE === "true"
+  const available = await coursesAvailableForCurrentUser()
   if (!available) notFound()
 
   // Paywall: a test inside a locked module is off-limits — send to the course.
