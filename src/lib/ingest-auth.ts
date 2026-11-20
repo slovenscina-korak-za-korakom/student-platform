@@ -8,9 +8,18 @@ import { timingSafeEqual } from "crypto"
  */
 export function verifyIngestSecret(req: Request): boolean {
   const secret = process.env.VIDEO_INGEST_SECRET
-  if (!secret) return false
   const header = req.headers.get("authorization") ?? ""
   const token = header.startsWith("Bearer ") ? header.slice(7) : ""
+  // Diagnostic only — logs presence + lengths, never the secret/token values.
+  // A secretLen/tokenLen mismatch of 1 is almost always a trailing newline; a
+  // missing secret means the deployment hasn't picked up the env var (redeploy).
+  console.warn("[ingest-auth] check", {
+    secretPresent: !!secret,
+    secretLen: secret?.length ?? 0,
+    tokenLen: token.length,
+    hasBearer: header.startsWith("Bearer "),
+  })
+  if (!secret) return false
   const a = Buffer.from(token)
   const b = Buffer.from(secret)
   if (a.length !== b.length) return false
