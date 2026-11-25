@@ -12,7 +12,8 @@
     "db:push": "drizzle-kit push",
     "db:seed": "bun run scripts/seed-database.ts",
     "test:webhook": "bun run scripts/test-clerk-webhook.ts",
-    "reset:preferences": "bun run scripts/reset-user-preferences.ts"
+    "reset:preferences": "bun run scripts/reset-user-preferences.ts",
+    "sweep:orphans": "bun run scripts/sweep-orphan-assets.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1156.0",

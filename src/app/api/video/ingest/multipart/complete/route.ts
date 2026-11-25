@@ -1,4 +1,7 @@
 import { NextResponse } from "next/server"
+import { and, eq } from "drizzle-orm"
+import { db } from "@/db"
+import { moduleItemsTable, type VideoItemData } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
 import { completeMultipartUpload, type CompletedPart } from "@/lib/s3"
 import { parseRawKey } from "@/lib/ingest-multipart"
@@ -7,7 +10,12 @@ import { parseRawKey } from "@/lib/ingest-multipart"
  * Video ingest (multipart), step 3 — assemble the uploaded parts into the final
  * raw master. That write fires s3:ObjectCreated → packaging, which later calls
  * /api/video/ingest/complete (the *separate* packaging callback that flips the
- * item to `ready`). This route only talks to S3; it does not touch the DB.
+ * item to `ready`).
+ *
+ * Before assembling, the item is (re)claimed for THIS upload's assetKey. The
+ * upload that actually finishes is the one that gets packaged, so the DB must
+ * point at it — otherwise a newer-but-abandoned upload (or a resumed older one)
+ * leaves the packaging callback 404ing and the item stuck "processing".
  *
  * Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
  */
@@ -49,6 +57,30 @@ export async function POST(req: Request) {
   }
 
   const rawKey = body.rawKey as string
+
+  // Claim the item for the upload that is actually completing (see header).
+  const item = await db.query.moduleItemsTable.findFirst({
+    where: eq(moduleItemsTable.id, parsed.moduleItemId),
+    columns: { id: true, type: true, data: true },
+  })
+  if (!item || item.type !== "video") {
+    return NextResponse.json({ error: "Video module item not found" }, { status: 404 })
+  }
+  const prev = item.data as VideoItemData | null
+  const prevKey = prev && "provider" in prev && prev.provider === "s3hls" ? prev.assetKey : null
+  if (prevKey !== parsed.assetKey || (prev as { status?: string })?.status !== "processing") {
+    const data: VideoItemData = { provider: "s3hls", assetKey: parsed.assetKey, status: "processing" }
+    await db
+      .update(moduleItemsTable)
+      .set({ data })
+      .where(and(eq(moduleItemsTable.id, parsed.moduleItemId), eq(moduleItemsTable.type, "video")))
+    console.log("[video-ingest-mpu:complete] claimed item for completing upload", {
+      moduleItemId: parsed.moduleItemId,
+      assetKey: parsed.assetKey,
+      supersededKey: prevKey,
+    })
+  }
+
   try {
     await completeMultipartUpload(rawKey, uploadId, parts)
   } catch (err) {

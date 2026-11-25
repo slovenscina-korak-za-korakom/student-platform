@@ -10,6 +10,7 @@ import {
   CompleteMultipartUploadCommand,
   AbortMultipartUploadCommand,
   ListPartsCommand,
+  ListMultipartUploadsCommand,
 } from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
@@ -193,6 +194,37 @@ export async function abortMultipartUpload(key: string, uploadId: string): Promi
   await client().send(
     new AbortMultipartUploadCommand({ Bucket: videoBucket(), Key: key, UploadId: uploadId })
   )
+}
+
+/**
+ * Abort every in-progress multipart upload whose key starts with `prefix`.
+ * Used when a new upload *replaces* an in-flight one for the same item, so the
+ * superseded upload can never complete, get packaged, and fire a callback for
+ * an assetKey the DB no longer holds. Returns the number aborted.
+ * Needs s3:ListBucketMultipartUploads on the bucket.
+ */
+export async function abortMultipartUploadsUnder(prefix: string): Promise<number> {
+  let aborted = 0
+  let keyMarker: string | undefined
+  let uploadIdMarker: string | undefined
+  do {
+    const res = await client().send(
+      new ListMultipartUploadsCommand({
+        Bucket: videoBucket(),
+        Prefix: prefix,
+        KeyMarker: keyMarker,
+        UploadIdMarker: uploadIdMarker,
+      })
+    )
+    for (const u of res.Uploads ?? []) {
+      if (!u.Key || !u.UploadId) continue
+      await abortMultipartUpload(u.Key, u.UploadId).catch(() => {})
+      aborted++
+    }
+    keyMarker = res.IsTruncated ? res.NextKeyMarker : undefined
+    uploadIdMarker = res.IsTruncated ? res.NextUploadIdMarker : undefined
+  } while (keyMarker)
+  return aborted
 }
 
 /**

@@ -183,7 +183,10 @@ async function putObject(bucket, key, body, ct) {
 }
 
 async function notifyComplete(assetKey, durationSec, rawKey) {
-  const res = await fetch(`${process.env.APP_BASE_URL}/api/video/ingest/complete`, {
+  // Strip trailing slashes: "https://host/" + "/api/..." gives "//api/...", which
+  // only works by luck via a 308 redirect.
+  const base = String(process.env.APP_BASE_URL ?? "").replace(/\/+$/, "")
+  const res = await fetch(`${base}/api/video/ingest/complete`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -191,5 +194,14 @@ async function notifyComplete(assetKey, durationSec, rawKey) {
     },
     body: JSON.stringify({ assetKey, durationSec, rawKey }),
   })
-  if (!res.ok) throw new Error(`complete callback failed: ${res.status} ${await res.text()}`)
+  if (!res.ok) {
+    const detail = await res.text()
+    if (res.status === 404) {
+      // Packaged output is intact under hls/<assetKey>/ — the item's row just
+      // points at a different (newer) assetKey. Recover by setting the row's
+      // data to { provider: "s3hls", assetKey, status: "ready", durationSec }.
+      console.error(`[recoverable] packaged ${assetKey} (${durationSec}s) but the app no longer references it`)
+    }
+    throw new Error(`complete callback failed: ${res.status} ${detail}`)
+  }
 }

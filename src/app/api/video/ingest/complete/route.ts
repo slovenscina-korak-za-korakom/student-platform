@@ -45,10 +45,13 @@ export async function POST(req: Request) {
   })
   const current = item?.data as VideoItemData | undefined
   if (!item || !current || current.provider !== "s3hls" || current.assetKey !== assetKey) {
-    // Most common cause: this app is on a DIFFERENT database than the one that
-    // minted the assetKey (e.g. the Lambda's APP_BASE_URL points at production,
-    // but the admin uploaded against the dev DB — or vice versa).
-    console.warn("[video-complete] 404 — no matching processing asset in THIS database", {
+    // Causes, most likely first:
+    //  1. Superseded upload — a newer upload for this item was started while
+    //     this one was in flight, overwriting the assetKey. The packaged output
+    //     in hls/<assetKey>/ is fine; point the row back at it to recover.
+    //  2. This app is on a different database than the one that minted the
+    //     assetKey (worker APP_BASE_URL vs. admin MAIN_APP_URL mismatch).
+    console.warn("[video-complete] 404 — no matching processing asset (superseded upload or wrong DB)", {
       itemId,
       found: !!item,
       storedAssetKey: current && "assetKey" in current ? current.assetKey : null,

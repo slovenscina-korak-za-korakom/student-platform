@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm"
 import { db } from "@/db"
 import { moduleItemsTable, modulesTable, type VideoItemData } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
+import { guardInFlightUpload } from "@/lib/video-ingest-guard"
 import { createMultipartUpload } from "@/lib/s3"
 
 /**
@@ -25,7 +26,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  let body: { moduleItemId?: unknown; ext?: unknown; contentType?: unknown }
+  let body: { moduleItemId?: unknown; ext?: unknown; contentType?: unknown; replace?: unknown }
   try {
     body = await req.json()
   } catch {
@@ -42,12 +43,16 @@ export async function POST(req: Request) {
 
   const item = await db.query.moduleItemsTable.findFirst({
     where: eq(moduleItemsTable.id, moduleItemId),
-    columns: { id: true, type: true, moduleId: true },
+    columns: { id: true, type: true, moduleId: true, data: true },
   })
   if (!item || item.type !== "video") {
     console.warn("[video-ingest-mpu:create] 404 — video module item not found", { moduleItemId })
     return NextResponse.json({ error: "Video module item not found" }, { status: 404 })
   }
+
+  // Don't silently orphan an upload that's still in flight (see video-ingest-guard).
+  const conflict = await guardInFlightUpload("video-ingest-mpu:create", moduleItemId, item.data, body.replace === true)
+  if (conflict) return conflict
 
   const mod = await db.query.modulesTable.findFirst({
     where: eq(modulesTable.id, item.moduleId),
