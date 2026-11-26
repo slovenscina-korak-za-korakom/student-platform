@@ -1,9 +1,12 @@
+# check=skip=FromPlatformFlagConstDisallowed
 # Rung-3 HLS packaging worker — runs as a one-shot Fargate task.
 #
 # MUST be built for linux/amd64: the bundled bin/ffmpeg + bin/ffprobe are
 # statically-linked x86-64 ELF binaries, and the Fargate task runs on X86_64.
 # On Apple Silicon build with:  docker build --platform linux/amd64 ...
-FROM --platform=linux/amd64 node:20-slim
+# The constant --platform below is deliberate (the build check is skipped above):
+# building without the flag must still produce an amd64 image, never arm64.
+FROM --platform=linux/amd64 node:24-slim
 
 WORKDIR /app
 
