@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process"
+import { execFileSync, spawn } from "node:child_process"
 import { randomBytes } from "node:crypto"
 import { createWriteStream, mkdtempSync, readFileSync, writeFileSync, readdirSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
@@ -27,8 +27,16 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
  * app's serving route resolves to /api/video/[itemId]/key (enrollment-gated).
  * The key is NEVER uploaded under `hls/` and is never presigned.
  *
+ * Failures: any error is logged as `[worker] FAILED …` (CloudWatch alarm) and
+ * reported to /api/video/ingest/fail so the item shows "failed" instead of
+ * hanging in "processing". Exceptions: a 404 from the complete callback (the
+ * item points at a different asset — nothing to mark; logged `[recoverable]`)
+ * and SIGTERM (Spot interruption / StopTask), which the task-watcher Lambda
+ * (watcher.mjs) handles because only it can tell the two apart and retry.
+ *
  * Env: AWS_REGION, APP_BASE_URL, VIDEO_INGEST_SECRET, BUCKET, RAW_KEY,
- *      FFMPEG_PATH (default "ffmpeg"), FFPROBE_PATH (default "ffprobe").
+ *      FFMPEG_PATH (default "ffmpeg"), FFPROBE_PATH (default "ffprobe"),
+ *      ATTEMPT (set to "2" by the watcher on its on-demand retry; logged only).
  * The Docker image sets FFMPEG_PATH/FFPROBE_PATH to the bundled static binaries.
  */
 
@@ -63,18 +71,45 @@ function ladderFor(srcHeight) {
 async function main() {
   const bucket = process.env.BUCKET
   const rawKey = process.env.RAW_KEY
-  if (!bucket || !rawKey) {
-    console.error("BUCKET and RAW_KEY env vars are required")
-    process.exit(1)
-  }
+  if (!bucket || !rawKey) throw new Error("BUCKET and RAW_KEY env vars are required")
+  console.log(`[worker] start ${rawKey} (attempt ${process.env.ATTEMPT || "1"})`)
   await packageOne(bucket, rawKey)
 }
 
+/** The complete callback 404'd: the packaged output is fine, the row points elsewhere. */
+class RecoverableCallbackError extends Error {}
+
+// The running ffmpeg child, so SIGTERM can stop it.
+let ffmpegChild = null
+
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  main().catch((err) => {
+  // Fargate sends SIGTERM on a Spot interruption (~2 min warning) or StopTask,
+  // then SIGKILL after the stopTimeout. ffmpeg runs async, so this handler can
+  // actually fire. Not reported as `failed` here: the task watcher sees the
+  // stop reason and either retries on on-demand or reports the failure.
+  process.on("SIGTERM", () => {
+    console.error(`[worker] SIGTERM for ${process.env.RAW_KEY} — stopping (watcher will retry or report)`)
+    try {
+      ffmpegChild?.kill("SIGKILL")
+    } catch {}
+    process.exit(143)
+  })
+
+  main().catch(async (err) => {
+    const msg = String(err?.message ?? err)
+    console.error(`[worker] FAILED ${process.env.RAW_KEY}: ${msg}`)
     console.error(err)
+    if (!(err instanceof RecoverableCallbackError)) {
+      await notifyFailed(assetKeyFrom(process.env.RAW_KEY), msg).catch((e) =>
+        console.error(`[worker] could not report failure: ${e?.message ?? e}`)
+      )
+    }
     process.exit(1)
   })
+}
+
+function assetKeyFrom(rawKey) {
+  return String(rawKey ?? "").match(/^raw\/(.+)\/master\.[^.]+$/)?.[1] ?? null
 }
 
 async function packageOne(bucket, rawKey) {
@@ -104,7 +139,7 @@ async function packageOne(bucket, rawKey) {
 
     const renditions = ladderFor(probeHeight(masterPath))
     console.log(`Ladder: ${renditions.map((r) => `${r.h}p`).join(", ")}`)
-    runFfmpeg(masterPath, hlsDir, keyInfoPath, renditions)
+    await runFfmpeg(masterPath, hlsDir, keyInfoPath, renditions)
 
     // Upload every HLS artifact (playlists + .ts); the key goes elsewhere.
     for (const file of readdirSync(hlsDir)) {
@@ -141,7 +176,27 @@ function runFfmpeg(input, hlsDir, keyInfoPath, renditions) {
     "-var_stream_map", renditions.map((_, i) => `v:${i},a:${i}`).join(" "),
     join(hlsDir, "stream_%v.m3u8")
   )
-  execFileSync(FFMPEG, args, { stdio: "inherit" })
+  // Async spawn (not execFileSync) so the event loop stays free for SIGTERM.
+  // stderr is forwarded to the logs and its tail kept for the failure reason.
+  return new Promise((resolve, reject) => {
+    const child = spawn(FFMPEG, args, { stdio: ["ignore", "inherit", "pipe"] })
+    ffmpegChild = child
+    let tail = ""
+    child.stderr.on("data", (chunk) => {
+      process.stderr.write(chunk)
+      tail = (tail + chunk.toString()).slice(-2000)
+    })
+    child.on("error", (err) => {
+      ffmpegChild = null
+      reject(err)
+    })
+    child.on("close", (code, signal) => {
+      ffmpegChild = null
+      if (code === 0) return resolve()
+      const last = tail.trim().split("\n").filter(Boolean).slice(-3).join(" | ")
+      reject(new Error(`ffmpeg exited ${code ?? signal}: ${last}`))
+    })
+  })
 }
 
 function probeDuration(input) {
@@ -182,26 +237,55 @@ async function putObject(bucket, key, body, ct) {
   await s3.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: body, ContentType: ct }))
 }
 
-async function notifyComplete(assetKey, durationSec, rawKey) {
-  // Strip trailing slashes: "https://host/" + "/api/..." gives "//api/...", which
-  // only works by luck via a 308 redirect.
+// POST to the app with the shared secret. Strip trailing slashes from the base:
+// "https://host/" + "/api/..." gives "//api/...", which only works by luck via a
+// 308 redirect.
+function postApp(path, body) {
   const base = String(process.env.APP_BASE_URL ?? "").replace(/\/+$/, "")
-  const res = await fetch(`${base}/api/video/ingest/complete`, {
+  return fetch(`${base}${path}`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.VIDEO_INGEST_SECRET}`,
     },
-    body: JSON.stringify({ assetKey, durationSec, rawKey }),
+    body: JSON.stringify(body),
+    signal: AbortSignal.timeout(30_000),
   })
-  if (!res.ok) {
-    const detail = await res.text()
-    if (res.status === 404) {
+}
+
+// Retries transient failures (network, 5xx, 429) — the encode took many
+// minutes; don't throw it away over one blip. 404 / other 4xx are final.
+async function notifyComplete(assetKey, durationSec, rawKey) {
+  const delays = [5_000, 15_000, 45_000]
+  for (let attempt = 0; ; attempt++) {
+    let res
+    let detail = ""
+    try {
+      res = await postApp("/api/video/ingest/complete", { assetKey, durationSec, rawKey })
+      if (res.ok) return
+      detail = await res.text().catch(() => "")
+    } catch (err) {
+      detail = String(err?.message ?? err)
+    }
+    if (res?.status === 404) {
       // Packaged output is intact under hls/<assetKey>/ — the item's row just
       // points at a different (newer) assetKey. Recover by setting the row's
       // data to { provider: "s3hls", assetKey, status: "ready", durationSec }.
       console.error(`[recoverable] packaged ${assetKey} (${durationSec}s) but the app no longer references it`)
+      throw new RecoverableCallbackError(`complete callback failed: 404 ${detail}`)
     }
-    throw new Error(`complete callback failed: ${res.status} ${detail}`)
+    const transient = !res || res.status >= 500 || res.status === 429
+    if (!transient || attempt >= delays.length) {
+      throw new Error(`complete callback failed: ${res?.status ?? "network"} ${detail}`)
+    }
+    console.warn(`[worker] complete callback ${res?.status ?? "network error"} — retrying in ${delays[attempt] / 1000}s`)
+    await new Promise((r) => setTimeout(r, delays[attempt]))
   }
+}
+
+async function notifyFailed(assetKey, reason) {
+  if (!assetKey) return
+  const res = await postApp("/api/video/ingest/fail", { assetKey, reason })
+  if (!res.ok) throw new Error(`fail report ${res.status}: ${await res.text().catch(() => "")}`)
+  console.log(`[worker] reported failure for ${assetKey}`)
 }
