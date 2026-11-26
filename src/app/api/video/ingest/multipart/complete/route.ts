@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server"
-import { and, eq } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { db } from "@/db"
 import { moduleItemsTable, type VideoItemData } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
-import { completeMultipartUpload, type CompletedPart } from "@/lib/s3"
+import { abortMultipartUpload, completeMultipartUpload, type CompletedPart } from "@/lib/s3"
+import { casItemData } from "@/lib/video-ingest-guard"
 import { parseRawKey } from "@/lib/ingest-multipart"
 
 /**
@@ -12,10 +13,13 @@ import { parseRawKey } from "@/lib/ingest-multipart"
  * /api/video/ingest/complete (the *separate* packaging callback that flips the
  * item to `ready`).
  *
- * Before assembling, the item is (re)claimed for THIS upload's assetKey. The
- * upload that actually finishes is the one that gets packaged, so the DB must
- * point at it — otherwise a newer-but-abandoned upload (or a resumed older one)
- * leaves the packaging callback 404ing and the item stuck "processing".
+ * Before assembling, we check the item still belongs to THIS upload. Since
+ * replacing an in-flight upload is now explicit (409 unless `replace`) and
+ * atomic (compare-and-swap in create), an upload whose assetKey the item no
+ * longer holds was deliberately superseded: it must NOT be assembled (that
+ * would package an orphan whose callback 404s). We answer 409
+ * UPLOAD_SUPERSEDED and abort it in S3. (This replaces the Step-0 stopgap that
+ * re-claimed the item for whichever upload finished.)
  *
  * Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
  */
@@ -58,7 +62,7 @@ export async function POST(req: Request) {
 
   const rawKey = body.rawKey as string
 
-  // Claim the item for the upload that is actually completing (see header).
+  // The item must still belong to this upload (see header).
   const item = await db.query.moduleItemsTable.findFirst({
     where: eq(moduleItemsTable.id, parsed.moduleItemId),
     columns: { id: true, type: true, data: true },
@@ -68,17 +72,37 @@ export async function POST(req: Request) {
   }
   const prev = item.data as VideoItemData | null
   const prevKey = prev && "provider" in prev && prev.provider === "s3hls" ? prev.assetKey : null
-  if (prevKey !== parsed.assetKey || (prev as { status?: string })?.status !== "processing") {
-    const data: VideoItemData = { provider: "s3hls", assetKey: parsed.assetKey, status: "processing" }
-    await db
-      .update(moduleItemsTable)
-      .set({ data })
-      .where(and(eq(moduleItemsTable.id, parsed.moduleItemId), eq(moduleItemsTable.type, "video")))
-    console.log("[video-ingest-mpu:complete] claimed item for completing upload", {
+  const prevStatus = prev && "provider" in prev && prev.provider === "s3hls" ? prev.status : undefined
+
+  if (prevKey !== parsed.assetKey) {
+    console.warn("[video-ingest-mpu:complete] 409 — upload was superseded; aborting instead of assembling", {
       moduleItemId: parsed.moduleItemId,
       assetKey: parsed.assetKey,
-      supersededKey: prevKey,
+      currentKey: prevKey,
+      currentStatus: prevStatus,
     })
+    await abortMultipartUpload(rawKey, uploadId).catch(() => {})
+    return NextResponse.json(
+      {
+        error: "This upload was replaced by a newer one for the same video and has been discarded.",
+        code: "UPLOAD_SUPERSEDED",
+      },
+      { status: 409 }
+    )
+  }
+  if (prevStatus === "ready") {
+    // Duplicate call (e.g. a retried request whose first attempt succeeded and
+    // was already packaged). Nothing to do — never flip a ready item back.
+    console.log("[video-ingest-mpu:complete] 200 — already ready (duplicate complete)", { rawKey })
+    return NextResponse.json({ ok: true, alreadyReady: true })
+  }
+  if (prevStatus !== "processing") {
+    // Same key but `failed` (e.g. a stale report): this upload is demonstrably
+    // alive, so put it back to processing.
+    const data: VideoItemData = { provider: "s3hls", assetKey: parsed.assetKey, status: "processing" }
+    if (!(await casItemData(parsed.moduleItemId, item.data, data))) {
+      return NextResponse.json({ error: "Item changed concurrently, retry", code: "UPLOAD_CHANGED" }, { status: 409 })
+    }
   }
 
   try {
