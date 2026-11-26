@@ -1,25 +1,23 @@
 import { NextResponse } from "next/server"
-import { and, eq, sql } from "drizzle-orm"
+import { and, eq, inArray } from "drizzle-orm"
 import { db } from "@/db"
-import { moduleItemsTable, type VideoItemData } from "@/db/schema"
+import { videoAssetsTable } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
+import { itemIdOf, lockItem } from "@/lib/video-assets"
 
 /**
- * Video ingest, failure report. Called when packaging can't finish, so the item
- * shows "failed" in the admin instead of hanging in "processing" forever:
+ * Video ingest, failure report. Called when packaging can't finish, so the
+ * admin shows "failed" instead of "processing" forever:
  *   - the worker container (index.mjs) on any error it can catch;
  *   - the dispatcher Lambda (dispatch.mjs) when no Fargate task could be started;
- *   - the task watcher Lambda (watcher.mjs) for crashes the worker can't report
- *     (OOM kill, image pull / ENI errors, StopTask, Spot interruption on the
- *     final attempt).
+ *   - the task watcher Lambda (watcher.mjs) for crashes the worker can't report.
  *
- * Body: { assetKey, reason }. Only flips the row if it still holds this assetKey
- * and is `processing` — a report for a superseded/ready asset is a no-op.
- * Always 200 (idempotent; several reporters may fire for one failure).
- * Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
+ * Body: { assetKey, reason }. Marks the upload's video_assets row `failed` if it
+ * is still uploading/packaging. The PUBLISHED video (module_items.data) is
+ * never touched — students keep watching it. Always 200 (idempotent; several
+ * reporters may fire for one failure). Auth: shared secret.
  */
 
-const ASSET_KEY_RE = /^courses\/\d+\/items\/(\d+)\/[0-9a-fA-F-]+$/
 const MAX_REASON = 500
 
 export async function POST(req: Request) {
@@ -36,38 +34,27 @@ export async function POST(req: Request) {
   }
 
   const assetKey = typeof body.assetKey === "string" ? body.assetKey : ""
-  const m = assetKey.match(ASSET_KEY_RE)
-  if (!m) {
+  const itemId = itemIdOf(assetKey)
+  if (itemId == null) {
     console.warn("[video-fail] 400 — bad assetKey", { assetKey })
     return NextResponse.json({ error: "Valid assetKey is required" }, { status: 400 })
   }
-  const itemId = Number(m[1])
   const reason = String(body.reason ?? "unknown error").slice(0, MAX_REASON)
 
-  const data: VideoItemData = {
-    provider: "s3hls",
-    assetKey,
-    status: "failed",
-    error: reason,
-    failedAt: new Date().toISOString(),
-  }
-  const updated = await db
-    .update(moduleItemsTable)
-    .set({ data })
-    .where(
-      and(
-        eq(moduleItemsTable.id, itemId),
-        eq(moduleItemsTable.type, "video"),
-        sql`${moduleItemsTable.data}->>'assetKey' = ${assetKey}`,
-        sql`${moduleItemsTable.data}->>'status' = 'processing'`
-      )
-    )
-    .returning({ id: moduleItemsTable.id })
+  const updated = await db.transaction(async (tx) => {
+    if (!(await lockItem(tx, itemId))) return []
+    const now = new Date()
+    return tx
+      .update(videoAssetsTable)
+      .set({ status: "failed", error: reason, failedAt: now, updatedAt: now })
+      .where(and(eq(videoAssetsTable.assetKey, assetKey), inArray(videoAssetsTable.status, ["uploading", "packaging"])))
+      .returning({ id: videoAssetsTable.id })
+  })
 
   if (updated.length === 0) {
-    console.log("[video-fail] 200 — no-op (item no longer processing this asset)", { itemId, assetKey, reason })
+    console.log("[video-fail] 200 — no-op (upload not active)", { itemId, assetKey, reason })
     return NextResponse.json({ ok: true, updated: false })
   }
-  console.warn("[video-fail] 200 — item marked failed", { itemId, assetKey, reason })
+  console.warn("[video-fail] 200 — upload marked failed", { itemId, assetKey, reason })
   return NextResponse.json({ ok: true, updated: true })
 }

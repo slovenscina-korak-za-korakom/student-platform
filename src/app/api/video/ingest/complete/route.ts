@@ -1,21 +1,27 @@
 import { NextResponse } from "next/server"
-import { and, eq, sql } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { db } from "@/db"
-import { moduleItemsTable, type VideoItemData } from "@/db/schema"
+import { videoAssetsTable } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
 import { deleteObject } from "@/lib/s3"
+import { itemIdOf, lockItem, publishRow, rowForKey, shouldAutoPublish } from "@/lib/video-assets"
 
 /**
- * Video ingest, step 2. The packaging worker
- * calls this once the encrypted HLS ladder + key are in S3. We flip the owning
- * module item to `ready` and record its duration; the item then streams. The
- * raw master is dropped best-effort (an S3 lifecycle rule on `raw/` is the
- * backstop). Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
+ * Video ingest, step 2 — the packaging worker calls this once the encrypted
+ * HLS ladder + key are in S3.
  *
- * The write is atomic: the row is only flipped if it still holds this assetKey
- * and is `processing` or `failed` (a late success after a failure report — e.g.
- * a retried task — wins). A repeat callback for an already-ready asset is a
- * no-op 200.
+ * For a known assetKey this ALWAYS succeeds (nothing packaged is ever lost):
+ * the video_assets row becomes `ready` with its duration. Then, under the item
+ * lock, it is published (module_items.data → this asset, previous published
+ * row → `superseded`) if it is still the item's current upload. If it was
+ * discarded meanwhile, or a newer upload exists, it stays `ready` but
+ * unpublished — selectable later in the admin's version history.
+ *
+ * The raw master is dropped best-effort (the `raw/` lifecycle rule is the
+ * backstop). Repeat callbacks are a no-op 200. Unknown assetKey → 404 (the
+ * worker logs it as `[recoverable]`).
+ *
+ * Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
  */
 
 export async function POST(req: Request) {
@@ -33,68 +39,62 @@ export async function POST(req: Request) {
   }
 
   const assetKey = String(body.assetKey ?? "")
-  const durationSec = body.durationSec == null ? undefined : Number(body.durationSec)
+  const durationSec = body.durationSec == null ? null : Math.round(Number(body.durationSec)) || null
   const rawKey = body.rawKey == null ? undefined : String(body.rawKey)
-
-  // assetKey is `courses/<courseId>/items/<itemId>/<uuid>`.
-  const itemId = Number(assetKey.match(/\/items\/(\d+)\//)?.[1])
+  const itemId = itemIdOf(assetKey)
   console.log("[video-complete] callback received", { assetKey, itemId, durationSec, rawKey })
-  if (!assetKey || !Number.isInteger(itemId)) {
+  if (itemId == null) {
     console.warn("[video-complete] 400 — bad assetKey", { assetKey })
     return NextResponse.json({ error: "Valid assetKey is required" }, { status: 400 })
   }
 
-  const item = await db.query.moduleItemsTable.findFirst({
-    where: eq(moduleItemsTable.id, itemId),
-    columns: { id: true, data: true },
+  const result = await db.transaction(async (tx) => {
+    const item = await lockItem(tx, itemId)
+    if (!item) return { kind: "notfound" as const }
+    const row = await rowForKey(tx, assetKey)
+    if (!row) return { kind: "notfound" as const }
+
+    if (row.status === "ready" || row.status === "superseded") {
+      return { kind: "duplicate" as const }
+    }
+    const publish = await shouldAutoPublish(tx, row)
+    const now = new Date()
+    await tx
+      .update(videoAssetsTable)
+      .set({
+        status: "ready",
+        durationSec: durationSec ?? row.durationSec,
+        readyAt: now,
+        error: null,
+        pct: 100,
+        updatedAt: now,
+      })
+      .where(eq(videoAssetsTable.id, row.id))
+    let replaced: string | null = null
+    if (publish) replaced = await publishRow(tx, item, row, durationSec ?? row.durationSec)
+    return { kind: "ready" as const, published: publish, replaced, previousStatus: row.status }
   })
-  const current = item?.data as VideoItemData | undefined
-  if (!item || !current || current.provider !== "s3hls" || current.assetKey !== assetKey) {
-    // Causes, most likely first:
-    //  1. Superseded upload — a newer upload for this item was started while
-    //     this one was in flight, overwriting the assetKey. The packaged output
-    //     in hls/<assetKey>/ is fine; point the row back at it to recover.
-    //  2. This app is on a different database than the one that minted the
-    //     assetKey (worker APP_BASE_URL vs. admin MAIN_APP_URL mismatch).
-    console.warn("[video-complete] 404 — no matching processing asset (superseded upload or wrong DB)", {
-      itemId,
-      found: !!item,
-      storedAssetKey: current && "assetKey" in current ? current.assetKey : null,
-      expectedAssetKey: assetKey,
-    })
-    return NextResponse.json({ error: "No matching processing asset" }, { status: 404 })
-  }
 
-  if (current.status === "ready") {
-    console.log("[video-complete] 200 — already ready (duplicate callback)", { itemId })
-    return NextResponse.json({ ok: true, itemId, alreadyReady: true })
-  }
-
-  const data: VideoItemData = {
-    provider: "s3hls",
-    assetKey,
-    status: "ready",
-    durationSec: durationSec ?? current.durationSec,
-  }
-  const updated = await db
-    .update(moduleItemsTable)
-    .set({ data })
-    .where(
-      and(
-        eq(moduleItemsTable.id, itemId),
-        sql`${moduleItemsTable.data}->>'assetKey' = ${assetKey}`,
-        sql`coalesce(${moduleItemsTable.data}->>'status', 'processing') in ('processing', 'failed')`
-      )
-    )
-    .returning({ id: moduleItemsTable.id })
-  if (updated.length === 0) {
-    // Changed between our read and the write (a replace won the race).
-    console.warn("[video-complete] 404 — item changed concurrently; asset is now orphaned", { itemId, assetKey })
+  if (result.kind === "notfound") {
+    // Most likely a different database than the one that minted the key
+    // (worker APP_BASE_URL vs. admin MAIN_APP_URL mismatch), or the item was deleted.
+    console.warn("[video-complete] 404 — unknown assetKey", { itemId, assetKey })
     return NextResponse.json({ error: "No matching processing asset" }, { status: 404 })
   }
 
   if (rawKey) await deleteObject(rawKey).catch(() => {})
 
-  console.log("[video-complete] 200 — item flipped to ready", { itemId, durationSec })
-  return NextResponse.json({ ok: true, itemId })
+  if (result.kind === "duplicate") {
+    console.log("[video-complete] 200 — already ready (duplicate callback)", { itemId, assetKey })
+    return NextResponse.json({ ok: true, itemId, alreadyReady: true })
+  }
+  console.log("[video-complete] 200 — asset ready", {
+    itemId,
+    assetKey,
+    durationSec,
+    published: result.published,
+    replaced: result.replaced,
+    previousStatus: result.previousStatus,
+  })
+  return NextResponse.json({ ok: true, itemId, published: result.published })
 }
