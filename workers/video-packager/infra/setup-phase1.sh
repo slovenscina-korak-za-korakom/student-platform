@@ -40,6 +40,11 @@ run() {
   fi
 }
 step() { printf '\n\033[1m== %s\033[0m\n' "$*"; }
+if [[ "${DRY_RUN:-}" == 1 ]]; then
+  printf '\033[33m*** DRY RUN — nothing will be changed. Re-run without DRY_RUN to apply. ***\033[0m\n'
+else
+  printf '\033[1m*** APPLYING changes to AWS account %s ***\033[0m\n' "623210504253"
+fi
 
 for bin in aws jq zip; do command -v "$bin" >/dev/null || { echo "missing: $bin"; exit 1; }; done
 [[ "$(aws sts get-caller-identity --query Account --output text)" == "$ACCOUNT" ]] || { echo "wrong AWS account"; exit 1; }
@@ -67,7 +72,7 @@ if aws sns list-subscriptions-by-topic --topic-arn "$TOPIC_ARN" 2>/dev/null \
   echo "subscription for $ALERT_EMAIL exists"
 else
   run aws sns subscribe --topic-arn "$TOPIC_ARN" --protocol email --notification-endpoint "$ALERT_EMAIL" >/dev/null
-  echo ">>> Confirm the subscription email sent to $ALERT_EMAIL"
+  [[ "${DRY_RUN:-}" == 1 ]] || echo ">>> Confirm the subscription email sent to $ALERT_EMAIL"
 fi
 
 # ── 2. Metric filters + alarms ────────────────────────────────────────────────
@@ -83,7 +88,7 @@ alarm() { # log-group filter-name pattern metric alarm-name description
     --statistic Sum --period 300 --evaluation-periods 1 --threshold 1 \
     --comparison-operator GreaterThanOrEqualToThreshold --treat-missing-data notBreaching \
     --alarm-actions "$TOPIC_ARN"
-  echo "alarm $aname on $lg"
+  [[ "${DRY_RUN:-}" == 1 ]] || echo "alarm $aname on $lg"
 }
 alarm /ecs/video-packager worker-failed \
   '?"[worker] FAILED" ?"complete callback failed" ?"[recoverable]" ?"No space left on device"' \
@@ -115,10 +120,20 @@ run aws lambda update-function-configuration --function-name "$DISPATCHER" \
 run aws lambda wait function-updated-v2 --function-name "$DISPATCHER"
 run aws iam put-role-policy --role-name "$DISP_ROLE_NAME" --policy-name video-alerts-publish \
   --policy-document "$(jq -nc --arg t "$TOPIC_ARN" '{Version:"2012-10-17",Statement:[{Effect:"Allow",Action:"sns:Publish",Resource:$t}]}')"
-run aws lambda put-function-event-invoke-config --function-name "$DISPATCHER" \
-  --maximum-retry-attempts 0 \
-  --destination-config "{\"OnFailure\":{\"Destination\":\"$TOPIC_ARN\"}}" >/dev/null
-echo "dispatcher deployed; env merged; retries=0; OnFailure → SNS"
+# Lambda validates sns:Publish on the role right now, and the policy above can
+# take a few seconds to propagate in IAM → retry for up to ~2 min.
+for i in $(seq 1 12); do
+  if run aws lambda put-function-event-invoke-config --function-name "$DISPATCHER" \
+      --maximum-retry-attempts 0 \
+      --destination-config "{\"OnFailure\":{\"Destination\":\"$TOPIC_ARN\"}}" >/dev/null 2>"$TMP/eic.err"; then
+    [[ "${DRY_RUN:-}" == 1 ]] && cat "$TMP/eic.err" >&2
+    break
+  fi
+  if (( i == 12 )) || ! grep -q "does not have permissions" "$TMP/eic.err"; then cat "$TMP/eic.err" >&2; exit 1; fi
+  echo "waiting for IAM propagation (sns:Publish on dispatcher role)… ($i/12)"
+  sleep 10
+done
+[[ "${DRY_RUN:-}" == 1 ]] || echo "dispatcher deployed; env merged; retries=0; OnFailure → SNS"
 
 # ── 4. Watcher Lambda + EventBridge ───────────────────────────────────────────
 step "4. Watcher Lambda ($WATCHER) + EventBridge rule ($RULE)"
@@ -153,10 +168,19 @@ if aws lambda get-function --function-name "$WATCHER" >/dev/null 2>&1; then
   run aws lambda wait function-updated-v2 --function-name "$WATCHER"
   run aws lambda update-function-configuration --function-name "$WATCHER" --environment "$WATCHER_ENV" --timeout 30 >/dev/null
 else
-  run aws lambda create-function --function-name "$WATCHER" --runtime "$DISP_RUNTIME" \
-    --handler index.handler --role "arn:aws:iam::${ACCOUNT}:role/${WATCHER_ROLE}" \
-    --zip-file "fileb://$TMP/watcher.zip" --timeout 30 --memory-size 256 \
-    --environment "$WATCHER_ENV" >/dev/null
+  # A just-created role can't be assumed by Lambda for a few seconds → retry.
+  for i in $(seq 1 12); do
+    if run aws lambda create-function --function-name "$WATCHER" --runtime "$DISP_RUNTIME" \
+        --handler index.handler --role "arn:aws:iam::${ACCOUNT}:role/${WATCHER_ROLE}" \
+        --zip-file "fileb://$TMP/watcher.zip" --timeout 30 --memory-size 256 \
+        --environment "$WATCHER_ENV" >/dev/null 2>"$TMP/cf.err"; then
+      [[ "${DRY_RUN:-}" == 1 ]] && cat "$TMP/cf.err" >&2
+      break
+    fi
+    if (( i == 12 )) || ! grep -q "cannot be assumed" "$TMP/cf.err"; then cat "$TMP/cf.err" >&2; exit 1; fi
+    echo "waiting for IAM propagation (watcher role)… ($i/12)"
+    sleep 10
+  done
 fi
 run aws lambda wait function-active-v2 --function-name "$WATCHER"
 
@@ -171,5 +195,10 @@ run aws lambda add-permission --function-name "$WATCHER" --statement-id eventbri
   --action lambda:InvokeFunction --principal events.amazonaws.com \
   --source-arn "arn:aws:events:${AWS_REGION}:${ACCOUNT}:rule/${RULE}" >/dev/null 2>&1 || echo "(invoke permission already present)"
 
+if [[ "${DRY_RUN:-}" == 1 ]]; then
+  step "Dry run finished — NOTHING was changed"
+  echo "To apply: unset DRY_RUN; ./infra/setup-phase1.sh"
+  exit 0
+fi
 step "Done"
 echo "Next: confirm the SNS email, rebuild + push the worker image (README), then run the tests in the plan."
