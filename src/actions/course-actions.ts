@@ -139,7 +139,7 @@ export type ModuleItemVM = {
   video?: {
     provider: "youtube" | "s3hls"
     url?: string // youtube only — never present for s3hls (no plain source URL)
-    status?: "processing" | "ready" // s3hls only
+    status?: "processing" | "ready" | "failed" // s3hls only
     durationSec: number | null
     lastPositionSec: number | null
   }

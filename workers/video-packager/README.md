@@ -124,9 +124,34 @@ group's allow-all egress suffices.
 - **Failures:** a failed task stops as FAILED/STOPPED with a non-zero exit; the
   task's **Logs** tab shows the cause. Common causes are a mismatched
   `VIDEO_INGEST_SECRET` or a subnet with no internet route.
-- **Spot interruptions** are rare but possible mid-encode. The task simply fails
-  and can be re-run by re-uploading or re-invoking; add a retry/DLQ later if it
-  becomes a problem.
+- **Spot interruptions** are rare but possible mid-encode. The task watcher
+  re-runs the task once on on-demand FARGATE (see "Failure handling & alerts").
+
+## Failure handling & alerts
+
+Nothing may leave an item stuck in `processing` silently:
+
+| Failure                                                            | Who notices                                                          | Result                                                                         |
+|--------------------------------------------------------------------|----------------------------------------------------------------------|--------------------------------------------------------------------------------|
+| ffmpeg / S3 / any error in the worker                              | worker (`[worker] FAILED …`)                                         | `POST /api/video/ingest/fail` → item `failed`                                  |
+| complete callback 404 (item points at another asset)               | worker (`[recoverable] …`)                                           | not marked; alarm email                                                        |
+| complete callback 5xx / network                                    | worker retries 3× (5 s / 15 s / 45 s)                                | then `failed`                                                                  |
+| RunTask can't start a task (Spot capacity, vCPU quota, bad subnet) | dispatcher: Spot → on-demand → 3 more on-demand tries (~3.5 min)     | `failed` ("Packaging could not start: …"), `[dispatch] ERROR`, OnFailure → SNS |
+| OOM kill, image pull, StopTask                                     | `watcher.mjs` (EventBridge: task STOPPED, exit ≠ 0)                  | `failed` + SNS email                                                           |
+| Spot interruption                                                  | worker logs SIGTERM; watcher re-runs once on on-demand (`ATTEMPT=2`) | retried; if that fails → `failed`                                              |
+
+The `/fail` report is idempotent and only flips a row that still holds that
+assetKey and is `processing`; a later success callback may still flip
+`failed → ready`.
+
+Alarms (SNS topic `video-pipeline-alerts`, email):
+`video-worker-failed` (`/ecs/video-packager`), `video-dispatch-error`
+(`/aws/lambda/video-packager`), `video-watcher-error`
+(`/aws/lambda/video-task-watcher`).
+
+**Setup / redeploy of both Lambdas + alarms:** `./infra/setup-phase1.sh`
+(idempotent; `DRY_RUN=1` to preview). The worker image is still built and
+pushed by hand (below).
 
 ## Local testing
 
