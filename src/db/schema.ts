@@ -1,4 +1,4 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -10,6 +10,9 @@ import {
   // pgEnum,
   jsonb, pgEnum,
   unique,
+  bigint,
+  index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 // export const sessionStatus = pgEnum("session_status", [
@@ -334,6 +337,65 @@ export const moduleItemsTable = pgTable("module_items", {
   order: integer().notNull().default(0),
 })
 
+/**
+ * Video uploads — one row per upload attempt of a `video` (s3hls) module item.
+ * The single source of truth for "the upload in progress" and for version
+ * history; `module_items.data` only mirrors the PUBLISHED asset
+ * ({provider, assetKey, status: "ready", durationSec}) so student code is
+ * unchanged. See VIDEO_PIPELINE_HARDENING_PLAN.md (Steps 4–7).
+ *
+ * Lifecycle: uploading → packaging → ready (published, or unpublished history)
+ *            → superseded (was published, then replaced); an active row can
+ *            also end failed | discarded. At most one uploading|packaging row
+ *            per item (partial unique index `video_assets_one_active`).
+ * Kept in sync with the admin panel's schema (slo-admin/src/db/schema.ts);
+ * the DDL lives in drizzle/manual/0009_video_assets.sql.
+ */
+export const videoAssetStatusEnum = pgEnum("video_asset_status", [
+  "uploading",
+  "packaging",
+  "ready",
+  "failed",
+  "superseded",
+  "discarded",
+]);
+export type VideoAssetStatus = (typeof videoAssetStatusEnum.enumValues)[number];
+
+export const videoAssetsTable = pgTable("video_assets", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  moduleItemId: integer().notNull().references(() => moduleItemsTable.id, { onDelete: "cascade" }),
+  assetKey: text().notNull().unique(),
+  status: videoAssetStatusEnum().notNull(),
+  // Upload session (multipart: uploadId + partSize; single PUT: null) — enough
+  // for another device to resume (Step 7).
+  uploadId: text(),
+  rawKey: text(),
+  partSize: integer(),
+  fileName: text(),
+  fileSize: bigint({ mode: "number" }),
+  fingerprint: text(),                         // "sha256:<hex>" over size + first/last 4 MB
+  durationSec: integer(),
+  error: text(),
+  startedBy: text(),                           // Clerk user id
+  startedByName: text(),                       // display name/email at upload time
+  clientId: text(),                            // random id per admin browser (localStorage)
+  userAgent: text(),
+  // Liveness lease (Step 6): the uploading browser pings every 30 s.
+  lastHeartbeatAt: timestamp({ withTimezone: true }),
+  pct: integer(),
+  paused: boolean().notNull().default(false),
+  createdAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+  packagingAt: timestamp({ withTimezone: true }),
+  readyAt: timestamp({ withTimezone: true }),
+  failedAt: timestamp({ withTimezone: true }),
+  updatedAt: timestamp({ withTimezone: true }).notNull().defaultNow(),
+}, (t) => [
+  index("video_assets_item_idx").on(t.moduleItemId),
+  uniqueIndex("video_assets_one_active")
+    .on(t.moduleItemId)
+    .where(sql`status in ('uploading', 'packaging')`),
+])
+
 /** Per-user completion + video resume position, one row per (user, item). */
 export const moduleItemProgressTable = pgTable("module_item_progress", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -412,4 +474,8 @@ export const testAttemptsRelations = relations(testAttemptsTable, ({ one }) => (
 
 export const courseEnrollmentsRelations = relations(courseEnrollmentsTable, ({ one }) => ({
   course: one(coursesTable, { fields: [courseEnrollmentsTable.courseId], references: [coursesTable.id] }),
+}));
+
+export const videoAssetsRelations = relations(videoAssetsTable, ({ one }) => ({
+  item: one(moduleItemsTable, { fields: [videoAssetsTable.moduleItemId], references: [moduleItemsTable.id] }),
 }));
