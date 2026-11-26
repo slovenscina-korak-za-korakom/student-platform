@@ -1,25 +1,22 @@
 import { NextResponse } from "next/server"
 import { eq } from "drizzle-orm"
 import { db } from "@/db"
-import { moduleItemsTable, type VideoItemData } from "@/db/schema"
+import { videoAssetsTable } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
 import { abortMultipartUpload, completeMultipartUpload, type CompletedPart } from "@/lib/s3"
-import { casItemData } from "@/lib/video-ingest-guard"
 import { parseRawKey } from "@/lib/ingest-multipart"
+import { isUniqueViolation, lockItem, rowForKey } from "@/lib/video-assets"
 
 /**
  * Video ingest (multipart), step 3 — assemble the uploaded parts into the final
  * raw master. That write fires s3:ObjectCreated → packaging, which later calls
- * /api/video/ingest/complete (the *separate* packaging callback that flips the
- * item to `ready`).
+ * /api/video/ingest/complete (the *separate* packaging callback).
  *
- * Before assembling, we check the item still belongs to THIS upload. Since
- * replacing an in-flight upload is now explicit (409 unless `replace`) and
- * atomic (compare-and-swap in create), an upload whose assetKey the item no
- * longer holds was deliberately superseded: it must NOT be assembled (that
- * would package an orphan whose callback 404s). We answer 409
- * UPLOAD_SUPERSEDED and abort it in S3. (This replaces the Step-0 stopgap that
- * re-claimed the item for whichever upload finished.)
+ * Decided on the upload's video_assets row, under the item lock:
+ *   uploading (or failed) + matching uploadId → CompleteMultipartUpload, row → packaging
+ *   packaging / ready / superseded            → 200 no-op (duplicate / retried request)
+ *   discarded                                 → 409 UPLOAD_SUPERSEDED, multipart aborted
+ *                                               (it was replaced; it must not get packaged)
  *
  * Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
  */
@@ -61,68 +58,76 @@ export async function POST(req: Request) {
   }
 
   const rawKey = body.rawKey as string
+  const assetKey = parsed.assetKey
 
-  // The item must still belong to this upload (see header).
-  const item = await db.query.moduleItemsTable.findFirst({
-    where: eq(moduleItemsTable.id, parsed.moduleItemId),
-    columns: { id: true, type: true, data: true },
-  })
-  if (!item || item.type !== "video") {
-    return NextResponse.json({ error: "Video module item not found" }, { status: 404 })
-  }
-  const prev = item.data as VideoItemData | null
-  const prevKey = prev && "provider" in prev && prev.provider === "s3hls" ? prev.assetKey : null
-  const prevStatus = prev && "provider" in prev && prev.provider === "s3hls" ? prev.status : undefined
+  type Outcome =
+    | { kind: "assembled" }
+    | { kind: "duplicate"; status: string }
+    | { kind: "superseded" }
+    | { kind: "mismatch" }
+    | { kind: "notfound" }
+    | { kind: "s3error"; msg: string }
 
-  if (prevKey !== parsed.assetKey) {
-    console.warn("[video-ingest-mpu:complete] 409 — upload was superseded; aborting instead of assembling", {
-      moduleItemId: parsed.moduleItemId,
-      assetKey: parsed.assetKey,
-      currentKey: prevKey,
-      currentStatus: prevStatus,
-    })
-    await abortMultipartUpload(rawKey, uploadId).catch(() => {})
-    return NextResponse.json(
-      {
-        error: "This upload was replaced by a newer one for the same video and has been discarded.",
-        code: "UPLOAD_SUPERSEDED",
-      },
-      { status: 409 }
-    )
-  }
-  if (prevStatus === "ready") {
-    // Duplicate call (e.g. a retried request whose first attempt succeeded and
-    // was already packaged). Nothing to do — never flip a ready item back.
-    console.log("[video-ingest-mpu:complete] 200 — already ready (duplicate complete)", { rawKey })
-    return NextResponse.json({ ok: true, alreadyReady: true })
-  }
-  if (prevStatus !== "processing") {
-    // Same key but `failed` (e.g. a stale report): this upload is demonstrably
-    // alive, so put it back to processing.
-    const data: VideoItemData = { provider: "s3hls", assetKey: parsed.assetKey, status: "processing" }
-    if (!(await casItemData(parsed.moduleItemId, item.data, data))) {
-      return NextResponse.json({ error: "Item changed concurrently, retry", code: "UPLOAD_CHANGED" }, { status: 409 })
-    }
-  }
-
+  let outcome: Outcome
   try {
-    await completeMultipartUpload(rawKey, uploadId, parts)
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "complete failed"
-    console.error("[video-ingest-mpu:complete] CompleteMultipartUpload failed", {
-      rawKey,
-      uploadId,
-      parts: parts.length,
-      msg,
+    outcome = await db.transaction(async (tx): Promise<Outcome> => {
+      const item = await lockItem(tx, parsed.moduleItemId)
+      if (!item) return { kind: "notfound" }
+      const row = await rowForKey(tx, assetKey)
+      if (!row) return { kind: "notfound" }
+
+      if (row.status === "packaging" || row.status === "ready" || row.status === "superseded") {
+        return { kind: "duplicate", status: row.status }
+      }
+      if (row.status === "discarded") return { kind: "superseded" }
+      if (row.uploadId && row.uploadId !== uploadId) return { kind: "mismatch" }
+
+      // S3 call inside the transaction: holding the item lock for the ~1 s it
+      // takes means a concurrent discard can't slip in between "assembled" and
+      // "marked packaging".
+      try {
+        await completeMultipartUpload(rawKey, uploadId, parts)
+      } catch (err) {
+        return { kind: "s3error", msg: err instanceof Error ? err.message : "complete failed" }
+      }
+      const now = new Date()
+      await tx
+        .update(videoAssetsTable)
+        .set({ status: "packaging", packagingAt: now, pct: 100, paused: false, error: null, updatedAt: now })
+        .where(eq(videoAssetsTable.id, row.id))
+      return { kind: "assembled" }
     })
-    return NextResponse.json({ error: msg }, { status: 502 })
+  } catch (err) {
+    if (isUniqueViolation(err)) {
+      // A failed row being revived while another upload is active.
+      return NextResponse.json({ error: "Another upload is active for this video", code: "UPLOAD_CHANGED" }, { status: 409 })
+    }
+    throw err
   }
 
-  console.log("[video-ingest-mpu:complete] 200 — object assembled", {
-    rawKey,
-    uploadId,
-    parts: parts.length,
-    moduleItemId: parsed.moduleItemId,
-  })
-  return NextResponse.json({ ok: true })
+  switch (outcome.kind) {
+    case "notfound":
+      return NextResponse.json({ error: "No upload found for this rawKey" }, { status: 404 })
+    case "mismatch":
+      return NextResponse.json({ error: "uploadId does not match this upload" }, { status: 409 })
+    case "duplicate":
+      console.log("[video-ingest-mpu:complete] 200 — already assembled (duplicate complete)", { rawKey, status: outcome.status })
+      return NextResponse.json({ ok: true, alreadyDone: true })
+    case "superseded":
+      console.warn("[video-ingest-mpu:complete] 409 — upload was discarded; aborting instead of assembling", { rawKey })
+      await abortMultipartUpload(rawKey, uploadId).catch(() => {})
+      return NextResponse.json(
+        {
+          error: "This upload was replaced by a newer one for the same video and has been discarded.",
+          code: "UPLOAD_SUPERSEDED",
+        },
+        { status: 409 }
+      )
+    case "s3error":
+      console.error("[video-ingest-mpu:complete] CompleteMultipartUpload failed", { rawKey, uploadId, parts: parts.length, msg: outcome.msg })
+      return NextResponse.json({ error: outcome.msg }, { status: 502 })
+    case "assembled":
+      console.log("[video-ingest-mpu:complete] 200 — object assembled, packaging", { rawKey, parts: parts.length })
+      return NextResponse.json({ ok: true })
+  }
 }
