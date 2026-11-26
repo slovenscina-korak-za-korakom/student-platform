@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { eq } from "drizzle-orm"
+import { and, eq, sql } from "drizzle-orm"
 import { db } from "@/db"
 import { moduleItemsTable, type VideoItemData } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
@@ -11,6 +11,11 @@ import { deleteObject } from "@/lib/s3"
  * module item to `ready` and record its duration; the item then streams. The
  * raw master is dropped best-effort (an S3 lifecycle rule on `raw/` is the
  * backstop). Auth: shared secret (Bearer VIDEO_INGEST_SECRET).
+ *
+ * The write is atomic: the row is only flipped if it still holds this assetKey
+ * and is `processing` or `failed` (a late success after a failure report — e.g.
+ * a retried task — wins). A repeat callback for an already-ready asset is a
+ * no-op 200.
  */
 
 export async function POST(req: Request) {
@@ -60,13 +65,33 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "No matching processing asset" }, { status: 404 })
   }
 
+  if (current.status === "ready") {
+    console.log("[video-complete] 200 — already ready (duplicate callback)", { itemId })
+    return NextResponse.json({ ok: true, itemId, alreadyReady: true })
+  }
+
   const data: VideoItemData = {
     provider: "s3hls",
     assetKey,
     status: "ready",
     durationSec: durationSec ?? current.durationSec,
   }
-  await db.update(moduleItemsTable).set({ data }).where(eq(moduleItemsTable.id, itemId))
+  const updated = await db
+    .update(moduleItemsTable)
+    .set({ data })
+    .where(
+      and(
+        eq(moduleItemsTable.id, itemId),
+        sql`${moduleItemsTable.data}->>'assetKey' = ${assetKey}`,
+        sql`coalesce(${moduleItemsTable.data}->>'status', 'processing') in ('processing', 'failed')`
+      )
+    )
+    .returning({ id: moduleItemsTable.id })
+  if (updated.length === 0) {
+    // Changed between our read and the write (a replace won the race).
+    console.warn("[video-complete] 404 — item changed concurrently; asset is now orphaned", { itemId, assetKey })
+    return NextResponse.json({ error: "No matching processing asset" }, { status: 404 })
+  }
 
   if (rawKey) await deleteObject(rawKey).catch(() => {})
 
