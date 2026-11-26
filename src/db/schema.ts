@@ -105,7 +105,16 @@ export type ExerciseData = MultipleChoiceData | SortData | MatchData | SpeakData
  */
 export type VideoItemData =
   | { provider?: "youtube"; url: string; durationSec?: number }
-  | { provider: "s3hls"; assetKey: string; status?: "processing" | "ready"; durationSec?: number };
+  | {
+      provider: "s3hls";
+      assetKey: string;
+      /** `failed` = packaging could not finish (worker/dispatcher/task-watcher report); see /api/video/ingest/fail. */
+      status?: "processing" | "ready" | "failed";
+      durationSec?: number;
+      /** Set with status `failed`: short reason (≤ 500 chars) + ISO timestamp. */
+      error?: string;
+      failedAt?: string;
+    };
 /**
  * PDF payload. Two coexisting shapes, discriminated by `provider`:
  * - legacy (no provider): an opaque `assetId` referencing an externally-managed
