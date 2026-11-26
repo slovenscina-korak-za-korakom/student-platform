@@ -35,12 +35,12 @@ it stays well inside Lambda's limits; all heavy lifting happens in the container
 
 ## Components
 
-| File | Role |
-|------|------|
-| `index.mjs` | The packaging worker. Container entrypoint; reads `BUCKET`/`RAW_KEY` from the environment, packages one master, exits non-zero on failure so a bad run surfaces as a FAILED task rather than looking "done". |
-| `dispatch.mjs` | The dispatcher Lambda. Replaces the old packaging Lambda, keeps the same S3 ObjectCreated trigger, and calls `ecs:RunTask` with the target object passed as container overrides. |
-| `Dockerfile` | `linux/amd64` image bundling the static `bin/ffmpeg` and `bin/ffprobe`; sets `FFMPEG_PATH`/`FFPROBE_PATH` to them. |
-| `.dockerignore` | Keeps `node_modules`, local artifacts, etc. out of the build context. |
+| File            | Role                                                                                                                                                                                                         |
+|-----------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `index.mjs`     | The packaging worker. Container entrypoint; reads `BUCKET`/`RAW_KEY` from the environment, packages one master, exits non-zero on failure so a bad run surfaces as a FAILED task rather than looking "done". |
+| `dispatch.mjs`  | The dispatcher Lambda. Replaces the old packaging Lambda, keeps the same S3 ObjectCreated trigger, and calls `ecs:RunTask` with the target object passed as container overrides.                             |
+| `Dockerfile`    | `linux/amd64` image bundling the static `bin/ffmpeg` and `bin/ffprobe`; sets `FFMPEG_PATH`/`FFPROBE_PATH` to them.                                                                                           |
+| `.dockerignore` | Keeps `node_modules`, local artifacts, etc. out of the build context.                                                                                                                                        |
 
 ## Output contract (app integration)
 
@@ -60,14 +60,14 @@ change is required** to adopt this worker.
 
 ### Container task (`index.mjs`)
 
-| Env var | Purpose |
-|---------|---------|
-| `BUCKET` | Source/destination bucket (passed per-run by the dispatcher). |
-| `RAW_KEY` | Key of the uploaded master, e.g. `raw/courses/1/items/42/abc/master.mp4` (passed per-run). |
-| `AWS_REGION` | Region of the bucket and app. |
-| `APP_BASE_URL` | Base URL the ingest callback is POSTed to. |
-| `VIDEO_INGEST_SECRET` | Shared secret for the callback; must match the app's value. |
-| `FFMPEG_PATH` / `FFPROBE_PATH` | Binary paths; the image sets these to the bundled static builds. |
+| Env var                        | Purpose                                                                                    |
+|--------------------------------|--------------------------------------------------------------------------------------------|
+| `BUCKET`                       | Source/destination bucket (passed per-run by the dispatcher).                              |
+| `RAW_KEY`                      | Key of the uploaded master, e.g. `raw/courses/1/items/42/abc/master.mp4` (passed per-run). |
+| `AWS_REGION`                   | Region of the bucket and app.                                                              |
+| `APP_BASE_URL`                 | Base URL the ingest callback is POSTed to.                                                 |
+| `VIDEO_INGEST_SECRET`          | Shared secret for the callback; must match the app's value.                                |
+| `FFMPEG_PATH` / `FFPROBE_PATH` | Binary paths; the image sets these to the bundled static builds.                           |
 
 `VIDEO_INGEST_SECRET` is a real secret. For defense-in-depth, store it in SSM
 Parameter Store (SecureString) and inject it via the task definition's
@@ -75,15 +75,15 @@ Parameter Store (SecureString) and inject it via the task definition's
 
 ### Dispatcher Lambda (`dispatch.mjs`)
 
-| Env var | Purpose |
-|---------|---------|
-| `ECS_CLUSTER` | Cluster that runs the task. |
-| `ECS_TASK_DEF` | Task-definition family. |
-| `CONTAINER_NAME` | Container name overrides target — must match the task definition's container name. |
-| `SUBNETS` | Comma-separated subnet ids (public — see Networking). |
-| `SECURITY_GROUPS` | Security group id(s) allowing outbound 443. |
+| Env var           | Purpose                                                                            |
+|-------------------|------------------------------------------------------------------------------------|
+| `ECS_CLUSTER`     | Cluster that runs the task.                                                        |
+| `ECS_TASK_DEF`    | Task-definition family.                                                            |
+| `CONTAINER_NAME`  | Container name overrides target — must match the task definition's container name. |
+| `SUBNETS`         | Comma-separated subnet ids (public — see Networking).                              |
+| `SECURITY_GROUPS` | Security group id(s) allowing outbound 443.                                        |
 
-The Node 20 Lambda runtime already bundles `@aws-sdk/client-ecs`, so the
+The Node 24 Lambda runtime already bundles `@aws-sdk/client-ecs`, so the
 dispatcher needs no dependency upload.
 
 ## AWS resources it expects
@@ -126,6 +126,16 @@ group's allow-all egress suffices.
   `VIDEO_INGEST_SECRET` or a subnet with no internet route.
 - **Spot interruptions** are rare but possible mid-encode. The task watcher
   re-runs the task once on on-demand FARGATE (see "Failure handling & alerts").
+
+## App callbacks
+
+| When | Call | Effect |
+|---|---|---|
+| before downloading the master | `POST /api/video/ingest/started {assetKey}` | upload → `packaging`; answers `proceed:false` if it was discarded/replaced (worker exits 0, no encode) |
+| packaged | `POST /api/video/ingest/complete {assetKey, durationSec, rawKey}` | version → `ready`; published if still the item's current upload |
+| any error | `POST /api/video/ingest/fail {assetKey, reason}` | upload → `failed` (published video untouched) |
+
+`started` is best-effort: if it errors, the worker packages anyway.
 
 ## Failure handling & alerts
 

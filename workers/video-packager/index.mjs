@@ -27,6 +27,10 @@ import { S3Client, GetObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3
  * app's serving route resolves to /api/video/[itemId]/key (enrollment-gated).
  * The key is NEVER uploaded under `hls/` and is never presigned.
  *
+ * Before downloading, it POSTs /api/video/ingest/started (row → packaging); if
+ * the app answers proceed:false (upload discarded/replaced) it exits 0 without
+ * encoding.
+ *
  * Failures: any error is logged as `[worker] FAILED …` (CloudWatch alarm) and
  * reported to /api/video/ingest/fail so the item shows "failed" instead of
  * hanging in "processing". Exceptions: a 404 from the complete callback (the
@@ -127,6 +131,12 @@ async function packageOne(bucket, rawKey) {
   const keyInfoPath = join(dir, "key_info")
 
   try {
+    // Tell the app packaging started (marks the upload `packaging`). If the
+    // upload was discarded/replaced meanwhile, don't spend an encode on it.
+    if (!(await notifyStarted(assetKey))) {
+      console.log(`[worker] skip ${assetKey}: the app says this upload was discarded or is already packaged`)
+      return
+    }
     await downloadToFile(bucket, rawKey, masterPath)
     execFileSync("mkdir", ["-p", hlsDir])
 
@@ -280,6 +290,22 @@ async function notifyComplete(assetKey, durationSec, rawKey) {
     }
     console.warn(`[worker] complete callback ${res?.status ?? "network error"} — retrying in ${delays[attempt] / 1000}s`)
     await new Promise((r) => setTimeout(r, delays[attempt]))
+  }
+}
+
+// Best-effort: any error → proceed (never block packaging on this call).
+async function notifyStarted(assetKey) {
+  try {
+    const res = await postApp("/api/video/ingest/started", { assetKey })
+    if (!res.ok) {
+      console.warn(`[worker] started callback ${res.status} — packaging anyway`)
+      return true
+    }
+    const body = await res.json().catch(() => ({}))
+    return body.proceed !== false
+  } catch (err) {
+    console.warn(`[worker] started callback failed (${err?.message ?? err}) — packaging anyway`)
+    return true
   }
 }
 
