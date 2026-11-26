@@ -4,7 +4,14 @@ import { eq } from "drizzle-orm"
 import { db } from "@/db"
 import { moduleItemsTable, modulesTable, type VideoItemData } from "@/db/schema"
 import { verifyIngestSecret } from "@/lib/ingest-auth"
-import { guardInFlightUpload } from "@/lib/video-ingest-guard"
+import {
+  abortSuperseded,
+  casItemData,
+  checkStartAllowed,
+  conflictChanged,
+  inFlightAssetKey,
+  parseExpectedAssetKey,
+} from "@/lib/video-ingest-guard"
 import { presignPut } from "@/lib/s3"
 
 /**
@@ -26,7 +33,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
   }
 
-  let body: { moduleItemId?: unknown; ext?: unknown; contentType?: unknown; replace?: unknown }
+  let body: {
+    moduleItemId?: unknown
+    ext?: unknown
+    contentType?: unknown
+    replace?: unknown
+    expectedAssetKey?: unknown
+  }
   try {
     body = await req.json()
   } catch {
@@ -53,8 +66,12 @@ export async function POST(req: Request) {
   }
 
   // Don't silently orphan an upload that's still in flight (see video-ingest-guard).
-  const conflict = await guardInFlightUpload("video-ingest", moduleItemId, item.data, body.replace === true)
+  const conflict = checkStartAllowed("video-ingest", moduleItemId, item.data, {
+    replace: body.replace === true,
+    expectedAssetKey: parseExpectedAssetKey(body.expectedAssetKey),
+  })
   if (conflict) return conflict
+  const superseded = inFlightAssetKey(item.data)
 
   const mod = await db.query.modulesTable.findFirst({
     where: eq(modulesTable.id, item.moduleId),
@@ -67,7 +84,12 @@ export async function POST(req: Request) {
 
   const assetKey = `courses/${mod.courseId}/items/${moduleItemId}/${randomUUID()}`
   const data: VideoItemData = { provider: "s3hls", assetKey, status: "processing" }
-  await db.update(moduleItemsTable).set({ data }).where(eq(moduleItemsTable.id, moduleItemId))
+  // Atomic: only wins if nobody changed the item since we read it (two tabs).
+  if (!(await casItemData(moduleItemId, item.data, data))) {
+    console.warn("[video-ingest] 409 — item changed concurrently", { moduleItemId })
+    return conflictChanged(inFlightAssetKey(item.data))
+  }
+  if (superseded) await abortSuperseded("video-ingest", moduleItemId, superseded)
 
   const rawKey = `raw/${assetKey}/master.${ext}`
   const uploadUrl = await presignPut(rawKey, contentType, 3600)
